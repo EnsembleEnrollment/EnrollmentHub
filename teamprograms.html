@@ -15,26 +15,21 @@
             --secondary-light: #FFB6C1;
             --accent: #FFA07A;
             --accent-light: #FFCBA4;
-            
             --bg-primary: #FFFFFF;
             --bg-secondary: #F8F9FA;
             --text-primary: #2D3748;
             --text-secondary: #718096;
             --text-light: #A0AEC0;
             --white: #FFFFFF;
-            
             --gray-50: #F8F9FA;
             --gray-100: #F1F3F5;
             --gray-200: #E9ECEF;
             --gray-300: #DEE2E6;
-            
             --success: #48BB78;
             --warning: #F6AD55;
-            
             --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
-            
             --sidebar-width: 260px;
             --sidebar-collapsed: 70px;
             --transition-speed: 0.3s;
@@ -52,520 +47,232 @@
 
         /* SIDEBAR */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: var(--white);
-            border-right: 1px solid var(--gray-200);
+            position: fixed; top: 0; left: 0;
+            width: var(--sidebar-width); height: 100vh;
+            background: var(--white); border-right: 1px solid var(--gray-200);
             box-shadow: var(--shadow-sm);
             transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
+            z-index: 1000; display: flex; flex-direction: column;
         }
-
         .sidebar.collapsed { width: var(--sidebar-collapsed); }
-
         .sidebar-header {
-            padding: 1.5rem 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 1.25rem; display: flex; align-items: center;
+            justify-content: space-between; border-bottom: 1px solid var(--gray-200);
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: opacity var(--transition-speed) ease;
-        }
-
+        .logo-section { display: flex; align-items: center; gap: 0.75rem; transition: opacity var(--transition-speed) ease; }
         .sidebar.collapsed .logo-section { opacity: 0; pointer-events: none; }
-
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-            color: var(--white);
-            font-weight: 700;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0; color: var(--white); font-weight: 700;
         }
-
         .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
-
         .toggle-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--gray-200);
-            background: var(--white);
-            color: var(--text-secondary);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
+            width: 32px; height: 32px; border: 1px solid var(--gray-200);
+            background: var(--white); color: var(--text-secondary); border-radius: 6px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease; flex-shrink: 0;
         }
-
         .toggle-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
         .sidebar.collapsed .toggle-icon { transform: rotate(180deg); }
         .toggle-icon { transition: transform var(--transition-speed) ease; font-size: 1rem; }
-
         .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1rem 0; }
-
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            padding: 0.875rem 1.5rem;
-            margin: 0.25rem 0.75rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            width: calc(100% - 1.5rem);
-            font-size: 0.9375rem;
-            font-weight: 500;
+            display: flex; align-items: center; gap: 0.875rem;
+            padding: 0.875rem 1.5rem; margin: 0.25rem 0.75rem;
+            color: var(--text-secondary); text-decoration: none; border-radius: 10px;
+            transition: all 0.2s ease; cursor: pointer; border: none;
+            background: transparent; width: calc(100% - 1.5rem);
+            font-size: 0.9375rem; font-weight: 500;
         }
-
         .nav-item:hover { background: var(--gray-100); color: var(--text-primary); }
-
         .nav-item.active {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(250, 128, 114, 0.3);
+            color: var(--white); box-shadow: 0 4px 12px rgba(250, 128, 114, 0.3);
         }
-
         .nav-icon { font-size: 1.25rem; flex-shrink: 0; width: 20px; }
         .nav-text { white-space: nowrap; transition: opacity var(--transition-speed) ease; }
         .sidebar.collapsed .nav-text { opacity: 0; pointer-events: none; }
         .sidebar.collapsed .nav-item { justify-content: center; padding: 0.875rem; }
-
         .sidebar-footer { padding: 0.5rem 0 1rem 0; border-top: 1px solid var(--gray-200); }
         .logout-btn { color: var(--secondary) !important; }
         .logout-btn:hover { background: rgba(255, 107, 157, 0.1) !important; }
-
         .sidebar-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); z-index: 999; opacity: 0;
             pointer-events: none; transition: opacity var(--transition-speed) ease;
         }
-
         .sidebar-overlay.active { opacity: 1; pointer-events: all; }
 
         .main-content {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            padding: 2rem 2.5rem;
+            margin-left: var(--sidebar-width); min-height: 100vh; padding: 2rem 2.5rem;
             transition: margin-left var(--transition-speed) ease;
         }
-
         .sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed); }
 
         /* Page Header */
         .page-header {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            margin-bottom: 2rem; display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 1rem;
         }
-
         .page-header-left h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.25rem; font-weight: 700; }
         .page-header-left p { color: var(--text-secondary); font-size: 1rem; }
-
         .header-right { display: flex; align-items: center; gap: 1rem; }
-
         .results-count {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; padding: 0.5rem 1rem; border-radius: 8px;
-            font-weight: 600; font-size: 0.875rem;
+            color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem;
         }
 
         /* Filter Section */
         .filter-section {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-md);
+            background: var(--white); border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 2rem; box-shadow: var(--shadow-md);
         }
-
-        .filter-row {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-
-        .filter-group {
-            flex: 1;
-            min-width: 180px;
-        }
-
+        .filter-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 180px; }
         .filter-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
+            display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;
         }
-
         .form-select, .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1.5px solid var(--gray-200);
-            border-radius: 10px;
-            font-size: 0.9375rem;
-            color: var(--text-primary);
-            background: var(--white);
-            transition: all 0.2s ease;
+            width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--gray-200);
+            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
+            background: var(--white); transition: all 0.2s ease;
         }
-
         .form-select:focus, .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1);
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1);
         }
-
         .form-select {
-            cursor: pointer;
-            appearance: none;
+            cursor: pointer; appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23718096' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 2.5rem;
+            background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
         }
 
         /* Programs Grid */
-        .programs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
-        }
+        .programs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
 
         /* Program Card */
         .program-card {
-            background: var(--white);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-            border: 1px solid var(--gray-200);
-            cursor: pointer;
+            background: var(--white); border-radius: 14px; overflow: hidden;
+            box-shadow: var(--shadow-sm); transition: all 0.2s ease;
+            border: 1px solid var(--gray-200); cursor: pointer;
         }
-
-        .program-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-
+        .program-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
         .program-card-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             padding: 1.25rem; color: white; position: relative; overflow: hidden;
         }
-
         .program-card-header::before {
             content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); pointer-events: none;
         }
-
         .program-header-top {
             display: flex; justify-content: space-between; align-items: flex-start;
             margin-bottom: 0.5rem; position: relative; z-index: 1;
         }
-
         .program-name { font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
-
         .program-type-badge {
-            background: rgba(255, 255, 255, 0.25);
-            padding: 0.25rem 0.625rem; border-radius: 20px;
-            font-size: 0.6875rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.25); padding: 0.25rem 0.625rem; border-radius: 20px;
+            font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
         }
-
         .program-studio {
-            font-size: 0.875rem; opacity: 0.9;
-            display: flex; align-items: center; gap: 0.375rem;
-            position: relative; z-index: 1;
+            font-size: 0.875rem; opacity: 0.9; display: flex; align-items: center;
+            gap: 0.375rem; position: relative; z-index: 1;
         }
-
-        .program-card-body {
-            padding: 1rem 1.25rem;
-        }
-
+        .program-card-body { padding: 1rem 1.25rem; }
         .program-info-row {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;
         }
-
         .program-info-row:last-child { margin-bottom: 0; }
-
-        .program-info-row i {
-            width: 16px;
-            color: var(--primary);
-        }
-
-        .program-badges {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 0.75rem;
-        }
-
-        .program-badge {
-            padding: 0.25rem 0.625rem;
-            border-radius: 20px;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .program-badge.free-trial {
-            background: rgba(72, 187, 120, 0.15);
-            color: var(--success);
-        }
-
-        .program-badge.parent-stay {
-            background: rgba(246, 173, 85, 0.15);
-            color: var(--warning);
-        }
-
+        .program-info-row i { width: 16px; color: var(--primary); }
+        .program-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+        .program-badge { padding: 0.25rem 0.625rem; border-radius: 20px; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; }
+        .program-badge.free-trial { background: rgba(72, 187, 120, 0.15); color: var(--success); }
+        .program-badge.parent-stay { background: rgba(246, 173, 85, 0.15); color: var(--warning); }
         .program-card-footer {
-            padding: 0.875rem 1.25rem;
-            background: var(--gray-50);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: 0.8125rem;
+            padding: 0.875rem 1.25rem; background: var(--gray-50);
+            display: flex; align-items: center; justify-content: space-between;
+            color: var(--text-secondary); font-size: 0.8125rem;
         }
+        .program-card-footer i { color: var(--primary); transition: transform 0.2s ease; }
+        .program-card:hover .program-card-footer i { transform: translateX(4px); }
 
-        .program-card-footer i {
-            color: var(--primary);
-            transition: transform 0.2s ease;
-        }
-
-        .program-card:hover .program-card-footer i {
-            transform: translateX(4px);
-        }
-
-        /* Modal Styles */
+        /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            padding: 1rem;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 2000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1rem;
         }
-
         .modal-overlay.active { opacity: 1; pointer-events: all; }
-
         .modal {
-            background: var(--white);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow: hidden;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            background: var(--white); border-radius: 20px; width: 100%; max-width: 700px;
+            max-height: 90vh; overflow: hidden; transform: translateY(20px);
+            transition: transform 0.3s ease; display: flex; flex-direction: column;
         }
-
         .modal-overlay.active .modal { transform: translateY(0); }
-
         .modal-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            padding: 1.5rem;
-            color: white;
-            position: relative;
+            padding: 1.5rem; color: white; position: relative;
         }
-
         .modal-header::before {
             content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); pointer-events: none;
         }
-
         .modal-close {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.2);
-            border: none; border-radius: 50%;
-            color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-            z-index: 1;
+            position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px;
+            background: rgba(255,255,255,0.2); border: none; border-radius: 50%;
+            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease; z-index: 1;
         }
-
         .modal-close:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
-
         .modal-title { font-size: 1.5rem; font-weight: 700; position: relative; z-index: 1; margin-bottom: 0.25rem; }
         .modal-subtitle { font-size: 0.9375rem; opacity: 0.9; position: relative; z-index: 1; }
-
         .modal-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--gray-200);
-            background: var(--gray-50);
-            overflow-x: auto;
+            display: flex; border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50); overflow-x: auto;
         }
-
         .modal-tab {
-            padding: 1rem 1.5rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            padding: 1rem 1.5rem; font-size: 0.875rem; font-weight: 600;
+            color: var(--text-secondary); cursor: pointer; border: none;
+            background: transparent; border-bottom: 3px solid transparent;
+            transition: all 0.2s ease; white-space: nowrap;
         }
-
         .modal-tab:hover { color: var(--text-primary); background: var(--white); }
-
-        .modal-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-            background: var(--white);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex: 1;
-        }
-
+        .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--white); }
+        .modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        .info-section {
-            margin-bottom: 1.5rem;
-        }
-
+        .info-section { margin-bottom: 1.5rem; }
         .info-section:last-child { margin-bottom: 0; }
-
         .info-section-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 0.75rem; font-weight: 700; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
         }
-
         .info-section-title i { color: var(--primary); }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .info-item {
-            background: var(--gray-50);
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .info-item { background: var(--gray-50); padding: 1rem; border-radius: 10px; }
         .info-item.full-width { grid-column: span 2; }
-
-        .info-item-label {
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
-            margin-bottom: 0.375rem;
-        }
-
-        .info-item-value {
-            font-size: 0.9375rem;
-            color: var(--text-primary);
-            line-height: 1.5;
-        }
-
-        .info-item-value a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
+        .info-item-label { font-size: 0.6875rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; margin-bottom: 0.375rem; }
+        .info-item-value { font-size: 0.9375rem; color: var(--text-primary); line-height: 1.5; }
+        .info-item-value a { color: var(--primary); text-decoration: none; }
         .info-item-value a:hover { text-decoration: underline; }
-
-        .policy-text {
-            background: var(--gray-50);
-            padding: 1rem;
-            border-radius: 10px;
-            font-size: 0.9375rem;
-            line-height: 1.6;
-            color: var(--text-primary);
-            white-space: pre-wrap;
-        }
-
         .toggle-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8125rem;
-            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
         }
+        .toggle-badge.enabled { background: rgba(72, 187, 120, 0.15); color: var(--success); }
+        .toggle-badge.disabled { background: var(--gray-100); color: var(--text-light); }
 
-        .toggle-badge.enabled {
-            background: rgba(72, 187, 120, 0.15);
-            color: var(--success);
-        }
-
-        .toggle-badge.disabled {
-            background: var(--gray-100);
-            color: var(--text-light);
-        }
-
-        /* Empty State */
+        /* Empty & Loading */
         .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); grid-column: 1 / -1; }
         .empty-state i { font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem; }
         .empty-state h3 { font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.5rem; }
         .empty-state p { font-size: 1rem; }
-
-        .loading {
-            display: flex; align-items: center; justify-content: center;
-            min-height: 400px; color: var(--text-secondary); font-size: 1.125rem;
-        }
+        .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
@@ -574,7 +281,6 @@
             .sidebar.collapsed ~ .main-content { margin-left: 0; }
             .programs-grid { grid-template-columns: 1fr; }
             .page-header { flex-direction: column; align-items: flex-start; }
-            .header-right { width: 100%; }
             .info-grid { grid-template-columns: 1fr; }
             .info-item.full-width { grid-column: span 1; }
             .modal-tab { padding: 0.75rem 1rem; font-size: 0.8125rem; }
@@ -583,14 +289,10 @@
             .filter-row { flex-direction: column; }
             .filter-group { width: 100%; min-width: unset; }
         }
-        
-        @media (max-width: 480px) {
-            .modal-tab { padding: 0.625rem 0.875rem; font-size: 0.75rem; }
-        }
+        @media (max-width: 480px) { .modal-tab { padding: 0.625rem 0.875rem; font-size: 0.75rem; } }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
             <div class="logo-section">
@@ -601,7 +303,6 @@
                 <span class="toggle-icon">‹</span>
             </button>
         </div>
-
         <nav class="sidebar-nav">
             <a href="teamdashboard.html" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
@@ -615,13 +316,9 @@
                 <span class="nav-icon"><i class="fas fa-building"></i></span>
                 <span class="nav-text">Studio Directory</span>
             </a>
-            <a href="teamteacher.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-chalkboard-teacher"></i></span>
+            <a href="teamteachers.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-star"></i></span>
                 <span class="nav-text">Teacher Directory</span>
-            </a>
-            <a href="teamsnippets.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
-                <span class="nav-text">Snippets</span>
             </a>
             <a href="teammap.html" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span>
@@ -631,23 +328,19 @@
                 <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
                 <span class="nav-text">Programs</span>
             </a>
+            <a href="teamsnippets.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
+                <span class="nav-text">Snippets</span>
+            </a>
             <a href="teamtraining-hub.html" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-book-open"></i></span>
-                <span class="nav-text">Training Hub</span>
-            </a>
-            <a href="teampolicies.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
-                <span class="nav-text">Policies</span>
-            </a>
-            <a href="teamprofile.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-user"></i></span>
-                <span class="nav-text">Profiles</span>
-            </a>
-            <a href="EnsembleDirectors.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
-                <span class="nav-text">Directors Page</span>
+                <span class="nav-text">Training</span>
             </a>
         </nav>
+        <a href="EnsembleDirectors.html" class="nav-item" style="margin: 0 0.75rem;">
+            <span class="nav-icon"><i class="far fa-user"></i></span>
+            <span class="nav-text">Directors Page</span>
+        </a>
         <div class="sidebar-footer">
             <button id="logoutBtn" class="nav-item logout-btn">
                 <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -715,9 +408,7 @@
     <div class="modal-overlay" id="programModal">
         <div class="modal">
             <div class="modal-header">
-                <button class="modal-close" onclick="closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
                 <h2 class="modal-title" id="modalTitle">Program Name</h2>
                 <p class="modal-subtitle" id="modalSubtitle">Studio Name</p>
             </div>
@@ -728,7 +419,6 @@
                 <button class="modal-tab" data-tab="links">Links</button>
             </div>
             <div class="modal-body">
-                <!-- Overview Tab -->
                 <div class="tab-content active" id="overviewTab">
                     <div class="info-section">
                         <div class="info-section-title"><i class="fas fa-info-circle"></i> Basic Info</div>
@@ -739,8 +429,6 @@
                         <div class="info-grid" id="pricingGrid"></div>
                     </div>
                 </div>
-
-                <!-- Enrollment Tab -->
                 <div class="tab-content" id="enrollmentTab">
                     <div class="info-section">
                         <div class="info-section-title"><i class="fas fa-user-plus"></i> Enrollment Details</div>
@@ -751,16 +439,12 @@
                         <div class="info-grid" id="midSemesterGrid"></div>
                     </div>
                 </div>
-
-                <!-- Policies Tab -->
                 <div class="tab-content" id="policiesTab">
                     <div class="info-section">
                         <div class="info-section-title"><i class="fas fa-clipboard-list"></i> Program Policies</div>
                         <div id="policiesContent"></div>
                     </div>
                 </div>
-
-                <!-- Links Tab -->
                 <div class="tab-content" id="linksTab">
                     <div class="info-section">
                         <div class="info-section-title"><i class="fas fa-link"></i> Program Links</div>
@@ -781,14 +465,12 @@
         let allBrands = [];
         let allZones = [];
 
-        // Helper function to get brand name from brand_id
         function getBrandName(brandId) {
             if (!brandId) return 'Unknown';
             const brand = allBrands.find(b => b.id === brandId);
             return brand ? brand.name : 'Unknown';
         }
 
-        // Helper function to get studio display label
         function getStudioLabel(studio) {
             if (!studio) return 'Unknown Studio';
             const brandName = getBrandName(studio.brand_id);
@@ -810,14 +492,10 @@
             const sidebar = document.getElementById('sidebar');
             const toggle = document.getElementById('sidebarToggle');
             const overlay = document.getElementById('sidebarOverlay');
-
             toggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
             overlay.addEventListener('click', () => sidebar.classList.add('collapsed'));
-
             document.getElementById('logoutBtn').addEventListener('click', () => {
-                if (confirm('Are you sure you want to logout?')) {
-                    window.location.href = 'login.html';
-                }
+                if (confirm('Are you sure you want to logout?')) window.location.href = 'index.html';
             });
         }
 
@@ -843,95 +521,84 @@
 
         async function loadData() {
             try {
-                // Load zones
                 try {
                     const { data: zones, error } = await supabaseClient.from('zones').select('*');
-                    if (!error) {
-                        allZones = zones || [];
-                    } else {
-                        console.warn('Zones table not available:', error.message);
-                        allZones = [];
-                        document.getElementById('zoneFilterGroup').style.display = 'none';
-                    }
-                } catch (e) {
-                    allZones = [];
-                    document.getElementById('zoneFilterGroup').style.display = 'none';
-                }
-                
-                // Load brands
+                    if (!error) { allZones = zones || []; }
+                    else { allZones = []; document.getElementById('zoneFilterGroup').style.display = 'none'; }
+                } catch (e) { allZones = []; document.getElementById('zoneFilterGroup').style.display = 'none'; }
+
                 try {
                     const { data: brands, error } = await supabaseClient.from('brands').select('*').order('name');
-                    if (!error) {
-                        allBrands = brands || [];
-                    } else {
-                        console.warn('Brands table not available:', error.message);
-                        allBrands = [];
-                        document.getElementById('brandFilterGroup').style.display = 'none';
-                    }
-                } catch (e) {
-                    allBrands = [];
-                    document.getElementById('brandFilterGroup').style.display = 'none';
-                }
+                    if (!error) { allBrands = brands || []; }
+                    else { allBrands = []; document.getElementById('brandFilterGroup').style.display = 'none'; }
+                } catch (e) { allBrands = []; document.getElementById('brandFilterGroup').style.display = 'none'; }
 
-                // Load studios
                 const { data: studios } = await supabaseClient.from('studios').select('*');
                 allStudios = studios || [];
 
-                // Load programs
-                const { data: programs, error } = await supabaseClient
-                    .from('programs')
-                    .select('*')
-                    .order('name');
-
+                const { data: programs, error } = await supabaseClient.from('programs').select('*').order('name');
                 if (error) throw error;
-
                 allPrograms = programs || [];
 
-                // Populate dropdowns
                 populateZoneDropdown();
                 populateBrandDropdown();
                 populateStateDropdown();
                 populateStudioDropdown();
-                
-                // Render all programs
+
                 applyFilters();
+
+                // ── Check for ?brand_id= URL param and pre-filter ──
+                checkUrlForBrand();
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').innerHTML = '<i class="fas fa-exclamation-circle"></i>&nbsp; Error loading programs';
             }
         }
 
+        // ── Read ?brand_id= from URL and apply it ──
+        function checkUrlForBrand() {
+            const params = new URLSearchParams(window.location.search);
+            const brandId = params.get('brand_id');
+            if (!brandId) return;
+
+            const brandSelect = document.getElementById('brandFilter');
+            const match = [...brandSelect.options].find(o => o.value === brandId);
+            if (match) {
+                brandSelect.value = brandId;
+                // Cascade: update state/studio dropdowns to reflect brand selection
+                updateStateAndStudioDropdowns();
+                applyFilters();
+                // Scroll results into view
+                setTimeout(() => {
+                    document.getElementById('programsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
         function populateZoneDropdown() {
             const select = document.getElementById('zoneFilter');
             select.innerHTML = '<option value="">All Zones</option>';
-            
             allZones.forEach(zone => {
                 const option = document.createElement('option');
                 option.value = zone.id;
                 option.textContent = zone.name || zone.zone_name || zone.title || 'Unknown Zone';
                 select.appendChild(option);
             });
-
-            if (allZones.length === 0) {
-                document.getElementById('zoneFilterGroup').style.display = 'none';
-            }
+            if (allZones.length === 0) document.getElementById('zoneFilterGroup').style.display = 'none';
         }
 
         function populateBrandDropdown(filteredBrands = null) {
             const select = document.getElementById('brandFilter');
             const brands = filteredBrands || allBrands;
             select.innerHTML = '<option value="">All Brands</option>';
-            
             brands.forEach(brand => {
                 const option = document.createElement('option');
                 option.value = brand.id;
                 option.textContent = brand.name;
                 select.appendChild(option);
             });
-
-            if (allBrands.length === 0) {
-                document.getElementById('brandFilterGroup').style.display = 'none';
-            }
+            if (allBrands.length === 0) document.getElementById('brandFilterGroup').style.display = 'none';
         }
 
         function populateStateDropdown(filteredStudios = null) {
@@ -939,70 +606,44 @@
             const currentValue = select.value;
             const studios = filteredStudios || allStudios;
             const states = [...new Set(studios.map(s => s.state).filter(Boolean))].sort();
-            
             select.innerHTML = '<option value="">All States</option>';
             states.forEach(state => {
                 const option = document.createElement('option');
-                option.value = state;
-                option.textContent = state;
+                option.value = state; option.textContent = state;
                 select.appendChild(option);
             });
-
-            // Restore value if still valid
-            if (currentValue && states.includes(currentValue)) {
-                select.value = currentValue;
-            }
+            if (currentValue && states.includes(currentValue)) select.value = currentValue;
         }
 
         function populateStudioDropdown(filteredStudios = null) {
             const select = document.getElementById('studioFilter');
             const currentValue = select.value;
             const studios = filteredStudios || allStudios;
-            
             select.innerHTML = '<option value="">All Studios</option>';
             studios.forEach(studio => {
                 const option = document.createElement('option');
-                option.value = studio.id;
-                option.textContent = getStudioLabel(studio);
+                option.value = studio.id; option.textContent = getStudioLabel(studio);
                 select.appendChild(option);
             });
-
-            // Restore value if still valid
-            if (currentValue && studios.some(s => s.id === currentValue)) {
-                select.value = currentValue;
-            }
+            if (currentValue && studios.some(s => s.id === currentValue)) select.value = currentValue;
         }
 
         function getFilteredStudios() {
             const zoneId = document.getElementById('zoneFilter').value;
             const brandId = document.getElementById('brandFilter').value;
             const state = document.getElementById('stateFilter').value;
-
             let filtered = [...allStudios];
-
-            // Filter by zone (through brands) - get brand_ids that belong to this zone
             if (zoneId && allBrands.length > 0) {
                 const zoneBrandIds = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id);
                 filtered = filtered.filter(s => zoneBrandIds.includes(s.brand_id));
             }
-
-            // Filter by brand
-            if (brandId) {
-                filtered = filtered.filter(s => s.brand_id === brandId);
-            }
-
-            // Filter by state
-            if (state) {
-                filtered = filtered.filter(s => s.state === state);
-            }
-
+            if (brandId) filtered = filtered.filter(s => s.brand_id === brandId);
+            if (state) filtered = filtered.filter(s => s.state === state);
             return filtered;
         }
 
         function onZoneChange() {
             const zoneId = document.getElementById('zoneFilter').value;
-
-            // Update brand dropdown based on zone
             if (allBrands.length > 0) {
                 if (zoneId) {
                     const filteredBrands = allBrands.filter(b => b.zone_id === zoneId);
@@ -1012,8 +653,6 @@
                 }
                 document.getElementById('brandFilter').value = '';
             }
-
-            // Update state and studio dropdowns
             updateStateAndStudioDropdowns();
             applyFilters();
         }
@@ -1033,25 +672,14 @@
         function updateStateAndStudioDropdowns() {
             const zoneId = document.getElementById('zoneFilter').value;
             const brandId = document.getElementById('brandFilter').value;
-
             let filteredStudios = [...allStudios];
-
-            // Filter by zone
             if (zoneId && allBrands.length > 0) {
                 const zoneBrandIds = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id);
                 filteredStudios = filteredStudios.filter(s => zoneBrandIds.includes(s.brand_id));
             }
-
-            // Filter by brand
-            if (brandId) {
-                filteredStudios = filteredStudios.filter(s => s.brand_id === brandId);
-            }
-
-            // Update state dropdown
+            if (brandId) filteredStudios = filteredStudios.filter(s => s.brand_id === brandId);
             populateStateDropdown(filteredStudios);
             document.getElementById('stateFilter').value = '';
-
-            // Update studio dropdown
             populateStudioDropdown(filteredStudios);
             document.getElementById('studioFilter').value = '';
         }
@@ -1059,29 +687,19 @@
         function applyFilters() {
             const studioId = document.getElementById('studioFilter').value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-            // Get studio IDs that match the filters
             const filteredStudios = getFilteredStudios();
             const filteredStudioIds = filteredStudios.map(s => s.id);
 
-            // Filter programs
             let filteredPrograms = allPrograms.filter(program => {
-                // Must belong to a studio in filtered list
                 if (!filteredStudioIds.includes(program.studio_id)) return false;
-
-                // If specific studio selected, filter to that studio
                 if (studioId && program.studio_id !== studioId) return false;
-
-                // Search filter - search by program name, price, enrollment type, skill level, brand, state, city
                 if (searchTerm) {
-                    // Get studio info for this program
                     const studio = allStudios.find(s => s.id === program.studio_id);
                     const brand = studio ? allBrands.find(b => b.id === studio.brand_id) : null;
                     const brandName = brand ? brand.name : '';
                     const studioCity = studio ? (studio.city || '') : '';
                     const studioState = studio ? (studio.state || '') : '';
-                    
-                    const matchesSearch = 
+                    const matchesSearch =
                         (program.name && program.name.toLowerCase().includes(searchTerm)) ||
                         (program.price && program.price.toLowerCase().includes(searchTerm)) ||
                         (program.enrollment_type && program.enrollment_type.toLowerCase().includes(searchTerm)) ||
@@ -1091,7 +709,6 @@
                         (studioState && studioState.toLowerCase().includes(searchTerm));
                     if (!matchesSearch) return false;
                 }
-
                 return true;
             });
 
@@ -1113,15 +730,13 @@
                         <i class="fas fa-graduation-cap"></i>
                         <h3>No programs found</h3>
                         <p>Try adjusting your filters or search term</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
 
             grid.innerHTML = programs.map(program => {
                 const studio = allStudios.find(s => s.id === program.studio_id);
                 const studioLabel = getStudioLabel(studio);
-
                 return `
                     <div class="program-card" onclick='openProgramModal(${JSON.stringify(program).replace(/'/g, "&#39;")})'>
                         <div class="program-card-header">
@@ -1129,60 +744,33 @@
                                 <div class="program-name">${program.name}</div>
                                 ${program.enrollment_type ? `<span class="program-type-badge">${program.enrollment_type.replace(' Enrollment', '').replace(' Based', '')}</span>` : ''}
                             </div>
-                            <div class="program-studio">
-                                <i class="fas fa-building"></i>
-                                ${studioLabel}
-                            </div>
+                            <div class="program-studio"><i class="fas fa-building"></i> ${studioLabel}</div>
                         </div>
                         <div class="program-card-body">
-                            ${program.price ? `
-                                <div class="program-info-row">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span>${program.price}${program.price_type ? ` (${program.price_type})` : ''}</span>
-                                </div>
-                            ` : ''}
-                            ${program.duration ? `
-                                <div class="program-info-row">
-                                    <i class="fas fa-clock"></i>
-                                    <span>${program.duration}</span>
-                                </div>
-                            ` : ''}
-                            ${program.lesson_frequency ? `
-                                <div class="program-info-row">
-                                    <i class="fas fa-calendar-week"></i>
-                                    <span>${program.lesson_frequency}</span>
-                                </div>
-                            ` : ''}
-                            ${program.skill_level ? `
-                                <div class="program-info-row">
-                                    <i class="fas fa-signal"></i>
-                                    <span>${program.skill_level}</span>
-                                </div>
-                            ` : ''}
+                            ${program.price ? `<div class="program-info-row"><i class="fas fa-dollar-sign"></i><span>${program.price}${program.price_type ? ` (${program.price_type})` : ''}</span></div>` : ''}
+                            ${program.duration ? `<div class="program-info-row"><i class="fas fa-clock"></i><span>${program.duration}</span></div>` : ''}
+                            ${program.lesson_frequency ? `<div class="program-info-row"><i class="fas fa-calendar-week"></i><span>${program.lesson_frequency}</span></div>` : ''}
+                            ${program.skill_level ? `<div class="program-info-row"><i class="fas fa-signal"></i><span>${program.skill_level}</span></div>` : ''}
                             ${(program.first_free_lesson || program.parent_guardian_required) ? `
                                 <div class="program-badges">
                                     ${program.first_free_lesson ? '<span class="program-badge free-trial"><i class="fas fa-gift"></i> Free Trial</span>' : ''}
                                     ${program.parent_guardian_required ? '<span class="program-badge parent-stay"><i class="fas fa-user-friends"></i> Parent Must Stay</span>' : ''}
-                                </div>
-                            ` : ''}
+                                </div>` : ''}
                         </div>
                         <div class="program-card-footer">
                             <span>View Details</span>
                             <i class="fas fa-arrow-right"></i>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
         function openProgramModal(program) {
             const studio = allStudios.find(s => s.id === program.studio_id);
             const studioLabel = getStudioLabel(studio);
-
             document.getElementById('modalTitle').textContent = program.name;
             document.getElementById('modalSubtitle').textContent = studioLabel;
 
-            // Basic Info
             document.getElementById('basicInfoGrid').innerHTML = `
                 ${infoItem('Class Size', program.class_size)}
                 ${infoItem('Duration', program.duration)}
@@ -1191,62 +779,52 @@
                 ${infoItem('Requirements', program.qualifications, true)}
                 ${infoItem('Curriculum', program.curriculum_details, true)}
             `;
-
-            // Pricing
             document.getElementById('pricingGrid').innerHTML = `
                 ${infoItem('Price', program.price)}
                 ${infoItem('Billing Type', program.price_type)}
                 ${infoItem('Registration Fee', program.registration_fee)}
                 ${infoItem('Fee Covers', program.registration_fee_covers, true)}
             `;
-
-            // Enrollment
             document.getElementById('enrollmentGrid').innerHTML = `
                 ${infoItem('Enrollment Type', program.enrollment_type)}
                 ${infoItem('Enrollment Process', program.enrollment_process, true)}
             `;
 
-            // Mid-Semester
-            const midSemesterSection = document.getElementById('midSemesterSection');
+            const midSection = document.getElementById('midSemesterSection');
             if (program.mid_semester_enrollment) {
-                midSemesterSection.style.display = 'block';
+                midSection.style.display = 'block';
                 document.getElementById('midSemesterGrid').innerHTML = `
                     ${infoItem('Mid-Semester Allowed', '<span class="toggle-badge enabled"><i class="fas fa-check"></i> Yes</span>')}
                     ${infoItem('Policy', program.mid_semester_policy, true)}
                     ${infoItem('Price Change', program.mid_semester_price_change, true)}
                 `;
             } else {
-                midSemesterSection.style.display = 'none';
+                midSection.style.display = 'none';
             }
 
-            // Policies
             document.getElementById('policiesContent').innerHTML = `
                 <div class="info-grid">
-                    ${infoItem('First Free Lesson', program.first_free_lesson ? 
-                        '<span class="toggle-badge enabled"><i class="fas fa-check"></i> Yes</span>' : 
+                    ${infoItem('First Free Lesson', program.first_free_lesson ?
+                        '<span class="toggle-badge enabled"><i class="fas fa-check"></i> Yes</span>' :
                         '<span class="toggle-badge disabled"><i class="fas fa-times"></i> No</span>')}
-                    ${infoItem('Parent Must Stay', program.parent_guardian_required ? 
-                        '<span class="toggle-badge enabled"><i class="fas fa-check"></i> Yes</span>' : 
+                    ${infoItem('Parent Must Stay', program.parent_guardian_required ?
+                        '<span class="toggle-badge enabled"><i class="fas fa-check"></i> Yes</span>' :
                         '<span class="toggle-badge disabled"><i class="fas fa-times"></i> No</span>')}
                     ${infoItem('Makeup Policy', program.makeup_policy, true)}
                     ${infoItem('Withdrawal Policy', program.withdrawal_policy, true)}
                     ${infoItem('Additional Policies', program.additional_policies, true)}
-                </div>
-            `;
+                </div>`;
 
-            // Links
             document.getElementById('linksGrid').innerHTML = `
                 ${linkItem('Scheduling Link', program.scheduling_link)}
                 ${linkItem('Flyer Link', program.flyer_link)}
                 ${linkItem('Website Description', program.website_description_link)}
             `;
 
-            // Reset to first tab
             document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelector('.modal-tab[data-tab="overview"]').classList.add('active');
             document.getElementById('overviewTab').classList.add('active');
-
             document.getElementById('programModal').classList.add('active');
         }
 
@@ -1256,8 +834,7 @@
                 <div class="info-item ${fullWidth ? 'full-width' : ''}">
                     <div class="info-item-label">${label}</div>
                     <div class="info-item-value">${value}</div>
-                </div>
-            `;
+                </div>`;
         }
 
         function linkItem(label, url) {
@@ -1265,26 +842,13 @@
             return `
                 <div class="info-item">
                     <div class="info-item-label">${label}</div>
-                    <div class="info-item-value">
-                        <a href="${url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Link</a>
-                    </div>
-                </div>
-            `;
+                    <div class="info-item-value"><a href="${url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Link</a></div>
+                </div>`;
         }
 
-        function closeModal() {
-            document.getElementById('programModal').classList.remove('active');
-        }
-
-        // Close modal on overlay click
-        document.getElementById('programModal').addEventListener('click', (e) => {
-            if (e.target.id === 'programModal') closeModal();
-        });
-
-        // Close modal on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
+        function closeModal() { document.getElementById('programModal').classList.remove('active'); }
+        document.getElementById('programModal').addEventListener('click', e => { if (e.target.id === 'programModal') closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
