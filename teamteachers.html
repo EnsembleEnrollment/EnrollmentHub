@@ -141,7 +141,6 @@
         .filter-toggle { color: var(--text-secondary); font-size: 0.875rem; transition: transform 0.2s ease; }
         .filter-toggle.collapsed { transform: rotate(-90deg); }
 
-        /* Reset Filters Button */
         .reset-filters-btn {
             display: flex; align-items: center; gap: 0.375rem;
             padding: 0.5rem 0.875rem;
@@ -151,10 +150,7 @@
             cursor: pointer; transition: all 0.2s;
             box-shadow: 0 2px 6px rgba(250, 128, 114, 0.3);
         }
-        .reset-filters-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(250, 128, 114, 0.4);
-        }
+        .reset-filters-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(250, 128, 114, 0.4); }
         .reset-filters-btn i { font-size: 0.75rem; }
 
         .filter-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
@@ -231,11 +227,7 @@
         .view-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
 
         /* Teachers Grid */
-        .teachers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 1rem;
-        }
+        .teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
         .teachers-grid.list-view { grid-template-columns: 1fr; }
 
         /* Teacher Card */
@@ -252,13 +244,6 @@
         }
         .teacher-card-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.125rem; }
         .teacher-card-brand { font-size: 0.8125rem; opacity: 0.9; }
-        .teacher-card-status {
-            position: absolute; top: 1rem; right: 1rem;
-            padding: 0.2rem 0.625rem; border-radius: 12px; font-size: 0.6875rem;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
-        }
-        .status-active { background: rgba(255,255,255,0.25); color: white; }
-        .status-inactive { background: rgba(0,0,0,0.15); color: rgba(255,255,255,0.8); }
 
         .teacher-card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
 
@@ -279,9 +264,7 @@
             border: 1px solid var(--gray-200); border-radius: 8px;
             font-size: 0.75rem; font-weight: 600; color: var(--text-primary); transition: all 0.2s;
         }
-        .instrument-chip .level-dot {
-            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-        }
+        .instrument-chip .level-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
         .level-beginner { background: var(--success); }
         .level-intermediate { background: var(--warning); }
         .level-advanced { background: var(--primary); }
@@ -294,16 +277,6 @@
         .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .badge-info { background: rgba(250, 128, 114, 0.1); color: var(--primary); }
         .badge-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
-        .badge-comfort { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
-
-        /* Comfort Level Mini Display */
-        .comfort-indicator {
-            display: inline-flex; align-items: center; gap: 0.25rem;
-            padding: 0.2rem 0.5rem; border-radius: 6px;
-            font-size: 0.6875rem; font-weight: 600;
-            background: rgba(139, 92, 246, 0.1); color: #8B5CF6;
-        }
-        .comfort-indicator i { font-size: 0.625rem; }
 
         /* Teacher Detail Modal */
         .modal {
@@ -355,47 +328,19 @@
         }
         .strength-item i { color: var(--primary); margin-top: 0.125rem; font-size: 0.75rem; }
 
-        /* Comfort Level Display in Modal */
         .comfort-level-display {
             display: flex; align-items: center; gap: 1rem;
-            padding: 1rem; background: var(--gray-50); border-radius: 10px;
-            margin-bottom: 1rem;
+            padding: 1rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
         }
-        .comfort-level-bar {
-            flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px;
-            overflow: hidden;
-        }
-        .comfort-level-fill {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-        }
-        .comfort-level-value {
-            font-size: 1.25rem; font-weight: 700; color: var(--primary);
-            min-width: 50px; text-align: center;
-        }
-        .comfort-level-label {
-            font-size: 0.875rem; color: var(--text-secondary);
-        }
-
-        /* Empty & Loading */
-        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
-        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; }
-        .empty-state p { font-size: 1rem; }
-        .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
+        .comfort-level-bar { flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
+        .comfort-level-fill { height: 100%; border-radius: 4px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
+        .comfort-level-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); min-width: 50px; text-align: center; }
+        .comfort-level-label { font-size: 0.875rem; color: var(--text-secondary); }
 
         /* Instrument Checkbox Filter */
-        .instrument-filter-section {
-            grid-column: 1 / -1;
-            margin-top: 0.5rem;
-        }
-        .instrument-filter-label {
-            font-size: 0.75rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 0.5rem;
-            text-transform: uppercase; letter-spacing: 0.03em;
-        }
-        .instrument-checkbox-grid {
-            display: flex; flex-wrap: wrap; gap: 0.5rem;
-        }
+        .instrument-filter-section { grid-column: 1 / -1; margin-top: 0.5rem; }
+        .instrument-filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .instrument-checkbox-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .instrument-checkbox {
             display: flex; align-items: center; gap: 0.375rem;
             padding: 0.5rem 0.75rem; background: var(--gray-50);
@@ -404,30 +349,22 @@
             font-size: 0.8125rem; font-weight: 500; color: var(--text-primary);
         }
         .instrument-checkbox:hover { border-color: var(--primary-light); }
-        .instrument-checkbox.selected {
-            border-color: var(--primary);
-            background: rgba(250, 128, 114, 0.1);
-            color: var(--primary-dark);
-        }
+        .instrument-checkbox.selected { border-color: var(--primary); background: rgba(250, 128, 114, 0.1); color: var(--primary-dark); }
         .instrument-checkbox .check-icon {
-            width: 16px; height: 16px;
-            border: 2px solid var(--gray-300); border-radius: 3px;
+            width: 16px; height: 16px; border: 2px solid var(--gray-300); border-radius: 3px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.625rem; color: transparent; transition: all 0.2s;
-            flex-shrink: 0;
+            font-size: 0.625rem; color: transparent; transition: all 0.2s; flex-shrink: 0;
         }
-        .instrument-checkbox.selected .check-icon {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-color: transparent; color: white;
-        }
-        .selected-instruments-info {
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-            color: var(--text-light);
-            font-style: italic;
-        }
+        .instrument-checkbox.selected .check-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); border-color: transparent; color: white; }
+        .selected-instruments-info { margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-light); font-style: italic; }
 
-        /* List view card adjustments */
+        /* Empty & Loading */
+        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
+        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; }
+        .empty-state p { font-size: 1rem; }
+        .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
+
+        /* List view */
         .teachers-grid.list-view .teacher-card { flex-direction: row; }
         .teachers-grid.list-view .teacher-card-header { min-width: 220px; display: flex; flex-direction: column; justify-content: center; }
         .teachers-grid.list-view .teacher-card-body { flex-direction: row; flex-wrap: wrap; gap: 1rem; align-items: center; }
@@ -443,14 +380,10 @@
             .filter-body { grid-template-columns: 1fr 1fr; }
             .detail-grid, .detail-instrument-grid { grid-template-columns: 1fr; }
         }
-
-        @media (max-width: 500px) {
-            .filter-body { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 500px) { .filter-body { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
             <div class="logo-section">
@@ -461,7 +394,6 @@
                 <span class="toggle-icon">‹</span>
             </button>
         </div>
-
         <nav class="sidebar-nav">
             <a href="teamdashboard.html" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
@@ -496,11 +428,10 @@
                 <span class="nav-text">Training</span>
             </a>
         </nav>
-            <a href="EnsembleDirectors.html" class="nav-item">
-                <span class="nav-icon"><i class="far fa-user"></i></span>
-                <span class="nav-text">Directors Page</span>
-            </a>
-        </nav>
+        <a href="EnsembleDirectors.html" class="nav-item" style="margin: 0 0.75rem;">
+            <span class="nav-icon"><i class="far fa-user"></i></span>
+            <span class="nav-text">Directors Page</span>
+        </a>
         <div class="sidebar-footer">
             <button id="logoutBtn" class="nav-item logout-btn">
                 <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -517,7 +448,6 @@
             <p>Find the right teacher by instrument, level, location, and more</p>
         </div>
 
-        <!-- Filter Section -->
         <div class="filter-section">
             <div class="filter-header" onclick="toggleFilters()">
                 <h3><i class="fas fa-sliders-h"></i> Filters</h3>
@@ -529,16 +459,11 @@
                 </div>
             </div>
             <div id="filterBody" class="filter-body">
-                <!-- Search -->
                 <div class="search-input-wrapper">
                     <i class="fas fa-search"></i>
                     <input type="text" id="teacherSearch" class="search-input" placeholder="Search by teacher name...">
                 </div>
-
-                <!-- Zone Tabs -->
                 <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
-
-                <!-- Dropdowns -->
                 <div class="filter-group">
                     <label>State</label>
                     <select id="filterState" class="filter-select" onchange="onStateFilterChange()"><option value="">All States</option></select>
@@ -551,14 +476,11 @@
                     <label>City</label>
                     <select id="filterCity" class="filter-select"><option value="">All Cities</option></select>
                 </div>
-                
-                <!-- Instrument Checkboxes -->
                 <div class="instrument-filter-section">
                     <div class="instrument-filter-label">Instruments (select multiple to find teachers who teach ALL selected)</div>
                     <div id="instrumentCheckboxGrid" class="instrument-checkbox-grid"></div>
                     <div id="selectedInstrumentsInfo" class="selected-instruments-info"></div>
                 </div>
-                
                 <div class="filter-group">
                     <label>Highest Level</label>
                     <select id="filterLevel" class="filter-select">
@@ -613,18 +535,14 @@
                         <option value="yes">Has Formal Education</option>
                     </select>
                 </div>
-
-                <!-- Active Filters -->
                 <div id="activeFilters" class="active-filters"></div>
             </div>
         </div>
 
-        <!-- Loading -->
         <div id="loading" class="loading">
             <i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i> Loading...
         </div>
 
-        <!-- Results -->
         <div id="content" style="display: none;">
             <div class="results-info">
                 <span id="resultsCount" class="results-count"></span>
@@ -641,7 +559,6 @@
         </div>
     </main>
 
-    <!-- Teacher Detail Modal -->
     <div id="teacherModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -662,7 +579,7 @@
         let zones = [];
         let currentView = 'grid';
         let activeZone = 'all';
-        let selectedInstruments = []; // Array of selected instrument names for multi-select
+        let selectedInstruments = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -675,8 +592,6 @@
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
             const overlay = document.getElementById('sidebarOverlay');
-            const logoutBtn = document.getElementById('logoutBtn');
-
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('collapsed');
                 if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
@@ -689,22 +604,15 @@
                 sidebar.classList.add('collapsed');
                 overlay.classList.remove('active');
             });
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to logout?')) {
-                    window.location.href = 'index.html';
-                }
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) window.location.href = 'index.html';
             });
         }
 
         function setupFilterListeners() {
             document.getElementById('teacherSearch').addEventListener('input', applyFilters);
-            [
-                'filterCity', 
-                'filterLevel', 'filterGenre', 'filterAge', 'filterLanguage',
-                'filterComfort', 'filterSpecialNeeds', 'filterFormalEd'
-            ].forEach(id => {
-                document.getElementById(id).addEventListener('change', applyFilters);
-            });
+            ['filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+                .forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
         }
 
         async function loadData() {
@@ -721,10 +629,7 @@
                 if (teachersRes.error) throw teachersRes.error;
 
                 zones = zonesRes.data || [];
-                brands = (brandsRes.data || []).map(b => ({
-                    ...b,
-                    zone: zones.find(z => z.id === b.zone_id)
-                }));
+                brands = (brandsRes.data || []).map(b => ({ ...b, zone: zones.find(z => z.id === b.zone_id) }));
 
                 teachers = (teachersRes.data || []).map(t => {
                     const matchedBrand = brands.find(b => b.name === t.brand);
@@ -743,46 +648,55 @@
 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
+
                 applyFilters();
+
+                // Check for ?brand= URL param and pre-filter
+                checkUrlForBrand();
+
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').innerHTML = '<p style="color: red;">Error loading data. Please refresh.</p>';
             }
         }
 
+        // Read ?brand= from URL and apply it as a filter
+        function checkUrlForBrand() {
+            const params = new URLSearchParams(window.location.search);
+            const brand = params.get('brand');
+            if (!brand) return;
+
+            const brandSelect = document.getElementById('filterBrand');
+            const match = [...brandSelect.options].find(o => o.value === brand);
+            if (match) {
+                brandSelect.value = brand;
+                updateCityOptions();
+                applyFilters();
+                // Give the DOM a tick to render results, then scroll into view
+                setTimeout(() => {
+                    document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
         function populateFilterOptions() {
-            // States - always show all states from teachers
             const states = [...new Set(teachers.map(t => t.state).filter(Boolean))].sort();
             populateSelect('filterState', states, 'All States');
-
-            // Initial population of brands and cities (all)
             updateBrandOptions();
             updateCityOptions();
-
-            // Instruments - render as checkboxes
             renderInstrumentCheckboxes();
-
-            // Languages
             const languageNames = [...new Set(teachers.flatMap(t => t.languages.map(l => l.language)).filter(Boolean))].sort();
             populateSelect('filterLanguage', languageNames, 'All Languages');
-
-            // Genres — split comma-separated values
             const allGenres = new Set();
             teachers.forEach(t => {
                 t.instruments.forEach(i => {
-                    if (i.genres) {
-                        i.genres.split(',').forEach(g => {
-                            const trimmed = g.trim();
-                            if (trimmed) allGenres.add(trimmed);
-                        });
-                    }
+                    if (i.genres) i.genres.split(',').forEach(g => { const trimmed = g.trim(); if (trimmed) allGenres.add(trimmed); });
                 });
             });
             populateSelect('filterGenre', [...allGenres].sort(), 'All Genres');
         }
 
         function onStateFilterChange() {
-            // Reset brand and city when state changes
             document.getElementById('filterBrand').value = '';
             document.getElementById('filterCity').value = '';
             updateBrandOptions();
@@ -791,7 +705,6 @@
         }
 
         function onBrandFilterChange() {
-            // Reset city when brand changes
             document.getElementById('filterCity').value = '';
             updateCityOptions();
             applyFilters();
@@ -799,85 +712,52 @@
 
         function updateBrandOptions() {
             const selectedState = document.getElementById('filterState').value;
-            
-            // Get brands based on state filter
-            let filteredTeachers = teachers;
-            if (selectedState) {
-                filteredTeachers = teachers.filter(t => t.state === selectedState);
-            }
-            
+            let filteredTeachers = selectedState ? teachers.filter(t => t.state === selectedState) : teachers;
             const brandNames = [...new Set(filteredTeachers.map(t => t.brand).filter(Boolean))].sort();
             const currentBrand = document.getElementById('filterBrand').value;
             populateSelect('filterBrand', brandNames, 'All Brands');
-            
-            // Restore selection if still valid
-            if (brandNames.includes(currentBrand)) {
-                document.getElementById('filterBrand').value = currentBrand;
-            }
+            if (brandNames.includes(currentBrand)) document.getElementById('filterBrand').value = currentBrand;
         }
 
         function updateCityOptions() {
             const selectedState = document.getElementById('filterState').value;
             const selectedBrand = document.getElementById('filterBrand').value;
-            
-            // Get cities based on state and brand filters
             let filteredTeachers = teachers;
-            if (selectedState) {
-                filteredTeachers = filteredTeachers.filter(t => t.state === selectedState);
-            }
-            if (selectedBrand) {
-                filteredTeachers = filteredTeachers.filter(t => t.brand === selectedBrand);
-            }
-            
+            if (selectedState) filteredTeachers = filteredTeachers.filter(t => t.state === selectedState);
+            if (selectedBrand) filteredTeachers = filteredTeachers.filter(t => t.brand === selectedBrand);
             const cityNames = [...new Set(filteredTeachers.flatMap(t => t.cities.map(c => c.city)).filter(Boolean))].sort();
             const currentCity = document.getElementById('filterCity').value;
             populateSelect('filterCity', cityNames, 'All Cities');
-            
-            // Restore selection if still valid
-            if (cityNames.includes(currentCity)) {
-                document.getElementById('filterCity').value = currentCity;
-            }
+            if (cityNames.includes(currentCity)) document.getElementById('filterCity').value = currentCity;
         }
 
         function renderInstrumentCheckboxes() {
             const instrumentNames = [...new Set(teachers.flatMap(t => t.instruments.map(i => i.instrument)).filter(Boolean))].sort();
             const container = document.getElementById('instrumentCheckboxGrid');
-            
             container.innerHTML = instrumentNames.map(inst => {
                 const isSelected = selectedInstruments.includes(inst);
                 return `
                     <div class="instrument-checkbox ${isSelected ? 'selected' : ''}" onclick="toggleInstrumentFilter('${inst}', this)">
                         <span class="check-icon"><i class="fas fa-check"></i></span>
                         <span>${inst}</span>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
-            
             updateSelectedInstrumentsInfo();
         }
 
         function toggleInstrumentFilter(instrument, el) {
             const idx = selectedInstruments.indexOf(instrument);
-            if (idx === -1) {
-                selectedInstruments.push(instrument);
-                el.classList.add('selected');
-            } else {
-                selectedInstruments.splice(idx, 1);
-                el.classList.remove('selected');
-            }
+            if (idx === -1) { selectedInstruments.push(instrument); el.classList.add('selected'); }
+            else { selectedInstruments.splice(idx, 1); el.classList.remove('selected'); }
             updateSelectedInstrumentsInfo();
             applyFilters();
         }
 
         function updateSelectedInstrumentsInfo() {
             const info = document.getElementById('selectedInstrumentsInfo');
-            if (selectedInstruments.length === 0) {
-                info.textContent = '';
-            } else if (selectedInstruments.length === 1) {
-                info.textContent = `Showing teachers who teach: ${selectedInstruments[0]}`;
-            } else {
-                info.textContent = `Showing teachers who teach ALL of: ${selectedInstruments.join(', ')}`;
-            }
+            if (selectedInstruments.length === 0) info.textContent = '';
+            else if (selectedInstruments.length === 1) info.textContent = `Showing teachers who teach: ${selectedInstruments[0]}`;
+            else info.textContent = `Showing teachers who teach ALL of: ${selectedInstruments.join(', ')}`;
         }
 
         function populateSelect(id, values, defaultLabel) {
@@ -885,23 +765,17 @@
             select.innerHTML = `<option value="">${defaultLabel}</option>`;
             values.forEach(v => {
                 const opt = document.createElement('option');
-                opt.value = v;
-                opt.textContent = v;
+                opt.value = v; opt.textContent = v;
                 select.appendChild(opt);
             });
         }
 
         function renderZoneTabs() {
             const container = document.getElementById('zoneFilterTabs');
-            const zonesWithTeachers = zones.filter(z =>
-                teachers.some(t => t.zone && t.zone.id === z.id)
-            );
-
+            const zonesWithTeachers = zones.filter(z => teachers.some(t => t.zone && t.zone.id === z.id));
             let html = `<button class="zone-tab ${activeZone === 'all' ? 'active' : ''}" onclick="filterByZone('all')">All Zones</button>`;
             html += zonesWithTeachers.map(z => `
-                <button class="zone-tab ${activeZone === z.id ? 'active' : ''}" onclick="filterByZone('${z.id}')">
-                    ${z.zone_name}
-                </button>
+                <button class="zone-tab ${activeZone === z.id ? 'active' : ''}" onclick="filterByZone('${z.id}')">${z.zone_name}</button>
             `).join('');
             container.innerHTML = html;
         }
@@ -924,114 +798,50 @@
             const search = document.getElementById('teacherSearch').value.trim();
             if (search) filters.search = search;
             if (activeZone !== 'all') filters.zone = activeZone;
-
-            [
-                'filterState', 'filterBrand', 'filterCity', 
-                'filterLevel', 'filterGenre', 'filterAge', 'filterLanguage',
-                'filterComfort', 'filterSpecialNeeds', 'filterFormalEd'
-            ].forEach(id => {
-                const val = document.getElementById(id).value;
-                if (val) filters[id] = val;
-            });
-            
-            // Add selected instruments
-            if (selectedInstruments.length > 0) {
-                filters.selectedInstruments = [...selectedInstruments];
-            }
-            
+            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+                .forEach(id => { const val = document.getElementById(id).value; if (val) filters[id] = val; });
+            if (selectedInstruments.length > 0) filters.selectedInstruments = [...selectedInstruments];
             return filters;
         }
 
         function applyFilters() {
             const filters = getActiveFilters();
             const searchLower = (filters.search || '').toLowerCase();
+            const levelOrder = { beginner: 1, intermediate: 2, advanced: 3 };
 
             const filtered = teachers.filter(t => {
-                // Name search
                 if (searchLower && !`${t.first_name} ${t.last_name}`.toLowerCase().includes(searchLower)) return false;
-
-                // Zone
                 if (filters.zone && (!t.zone || t.zone.id !== filters.zone)) return false;
-
-                // State
                 if (filters.filterState && t.state !== filters.filterState) return false;
-
-                // Brand
                 if (filters.filterBrand && t.brand !== filters.filterBrand) return false;
-
-                // City
                 if (filters.filterCity && !t.cities.some(c => c.city === filters.filterCity)) return false;
-
-                // Language
                 if (filters.filterLanguage && !t.languages.some(l => l.language === filters.filterLanguage)) return false;
-
-                // Instruments - must teach ALL selected instruments
                 if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
                     const teacherInstruments = t.instruments.map(i => i.instrument);
-                    const hasAllInstruments = filters.selectedInstruments.every(inst => 
-                        teacherInstruments.includes(inst)
-                    );
-                    if (!hasAllInstruments) return false;
+                    if (!filters.selectedInstruments.every(inst => teacherInstruments.includes(inst))) return false;
                 }
-
-                // Level — teacher has at least one instrument at or above this level
                 if (filters.filterLevel) {
-                    const levelOrder = { beginner: 1, intermediate: 2, advanced: 3 };
                     const targetLevel = levelOrder[filters.filterLevel] || 0;
-                    let relevantInstruments = t.instruments;
-                    // If instruments are selected, only check level for those instruments
-                    if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
-                        relevantInstruments = relevantInstruments.filter(i => 
-                            filters.selectedInstruments.includes(i.instrument)
-                        );
-                    }
-                    const hasLevel = relevantInstruments.some(i => (levelOrder[i.teacher_level] || 0) >= targetLevel);
-                    if (!hasLevel) return false;
+                    let rel = t.instruments;
+                    if (filters.selectedInstruments?.length > 0) rel = rel.filter(i => filters.selectedInstruments.includes(i.instrument));
+                    if (!rel.some(i => (levelOrder[i.teacher_level] || 0) >= targetLevel)) return false;
                 }
-
-                // Genre
                 if (filters.filterGenre) {
-                    let relevantInstruments = t.instruments;
-                    // If instruments are selected, only check genres for those instruments
-                    if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
-                        relevantInstruments = relevantInstruments.filter(i => 
-                            filters.selectedInstruments.includes(i.instrument)
-                        );
-                    }
-                    const hasGenre = relevantInstruments.some(i =>
-                        i.genres && i.genres.split(',').map(g => g.trim()).includes(filters.filterGenre)
-                    );
-                    if (!hasGenre) return false;
+                    let rel = t.instruments;
+                    if (filters.selectedInstruments?.length > 0) rel = rel.filter(i => filters.selectedInstruments.includes(i.instrument));
+                    if (!rel.some(i => i.genres && i.genres.split(',').map(g => g.trim()).includes(filters.filterGenre))) return false;
                 }
-
-                // Age — teacher accepts students at this age (youngest_age_preference <= selected age)
                 if (filters.filterAge) {
                     const age = parseInt(filters.filterAge);
-                    let relevantInstruments = t.instruments;
-                    // If instruments are selected, only check age for those instruments
-                    if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
-                        relevantInstruments = relevantInstruments.filter(i => 
-                            filters.selectedInstruments.includes(i.instrument)
-                        );
-                    }
-                    const acceptsAge = relevantInstruments.some(i =>
-                        i.youngest_age_preference && parseInt(i.youngest_age_preference) <= age
-                    );
-                    if (!acceptsAge) return false;
+                    let rel = t.instruments;
+                    if (filters.selectedInstruments?.length > 0) rel = rel.filter(i => filters.selectedInstruments.includes(i.instrument));
+                    if (!rel.some(i => i.youngest_age_preference && parseInt(i.youngest_age_preference) <= age)) return false;
                 }
-
-                // Learning Needs Comfort Level
                 if (filters.filterComfort) {
-                    const minComfort = parseInt(filters.filterComfort);
-                    if (!t.learning_needs_comfort || t.learning_needs_comfort < minComfort) return false;
+                    if (!t.learning_needs_comfort || t.learning_needs_comfort < parseInt(filters.filterComfort)) return false;
                 }
-
-                // Special Needs Willing
                 if (filters.filterSpecialNeeds === 'yes' && !t.special_needs_willing) return false;
-
-                // Formal Education
                 if (filters.filterFormalEd === 'yes' && !t.formal_music_education) return false;
-
                 return true;
             });
 
@@ -1042,7 +852,6 @@
         function renderActiveFilters(filters) {
             const container = document.getElementById('activeFilters');
             const chips = [];
-
             const labels = {
                 zone: () => { const z = zones.find(z => z.id === filters.zone); return z ? `Zone: ${z.zone_name}` : null; },
                 filterState: () => `State: ${filters.filterState}`,
@@ -1056,46 +865,33 @@
                 filterSpecialNeeds: () => `Special Needs: Yes`,
                 filterFormalEd: () => `Formal Education: Yes`,
             };
-
             Object.keys(labels).forEach(key => {
                 if (filters[key]) {
                     const label = labels[key]();
                     if (label) {
-                        const clearAction = key === 'zone'
-                            ? `filterByZone('all')`
-                            : `clearFilter('${key}')`;
+                        const clearAction = key === 'zone' ? `filterByZone('all')` : `clearFilter('${key}')`;
                         chips.push(`<span class="filter-chip">${label}<button onclick="${clearAction}">&times;</button></span>`);
                     }
                 }
             });
-            
-            // Add chips for each selected instrument
             if (filters.selectedInstruments) {
                 filters.selectedInstruments.forEach(inst => {
                     chips.push(`<span class="filter-chip">Instrument: ${inst}<button onclick="clearInstrumentFilter('${inst}')">&times;</button></span>`);
                 });
             }
-
-            if (chips.length > 1) {
-                chips.push(`<button class="clear-all-btn" onclick="clearAllFilters()">Clear All</button>`);
-            }
-
+            if (chips.length > 1) chips.push(`<button class="clear-all-btn" onclick="clearAllFilters()">Clear All</button>`);
             container.innerHTML = chips.join('');
         }
 
         function clearInstrumentFilter(instrument) {
             const idx = selectedInstruments.indexOf(instrument);
-            if (idx !== -1) {
-                selectedInstruments.splice(idx, 1);
-            }
+            if (idx !== -1) selectedInstruments.splice(idx, 1);
             renderInstrumentCheckboxes();
             applyFilters();
         }
 
         function clearFilter(filterId) {
             document.getElementById(filterId).value = '';
-            
-            // Handle cascading resets
             if (filterId === 'filterState') {
                 document.getElementById('filterBrand').value = '';
                 document.getElementById('filterCity').value = '';
@@ -1105,7 +901,6 @@
                 document.getElementById('filterCity').value = '';
                 updateCityOptions();
             }
-            
             applyFilters();
         }
 
@@ -1113,17 +908,10 @@
             document.getElementById('teacherSearch').value = '';
             activeZone = 'all';
             renderZoneTabs();
-            [
-                'filterState', 'filterBrand', 'filterCity', 
-                'filterLevel', 'filterGenre', 'filterAge', 'filterLanguage',
-                'filterComfort', 'filterSpecialNeeds', 'filterFormalEd'
-            ].forEach(id => {
-                document.getElementById(id).value = '';
-            });
-            // Clear selected instruments
+            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+                .forEach(id => document.getElementById(id).value = '');
             selectedInstruments = [];
             renderInstrumentCheckboxes();
-            // Reset cascading filters
             updateBrandOptions();
             updateCityOptions();
             applyFilters();
@@ -1131,8 +919,7 @@
 
         function setView(view) {
             currentView = view;
-            const grid = document.getElementById('teachersGrid');
-            grid.classList.toggle('list-view', view === 'list');
+            document.getElementById('teachersGrid').classList.toggle('list-view', view === 'list');
             document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
             document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
         }
@@ -1140,28 +927,19 @@
         function renderTeachers(teachersList) {
             const container = document.getElementById('teachersGrid');
             document.getElementById('resultsCount').innerHTML = `<strong>${teachersList.length}</strong> teacher${teachersList.length !== 1 ? 's' : ''} found`;
-
             if (teachersList.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <p>No teachers match your filters</p>
-                    </div>`;
+                container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-chalkboard-teacher"></i><p>No teachers match your filters</p></div>`;
                 return;
             }
-
             container.innerHTML = teachersList.map(t => {
                 const instrumentChips = t.instruments.map(i => `
                     <span class="instrument-chip">
                         <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
                         ${i.instrument}${i.teacher_level ? ` (${i.teacher_level})` : ''}
-                    </span>
-                `).join('');
-
+                    </span>`).join('');
                 const cityList = t.cities.map(c => c.city).join(', ');
                 const languageList = t.languages.map(l => l.language).join(', ');
                 const comfortLevel = t.learning_needs_comfort;
-
                 return `
                     <div class="teacher-card" onclick="openTeacherDetail('${t.id}')" style="cursor:pointer;">
                         <div class="teacher-card-header">
@@ -1176,26 +954,21 @@
                                 <div class="teacher-instruments-list">
                                     <div class="teacher-instruments-label">Instruments</div>
                                     <div class="instrument-chip-row">${instrumentChips}</div>
-                                </div>
-                            ` : ''}
+                                </div>` : ''}
                             <div class="teacher-badges">
                                 ${t.formal_music_education ? '<span class="teacher-badge badge-info">Formal Education</span>' : ''}
                                 ${t.special_needs_willing ? '<span class="teacher-badge badge-success">Special Needs</span>' : ''}
                                 ${comfortLevel && comfortLevel >= 8 ? '<span class="teacher-badge badge-purple">High Comfort w/ Learning Needs</span>' : ''}
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
-        // ============ DETAIL MODAL ============
         function openTeacherDetail(teacherId) {
             const t = teachers.find(x => x.id === teacherId);
             if (!t) return;
-
             document.getElementById('modalTeacherName').textContent = `${t.first_name} ${t.last_name}`;
-
             const strengths = [t.teaching_strength_1, t.teaching_strength_2, t.teaching_strength_3].filter(Boolean);
             const cityList = t.cities.map(c => c.city).join(', ') || 'N/A';
             const languageList = t.languages.map(l => l.language).join(', ') || 'N/A';
@@ -1213,48 +986,38 @@
                         <div class="detail-item"><label>Year Started</label><p>${t.year_started_at_studio || 'N/A'}</p></div>
                         ${t.zone ? `<div class="detail-item"><label>Zone</label><p>${t.zone.zone_name}</p></div>` : ''}
                     </div>
-                </div>
-            `;
+                </div>`;
 
-            // Learning Needs Comfort
             if (comfortLevel > 0) {
                 html += `
                     <div class="detail-section">
                         <div class="detail-section-title">Student Learning Needs</div>
                         <div class="comfort-level-display">
-                            <div style="flex: 1;">
+                            <div style="flex:1;">
                                 <div class="comfort-level-label">Comfort with diverse learning needs (ADHD, autism, dyslexia, etc.)</div>
-                                <div class="comfort-level-bar" style="margin-top: 0.5rem;">
-                                    <div class="comfort-level-fill" style="width: ${comfortLevel * 10}%;"></div>
+                                <div class="comfort-level-bar" style="margin-top:0.5rem;">
+                                    <div class="comfort-level-fill" style="width:${comfortLevel * 10}%;"></div>
                                 </div>
                             </div>
                             <div class="comfort-level-value">${comfortLevel}/10</div>
                         </div>
                         ${t.special_needs_willing ? `<div class="strength-item"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>` : ''}
-                    </div>
-                `;
+                    </div>`;
             } else if (t.special_needs_willing) {
                 html += `
                     <div class="detail-section">
                         <div class="detail-section-title">Student Learning Needs</div>
                         <div class="strength-item"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>
-                    </div>
-                `;
+                    </div>`;
             }
 
-            // Education & Strengths
             if (t.formal_music_education || t.formal_education_details || strengths.length > 0) {
                 html += `<div class="detail-section"><div class="detail-section-title">Education & Strengths</div>`;
-                if (t.formal_education_details) {
-                    html += `<div style="margin-bottom: 1rem; font-size: 0.9375rem; color: var(--text-primary); line-height: 1.6;">${t.formal_education_details}</div>`;
-                }
-                if (strengths.length > 0) {
-                    html += strengths.map(s => `<div class="strength-item"><i class="fas fa-check-circle"></i><span>${s}</span></div>`).join('');
-                }
+                if (t.formal_education_details) html += `<div style="margin-bottom:1rem;font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>`;
+                if (strengths.length > 0) html += strengths.map(s => `<div class="strength-item"><i class="fas fa-check-circle"></i><span>${s}</span></div>`).join('');
                 html += `</div>`;
             }
 
-            // Instruments
             if (t.instruments.length > 0) {
                 html += `<div class="detail-section"><div class="detail-section-title">Instruments</div>`;
                 html += t.instruments.map(i => `
@@ -1265,41 +1028,28 @@
                             <div class="detail-item"><label>Youngest Age</label><p>${i.youngest_age_preference ? i.youngest_age_preference + '+' : 'N/A'}</p></div>
                             <div class="detail-item"><label>Year Started Teaching</label><p>${i.year_started || 'N/A'}</p></div>
                             <div class="detail-item"><label>Genres</label><p>${i.genres || 'N/A'}</p></div>
-                            ${i.achievements_credentials ? `<div class="detail-item" style="grid-column: 1/-1;"><label>Certifications & Experience</label><p>${i.achievements_credentials}</p></div>` : ''}
-                            ${i.notes ? `<div class="detail-item" style="grid-column: 1/-1;"><label>Notes</label><div style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">${i.notes}</div></div>` : ''}
+                            ${i.achievements_credentials ? `<div class="detail-item" style="grid-column:1/-1;"><label>Certifications & Experience</label><p>${i.achievements_credentials}</p></div>` : ''}
+                            ${i.notes ? `<div class="detail-item" style="grid-column:1/-1;"><label>Notes</label><div style="font-size:0.875rem;color:var(--text-secondary);line-height:1.5;">${i.notes}</div></div>` : ''}
                         </div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
                 html += `</div>`;
             }
 
-            // Additional Notes
             if (t.additional_notes) {
                 html += `
                     <div class="detail-section">
                         <div class="detail-section-title">Additional Notes</div>
-                        <div style="font-size: 0.9375rem; color: var(--text-primary); line-height: 1.6;">${t.additional_notes}</div>
-                    </div>
-                `;
+                        <div style="font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.additional_notes}</div>
+                    </div>`;
             }
 
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('teacherModal').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('teacherModal').classList.remove('active');
-        }
-
-        // Close modal on backdrop click
-        document.addEventListener('click', (e) => {
-            if (e.target.id === 'teacherModal') closeModal();
-        });
-
-        // Close modal on Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
+        function closeModal() { document.getElementById('teacherModal').classList.remove('active'); }
+        document.addEventListener('click', e => { if (e.target.id === 'teacherModal') closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
