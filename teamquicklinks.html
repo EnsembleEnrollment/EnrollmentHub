@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            /* Salmon/Coral Color Scheme - EXACT MATCH TO DASHBOARD */
             --primary: #FA8072;
             --primary-light: #FFB4A2;
             --primary-dark: #E96E5D;
@@ -16,1045 +15,1188 @@
             --secondary-light: #FFB6C1;
             --accent: #FFA07A;
             --accent-light: #FFCBA4;
-            
+
             --bg-primary: #FFFFFF;
             --bg-secondary: #F8F9FA;
             --text-primary: #2D3748;
             --text-secondary: #718096;
             --text-light: #A0AEC0;
             --white: #FFFFFF;
-            
+
             --gray-50: #F8F9FA;
             --gray-100: #F1F3F5;
             --gray-200: #E9ECEF;
             --gray-300: #DEE2E6;
-            
-            --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
-            --shadow-xl: 0 20px 40px 0 rgba(0, 0, 0, 0.15);
-            
+
+            --shadow-sm: 0 2px 4px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px 0 rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px 0 rgba(0,0,0,0.12);
+
             --sidebar-width: 260px;
             --sidebar-collapsed: 70px;
             --transition-speed: 0.3s;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #F8F9FA;
             min-height: 100vh;
             color: var(--text-primary);
             overflow-x: hidden;
         }
 
-        /* SIDEBAR - EXACT MATCH TO DASHBOARD */
+        /* ── SIDEBAR ── */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
+            position: fixed; top: 0; left: 0;
+            width: var(--sidebar-width); height: 100vh;
             background: var(--white);
             border-right: 1px solid var(--gray-200);
             box-shadow: var(--shadow-sm);
             transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
+            z-index: 1000; display: flex; flex-direction: column;
         }
-
-        .sidebar.collapsed {
-            width: var(--sidebar-collapsed);
-        }
-
+        .sidebar.collapsed { width: var(--sidebar-collapsed); }
         .sidebar-header {
-            padding: 1.5rem 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 1.5rem 1.25rem; display: flex;
+            align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--gray-200);
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: opacity var(--transition-speed) ease;
-        }
-
-        .sidebar.collapsed .logo-section {
-            opacity: 0;
-            pointer-events: none;
-        }
-
+        .logo-section { display: flex; align-items: center; gap: 0.75rem; transition: opacity var(--transition-speed) ease; }
+        .sidebar.collapsed .logo-section { opacity: 0; pointer-events: none; }
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-            color: var(--white);
-            font-weight: 700;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0; color: var(--white); font-weight: 700;
         }
-
-        .logo-text {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-
+        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
         .toggle-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--gray-200);
-            background: var(--white);
-            color: var(--text-secondary);
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
+            width: 32px; height: 32px; border: 1px solid var(--gray-200);
+            background: var(--white); color: var(--text-secondary); border-radius: 6px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease; flex-shrink: 0;
         }
-
-        .toggle-btn:hover {
-            background: var(--gray-50);
-            border-color: var(--gray-300);
-        }
-
-        .sidebar.collapsed .toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        .toggle-icon {
-            transition: transform var(--transition-speed) ease;
-            font-size: 1rem;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 1rem 0;
-        }
-
-        .sidebar-nav::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .sidebar-nav::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .sidebar-nav::-webkit-scrollbar-thumb {
-            background: var(--gray-300);
-            border-radius: 2px;
-        }
-
+        .toggle-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
+        .sidebar.collapsed .toggle-icon { transform: rotate(180deg); }
+        .toggle-icon { transition: transform var(--transition-speed) ease; font-size: 1rem; }
+        .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1rem 0; }
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.875rem;
-            padding: 0.875rem 1.5rem;
-            margin: 0.25rem 0.75rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            width: calc(100% - 1.5rem);
-            font-size: 0.9375rem;
-            font-weight: 500;
+            display: flex; align-items: center; gap: 0.875rem;
+            padding: 0.875rem 1.5rem; margin: 0.25rem 0.75rem;
+            color: var(--text-secondary); text-decoration: none;
+            border-radius: 10px; transition: all 0.2s ease;
+            cursor: pointer; border: none; background: transparent;
+            width: calc(100% - 1.5rem); font-size: 0.9375rem; font-weight: 500;
         }
-
-        .nav-item:hover {
-            background: var(--gray-100);
-            color: var(--text-primary);
-        }
-
+        .nav-item:hover { background: var(--gray-100); color: var(--text-primary); }
         .nav-item.active {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(250, 128, 114, 0.3);
+            color: var(--white); box-shadow: 0 4px 12px rgba(250,128,114,0.3);
         }
-
-        .nav-icon {
-            font-size: 1.25rem;
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-text {
-            white-space: nowrap;
-            transition: opacity var(--transition-speed) ease;
-        }
-
-        .sidebar.collapsed .nav-text {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .sidebar.collapsed .nav-item {
-            justify-content: center;
-            padding: 0.875rem;
-        }
-
-        .sidebar-footer {
-            padding: 0.5rem 0 1rem 0;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .logout-btn {
-            color: var(--secondary) !important;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 107, 157, 0.1) !important;
-        }
-
+        .nav-icon { font-size: 1.25rem; flex-shrink: 0; width: 20px; }
+        .nav-text { white-space: nowrap; transition: opacity var(--transition-speed) ease; }
+        .sidebar.collapsed .nav-text { opacity: 0; pointer-events: none; }
+        .sidebar.collapsed .nav-item { justify-content: center; padding: 0.875rem; }
+        .sidebar-footer { padding: 0.5rem 0 1rem 0; border-top: 1px solid var(--gray-200); }
+        .logout-btn { color: var(--secondary) !important; }
+        .logout-btn:hover { background: rgba(255,107,157,0.1) !important; }
         .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transition-speed) ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 999; opacity: 0;
+            pointer-events: none; transition: opacity var(--transition-speed) ease;
         }
+        .sidebar-overlay.active { opacity: 1; pointer-events: all; }
 
-        .sidebar-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
+        /* ── MAIN ── */
         .main-content {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            padding: 2rem 2.5rem;
-            transition: margin-left var(--transition-speed) ease;
+            margin-left: var(--sidebar-width); min-height: 100vh;
+            padding: 2rem 2.5rem; transition: margin-left var(--transition-speed) ease;
         }
+        .sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed); }
 
-        .sidebar.collapsed ~ .main-content {
-            margin-left: var(--sidebar-collapsed);
-        }
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .page-header p { color: var(--text-secondary); }
 
-        /* Page Header */
-        .page-header {
-            margin-bottom: 2.5rem;
-        }
-
-        .page-header h1 {
-            font-size: 2rem;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .page-header p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        /* Tabs Section - Compact */
-        .tabs-section {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 1.5rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            border-bottom: 2px solid var(--gray-200);
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 0.75rem 1.25rem;
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-bottom: -2px;
-        }
-
-        .tab:hover {
-            color: var(--text-primary);
-        }
-
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Studio Section - Compact */
+        /* ── BRANDS SECTION ── */
         .studio-section {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
+            background: var(--white); border-radius: 16px;
+            padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-md);
         }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .section-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.625rem; }
+        .section-title i { color: var(--primary); }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-        }
-
-        .section-title i {
-            color: var(--primary);
-            font-size: 1.125rem;
-        }
-
-        /* Zone Filter Tabs */
-        .zone-filter-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
+        .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
         .zone-tab {
-            padding: 0.5rem 1rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
+            color: var(--text-secondary); background: var(--gray-50);
+            border: 1.5px solid var(--gray-200); border-radius: 20px; cursor: pointer; transition: all 0.2s ease;
         }
-
-        .zone-tab:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
+        .zone-tab:hover { border-color: var(--primary); color: var(--primary); }
         .zone-tab.active {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 2px 8px rgba(250, 128, 114, 0.3);
+            color: white; border-color: transparent; box-shadow: 0 2px 8px rgba(250,128,114,0.3);
         }
 
-        /* Search Bar - Compact */
-        .search-container {
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
+        .search-container { margin-bottom: 1rem; position: relative; }
         .search-bar {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.75rem;
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            border-radius: 10px;
-            font-size: 0.875rem;
-            color: var(--text-primary);
-            transition: all 0.2s ease;
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 10px; font-size: 0.875rem; color: var(--text-primary); transition: all 0.2s ease;
         }
+        .search-bar:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(250,128,114,0.1); }
+        .search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--primary); }
 
-        .search-bar:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.875rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 1rem;
-        }
-
-        /* Brand Cards - Clean Row Layout with Accent Bar */
+        /* ── BRAND CARDS ── */
         .studios-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
 
-        @media (max-width: 1100px) {
-            .studios-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 700px) {
-            .studios-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .brand-card {
             background: var(--white);
             border: 1px solid var(--gray-200);
             border-left: 4px solid var(--primary);
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: var(--shadow-sm);
-            padding: 1rem 1.25rem;
-            text-decoration: none;
-            transition: all 0.2s ease;
+            padding: 1rem 1.25rem 1rem;
             display: flex;
             flex-direction: column;
+            transition: all 0.2s ease;
         }
+        .brand-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
-        .brand-card:hover {
-            border-left-color: var(--accent);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .brand-card.clickable {
-            cursor: pointer;
-        }
-
-        .brand-card.no-link {
-            cursor: default;
-            border-left-color: var(--gray-300);
-        }
-
-        .brand-card.no-link:hover {
-            transform: none;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .brand-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-        }
-
-        .brand-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
+        .brand-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .brand-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
         .brand-state-badge {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            font-size: 0.625rem;
-            font-weight: 700;
-            padding: 0.25rem 0.625rem;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
+            color: white; font-size: 0.625rem; font-weight: 700;
+            padding: 0.25rem 0.625rem; border-radius: 10px; text-transform: uppercase;
         }
 
         .brand-info-row {
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column; gap: 0.5rem;
+            padding-top: 0.75rem; border-top: 1px solid var(--gray-100); flex: 1;
+        }
+        .brand-info-items { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .brand-info-item { display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; }
+        .brand-info-item i { color: var(--primary); font-size: 0.75rem; width: 14px; }
+        .brand-info-item span { color: var(--text-secondary); font-weight: 500; }
+
+        /* ── 4-BUTTON FOOTER ── */
+        .brand-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
-            padding-top: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 0.875rem;
             border-top: 1px solid var(--gray-100);
-            flex: 1;
         }
 
-        .brand-info-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .brand-info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-            font-size: 0.8125rem;
-        }
-
-        .brand-info-item i {
-            color: var(--primary);
-            font-size: 0.75rem;
-            width: 14px;
-        }
-
-        .brand-info-item span {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .brand-card-footer {
-            margin-top: auto;
-            padding-top: 0.75rem;
-            text-align: right;
-        }
-
-        .brand-schedule-link {
+        .action-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.375rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--primary);
-            transition: all 0.2s ease;
-        }
-
-        .brand-card.clickable:hover .brand-schedule-link {
-            color: var(--accent);
-        }
-
-        .brand-schedule-link i {
-            font-size: 0.75rem;
-            transition: transform 0.2s ease;
-        }
-
-        .brand-card.clickable:hover .brand-schedule-link i {
-            transform: translateX(3px);
-        }
-
-        .no-schedule-text {
-            display: inline-block;
-            font-size: 0.75rem;
-            color: var(--text-light);
-            font-style: italic;
-        }
-
-        /* Link Cards - Compact View */
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 0.875rem;
-        }
-
-        .link-card {
-            background: var(--white);
-            border: 1px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 1rem;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .link-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-        }
-
-        .link-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .link-title {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-            line-height: 1.3;
-        }
-
-        .link-subtitle {
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .link-arrow {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: var(--primary);
-            font-size: 1rem;
-            opacity: 0.6;
+            gap: 0.375rem;
+            padding: 0.5rem 0.625rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
             transition: all 0.2s ease;
-            flex-shrink: 0;
+            text-decoration: none;
         }
 
-        .link-card:hover .link-arrow {
-            opacity: 1;
-            transform: translateX(4px);
-        }
-
-        /* Category Header */
-        .category-header-section {
-            margin-bottom: 1.25rem;
-        }
-
-        .category-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+        .action-btn.schedule {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
             color: var(--text-primary);
         }
-
-        /* Empty State - Compact */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            color: var(--text-secondary);
+        .action-btn.schedule:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+        .action-btn.schedule.disabled {
+            background: var(--gray-50); color: var(--text-light);
+            border: 1.5px solid var(--gray-200);
+            cursor: not-allowed; pointer-events: none;
         }
 
-        .empty-state i {
-            font-size: 3rem;
-            color: var(--gray-300);
+        .action-btn.info {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            color: var(--text-primary);
+        }
+        .action-btn.info:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+
+        .action-btn.teachers {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .action-btn.teachers:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+
+        .action-btn.programs {
+            background: var(--gray-50);
+            border: 1.5px solid var(--gray-200);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .action-btn.programs:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+
+        /* ── TABS / LINKS ── */
+        .tabs-section { background: var(--white); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow-md); margin-bottom: 1.5rem; }
+        .tabs { display: flex; gap: 0.5rem; border-bottom: 2px solid var(--gray-200); margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .tab {
+            padding: 0.75rem 1.25rem; background: transparent; border: none;
+            border-bottom: 3px solid transparent; color: var(--text-secondary);
+            font-size: 0.9375rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; margin-bottom: -2px;
+        }
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 0.875rem; }
+        .link-card {
+            background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px;
+            padding: 1rem; text-decoration: none; transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; box-shadow: var(--shadow-sm);
+        }
+        .link-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .link-content { flex: 1; min-width: 0; }
+        .link-title { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .link-subtitle { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .link-arrow { color: var(--primary); font-size: 1rem; opacity: 0.6; transition: all 0.2s ease; flex-shrink: 0; }
+        .link-card:hover .link-arrow { opacity: 1; transform: translateX(4px); }
+
+        /* ── STUDIO PICKER MODAL ── */
+        /* ── STUDIO PICKER MODAL ── */
+        .picker-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+            z-index: 2000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1.5rem;
+        }
+        .picker-overlay.active { opacity: 1; pointer-events: all; }
+
+        .picker-modal {
+            background: var(--white); border-radius: 20px; width: 100%; max-width: 680px;
+            max-height: 80vh; display: flex; flex-direction: column;
+            transform: translateY(24px) scale(0.96); transition: transform 0.3s ease; overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .picker-overlay.active .picker-modal { transform: translateY(0) scale(1); }
+
+        .picker-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 1.25rem 1.5rem; color: white; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        }
+        .picker-header-title { font-size: 1.125rem; font-weight: 700; }
+        .picker-header-sub { font-size: 0.8125rem; opacity: 0.85; margin-top: 0.125rem; }
+        .picker-close {
+            width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.2);
+            color: white; border-radius: 50%; cursor: pointer; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        .picker-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
+
+        /* Search inside picker */
+        .picker-search-wrap {
+            padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--gray-200);
+            flex-shrink: 0; position: relative;
+        }
+        .picker-search {
+            width: 100%; padding: 0.625rem 1rem 0.625rem 2.5rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+        .picker-search:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(250,128,114,0.1); }
+        .picker-search-icon {
+            position: absolute; left: 2.125rem; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 0.875rem; pointer-events: none;
+        }
+
+        /* Scrollable grid body */
+        .picker-body {
+            padding: 1rem 1.25rem 1.25rem;
+            overflow-y: auto; flex: 1;
+        }
+        .picker-body::-webkit-scrollbar { width: 4px; }
+        .picker-body::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+        .picker-count {
+            font-size: 0.75rem; font-weight: 600; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.04em;
             margin-bottom: 0.75rem;
         }
 
-        .empty-state p {
-            font-size: 1rem;
+        /* 2-col grid of location cards */
+        .picker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.625rem;
         }
 
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            color: var(--text-secondary);
-            font-size: 1.125rem;
+        .picker-studio-btn {
+            display: flex; flex-direction: column;
+            padding: 0.875rem 1rem; background: var(--gray-50);
+            border: 1.5px solid var(--gray-200); border-radius: 12px;
+            cursor: pointer; transition: all 0.2s ease; text-align: left;
+            position: relative;
+        }
+        .picker-studio-btn:hover {
+            border-color: var(--primary); background: rgba(250,128,114,0.04);
+            transform: translateY(-2px); box-shadow: var(--shadow-md);
         }
 
-        /* Responsive */
+        .picker-city {
+            font-size: 1.0625rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+        }
+        .picker-state {
+            font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.2rem;
+        }
+        .picker-address {
+            font-size: 0.75rem; color: var(--text-light); margin-top: 0.375rem; line-height: 1.4;
+        }
+        .picker-arrow {
+            position: absolute; bottom: 0.75rem; right: 0.875rem;
+            color: var(--primary); opacity: 0; transition: all 0.2s ease; font-size: 0.75rem;
+        }
+        .picker-studio-btn:hover .picker-arrow { opacity: 1; transform: translateX(2px); }
+
+        .picker-empty {
+            text-align: center; padding: 2rem 1rem;
+            color: var(--text-light); font-size: 0.9375rem; grid-column: span 2;
+        }
+        .picker-empty i { font-size: 2rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300); }
+
+        @media (max-width: 500px) {
+            .picker-grid { grid-template-columns: 1fr; }
+            .picker-empty { grid-column: span 1; }
+        }
+
+        /* ── STUDIO DETAIL MODAL (full screen) ── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-secondary);
+            z-index: 3000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+            overflow: hidden;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: var(--white); width: 100%; height: 100%;
+            max-width: 100%; max-height: 100%;
+            transform: translateY(30px); transition: transform 0.3s ease;
+            display: flex; flex-direction: column; border-radius: 0;
+        }
+        .modal-overlay.active .modal { transform: translateY(0); }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 1.25rem 5rem 1.25rem 1.5rem;
+            color: white; position: relative; overflow: hidden; flex-shrink: 0;
+        }
+        .modal-header::before {
+            content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); pointer-events: none;
+        }
+        .modal-header-content { position: relative; z-index: 1; }
+        .modal-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.375rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; line-height: 1.3; }
+        .modal-zone-badge {
+            background: rgba(255,255,255,0.25); padding: 0.375rem 0.875rem; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .modal-location { font-size: 0.9375rem; opacity: 0.9; display: flex; align-items: center; gap: 0.375rem; }
+
+        /* Big obvious close button */
+        .modal-close {
+            position: absolute; top: 50%; right: 1.25rem; transform: translateY(-50%);
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(255,255,255,0.2); color: white;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            border-radius: 10px; padding: 0.5rem 1rem;
+            cursor: pointer; font-size: 0.9375rem; font-weight: 600;
+            transition: all 0.2s ease; z-index: 2; white-space: nowrap;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.7); }
+        .modal-close i { font-size: 0.875rem; }
+
+        .modal-tabs {
+            display: flex; border-bottom: 2px solid var(--gray-200);
+            background: var(--gray-50); overflow-x: auto; flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-tabs::-webkit-scrollbar { height: 4px; }
+        .modal-tabs::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+        .modal-tab {
+            padding: 0.875rem 1.25rem; font-size: 0.9375rem; font-weight: 600;
+            color: var(--text-secondary); background: transparent; border: none;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
+            cursor: pointer; white-space: nowrap; transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .modal-tab:hover { color: var(--text-primary); background: var(--gray-100); }
+        .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--white); }
+
+        .modal-body {
+            padding: 2rem max(2rem, calc(50% - 480px));
+            overflow-y: auto; flex: 1;
+        }
+        .modal-tab-content { display: none; }
+        .modal-tab-content.active { display: block; }
+
+        /* Info Rows */
+        .info-list { display: flex; flex-direction: column; gap: 0.625rem; }
+        .info-row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 10px; }
+        .info-row i { color: var(--primary); width: 18px; flex-shrink: 0; margin-top: 2px; }
+        .info-row-content { flex: 1; min-width: 0; }
+        .info-row-label { font-size: 0.6875rem; color: var(--text-light); text-transform: uppercase; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 0.25rem; }
+        .info-row-value { font-size: 0.9375rem; color: var(--text-primary); font-weight: 500; word-break: break-word; }
+        .info-row-value a { color: var(--primary); text-decoration: none; }
+        .info-row-value a:hover { text-decoration: underline; }
+        .info-row-value.empty { color: var(--text-light); font-style: italic; font-weight: 400; }
+        .info-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
+        .info-grid-2col .info-row.full-width { grid-column: span 2; }
+
+        .info-section { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--gray-200); }
+        .info-section:first-child { margin-top: 1rem; padding-top: 0; border-top: none; }
+        .info-section-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .info-section-title i { color: var(--primary); }
+
+        .info-rich-content { font-size: 0.9375rem; color: var(--text-primary); line-height: 1.7; padding: 1rem; background: var(--gray-50); border-radius: 10px; }
+
+        .info-list-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+        .info-list-card { background: var(--gray-50); border-radius: 10px; padding: 1rem; border-left: 3px solid var(--primary); }
+        .info-list-card.instrument-card { border-left-color: #F59E0B; }
+        .info-list-card-title { font-size: 0.9375rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.375rem; display: flex; align-items: center; gap: 0.5rem; }
+        .info-list-card-title i { color: var(--primary); }
+        .info-list-card-subtitle { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .info-list-card-desc { font-size: 0.875rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 0.5rem; }
+        .info-list-card-detail { font-size: 0.8125rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.375rem; margin-top: 0.5rem; }
+        .info-list-card-detail i { color: var(--primary); width: 14px; }
+        .info-list-card-detail a { color: var(--primary); text-decoration: none; }
+        .info-list-card-detail a:hover { text-decoration: underline; }
+        .info-list-card-field { display: flex; flex-direction: column; gap: 0.125rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--gray-200); }
+        .info-list-card-field .field-label { font-size: 0.6875rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.03em; }
+        .info-list-card-field .field-value { font-size: 0.875rem; color: var(--text-primary); line-height: 1.5; }
+
+        .modal-footer {
+            padding: 1rem max(2rem, calc(50% - 480px));
+            border-top: 1px solid var(--gray-200); background: var(--gray-50); flex-shrink: 0;
+        }
+        .modal-action-btn {
+            width: 100%; padding: 0.875rem 1rem; border-radius: 10px; font-size: 0.9375rem;
+            font-weight: 600; text-decoration: none; text-align: center; transition: all 0.2s ease;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; border: none;
+        }
+        .modal-action-btn.primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
+        .modal-action-btn.primary:hover { box-shadow: 0 4px 12px rgba(250,128,114,0.4); transform: translateY(-1px); }
+        .modal-action-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* Empty / Loading */
+        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
+        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; display: block; }
+        .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
+
+        @media (max-width: 1100px) { .studios-grid { grid-template-columns: repeat(2,1fr); } }
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar:not(.collapsed) {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
-            
-            .sidebar.collapsed ~ .main-content {
-                margin-left: 0;
-            }
-
-            .studios-grid,
-            .links-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                gap: 0.25rem;
-            }
-
-            .tab {
-                padding: 0.75rem 1rem;
-                font-size: 0.875rem;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar:not(.collapsed) { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1.5rem; }
+            .sidebar.collapsed ~ .main-content { margin-left: 0; }
+            .studios-grid { grid-template-columns: 1fr; }
+            .info-grid-2col { grid-template-columns: 1fr; }
+            .info-grid-2col .info-row.full-width { grid-column: span 1; }
+            .modal-tab { padding: 0.75rem 1rem; font-size: 0.8125rem; }
+            .modal { max-height: 95vh; }
+            .modal-body { max-height: 400px; padding: 1rem; }
         }
+        @media (max-width: 700px) { .studios-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div id="sidebar" class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-section">
-                <div class="logo-icon">EH</div>
-                <span class="logo-text">Enrollment Hub</span>
-            </div>
-            <button id="sidebarToggle" class="toggle-btn">
-                <span class="toggle-icon">‹</span>
-            </button>
-        </div>
 
-        <nav class="sidebar-nav">
-            <a href="teamdashboard.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="teamquicklinks.html" class="nav-item active">
-                <span class="nav-icon"><i class="fas fa-link"></i></span>
-                <span class="nav-text">Quick Links</span>
-            </a>
-            <a href="teamstudio-directory.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-building"></i></span>
-                <span class="nav-text">Studio Directory</span>
-            </a>
-            <a href="teamteachers.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-star"></i></span>
-                <span class="nav-text">Teacher Directory</span>
-            </a>
-            <a href="teammap.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span>
-                <span class="nav-text">Map</span>
-            </a>
-            <a href="teamprograms.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
-                <span class="nav-text">Programs</span>
-            </a>
-            <a href="teamsnippets.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
-                <span class="nav-text">Snippets</span>
-            </a>
-            <a href="teamtraining-hub.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-book-open"></i></span>
-                <span class="nav-text">Training</span>
-            </a>
-        </nav>
-            <a href="EnsembleDirectors.html" class="nav-item">
-                <span class="nav-icon"><i class="far fa-user"></i></span>
-                <span class="nav-text">Directors Page</span>
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <button id="logoutBtn" class="nav-item logout-btn">
-                <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
-                <span class="nav-text">Logout</span>
-            </button>
+<!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-section">
+            <div class="logo-icon">EH</div>
+            <span class="logo-text">Enrollment Hub</span>
         </div>
+        <button id="sidebarToggle" class="toggle-btn">
+            <span class="toggle-icon">‹</span>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="teamdashboard.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="teamquicklinks.html" class="nav-item active">
+            <span class="nav-icon"><i class="fas fa-link"></i></span>
+            <span class="nav-text">Quick Links</span>
+        </a>
+        <a href="teamstudio-directory.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-building"></i></span>
+            <span class="nav-text">Studio Directory</span>
+        </a>
+        <a href="teamteachers.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-star"></i></span>
+            <span class="nav-text">Teacher Directory</span>
+        </a>
+        <a href="teammap.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span>
+            <span class="nav-text">Map</span>
+        </a>
+        <a href="teamprograms.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
+            <span class="nav-text">Programs</span>
+        </a>
+        <a href="teamsnippets.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
+            <span class="nav-text">Snippets</span>
+        </a>
+        <a href="teamtraining-hub.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-book-open"></i></span>
+            <span class="nav-text">Training</span>
+        </a>
+    </nav>
+    <a href="EnsembleDirectors.html" class="nav-item" style="margin: 0 0.75rem;">
+        <span class="nav-icon"><i class="far fa-user"></i></span>
+        <span class="nav-text">Directors Page</span>
+    </a>
+    <div class="sidebar-footer">
+        <button id="logoutBtn" class="nav-item logout-btn">
+            <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+            <span class="nav-text">Logout</span>
+        </button>
+    </div>
+</div>
+
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<main class="main-content">
+    <div class="page-header">
+        <h1>Quick Links</h1>
+        <p>Access all your studios and important links in one place</p>
     </div>
 
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin" style="margin-right:0.5rem;"></i> Loading...
+    </div>
 
-    <main class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1>Quick Links</h1>
-            <p>Access all your studios and important links in one place</p>
-        </div>
-
-        <div id="loading" class="loading">
-            <i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>
-            Loading...
-        </div>
-
-        <div id="content" style="display: none;">
-            <!-- Brand Snapshot Section -->
-            <div class="studio-section">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-building"></i>
-                        Brands
-                    </h2>
-                </div>
-                <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
-                <div class="search-container">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="brandSearch" class="search-bar" placeholder="Search by name, price, or state...">
-                </div>
-                <div id="brandsGrid" class="studios-grid"></div>
+    <div id="content" style="display:none;">
+        <!-- Brands -->
+        <div class="studio-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-building"></i> Brands</h2>
             </div>
+            <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="brandSearch" class="search-bar" placeholder="Search by name, price, or state...">
+            </div>
+            <div id="brandsGrid" class="studios-grid"></div>
+        </div>
 
-            <!-- Category Tabs Section -->
-            <div class="tabs-section">
-                <div class="tabs" id="categoryTabs"></div>
-                <div id="tabContents"></div>
+        <!-- Category Tabs -->
+        <div class="tabs-section">
+            <div class="tabs" id="categoryTabs"></div>
+            <div id="tabContents"></div>
+        </div>
+    </div>
+</main>
+
+<!-- Studio Picker Modal -->
+<div id="pickerOverlay" class="picker-overlay">
+    <div class="picker-modal">
+        <div class="picker-header">
+            <div>
+                <div class="picker-header-title" id="pickerTitle">Select a Studio</div>
+                <div class="picker-header-sub" id="pickerSub">Multiple locations found</div>
+            </div>
+            <button class="picker-close" onclick="closePicker()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="picker-search-wrap">
+            <i class="fas fa-search picker-search-icon"></i>
+            <input type="text" id="pickerSearch" class="picker-search" placeholder="Search by city or state...">
+        </div>
+        <div class="picker-body">
+            <div class="picker-count" id="pickerCount"></div>
+            <div class="picker-grid" id="pickerBody"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Studio Detail Modal -->
+<div id="studioModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="modal-header-content">
+                <div class="modal-header-top">
+                    <div class="modal-title" id="modalTitle"></div>
+                    <div class="modal-zone-badge" id="modalZone"></div>
+                </div>
+                <div class="modal-location" id="modalLocation"></div>
             </div>
         </div>
-    </main>
+        <div class="modal-tabs">
+            <button class="modal-tab active" onclick="switchModalTab('basic',this)">Basic Info</button>
+            <button class="modal-tab" onclick="switchModalTab('contact',this)">Contact</button>
+            <button class="modal-tab" onclick="switchModalTab('pricing',this)">Pricing</button>
+            <button class="modal-tab" onclick="switchModalTab('details',this)">Details</button>
+            <button class="modal-tab" onclick="switchModalTab('customercare',this)">Customer Care</button>
+            <button class="modal-tab" onclick="switchModalTab('discounts',this)">Discounts</button>
+            <button class="modal-tab" onclick="switchModalTab('scholarships',this)">Scholarships</button>
+            <button class="modal-tab" onclick="switchModalTab('policies',this)">Policies</button>
+            <button class="modal-tab" onclick="switchModalTab('notes',this)">Notes</button>
+            <button class="modal-tab" onclick="switchModalTab('instruments',this)">Instruments</button>
+            <button class="modal-tab" onclick="switchModalTab('links',this)">Links</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
 
-    <script>
-        const SUPABASE_URL = 'https://kvyvjwepfrqqkvyyutdw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
-        
-        let supabaseClient;
-        let allBrands = [];
-        let allZones = [];
-        let categories = [];
-        let links = [];
-        let activeCategory = null;
-        let activeZone = 'all';
+<script>
+const SUPABASE_URL = 'https://kvyvjwepfrqqkvyyutdw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            // Load saved zone filter
-            const savedZone = localStorage.getItem('teamQuickLinksZone');
-            if (savedZone) {
-                activeZone = savedZone;
-            }
-            
-            setupSidebar();
-            loadData();
+let sb;
+let allBrands = [], allZones = [], allStudios = [], categories = [], links = [];
+let activeZone = 'all', activeCategory = null;
+
+// Enriched studio data (from studio directory tables)
+let studioInstruments = [], studioLinks = [], studioAdmins = [];
+let studioScholarships = [], studioNotes = [], studioPolicies = [], studioDiscounts = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const saved = localStorage.getItem('teamQuickLinksZone');
+    if (saved) activeZone = saved;
+    setupSidebar();
+    loadData();
+});
+
+function setupSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
+            overlay.classList.add('active');
+        } else {
+            overlay.classList.remove('active');
+        }
+    });
+    overlay.addEventListener('click', () => {
+        sidebar.classList.add('collapsed');
+        overlay.classList.remove('active');
+    });
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) window.location.href = 'index.html';
+    });
+}
+
+async function loadData() {
+    try {
+        const [
+            brandsRes, zonesRes, studiosRes, catRes, linksRes,
+            instrRes, slinkRes, adminsRes, scholRes, notesRes, policiesRes, discountsRes
+        ] = await Promise.all([
+            sb.from('brands').select('*'),
+            sb.from('zones').select('*'),
+            sb.from('studios').select('*').order('city'),
+            sb.from('categories').select('*').order('order_index'),
+            sb.from('quick_links').select('*').order('order_index'),
+            sb.from('studio_instruments').select('*').order('order_index'),
+            sb.from('studio_links').select('*').order('order_index'),
+            sb.from('studio_admins').select('*').order('order_index'),
+            sb.from('studio_scholarships').select('*').order('order_index'),
+            sb.from('studio_notes').select('*').order('order_index'),
+            sb.from('studio_policies').select('*').order('order_index'),
+            sb.from('studio_discounts').select('*').order('order_index')
+        ]);
+
+        allZones = zonesRes.data || [];
+        allBrands = (brandsRes.data || []).map(b => ({
+            ...b,
+            zone: allZones.find(z => z.id === b.zone_id)
+        }));
+
+        studioInstruments  = instrRes.data    || [];
+        studioLinks        = slinkRes.data    || [];
+        studioAdmins       = adminsRes.data   || [];
+        studioScholarships = scholRes.data    || [];
+        studioNotes        = notesRes.data    || [];
+        studioPolicies     = policiesRes.data || [];
+        studioDiscounts    = discountsRes.data|| [];
+
+        allStudios = (studiosRes.data || []).map(s => {
+            const brand = allBrands.find(b => b.id === s.brand_id);
+            const zone  = brand ? allZones.find(z => z.id === brand.zone_id) : null;
+            return {
+                ...s,
+                brand,
+                zone: zone ? `Zone ${zone.zone_number}` : null,
+                instruments:    studioInstruments.filter(i => i.studio_id === s.id),
+                custom_links:   studioLinks.filter(l => l.studio_id === s.id),
+                admins:         studioAdmins.filter(a => a.studio_id === s.id),
+                scholarships:   studioScholarships.filter(x => x.studio_id === s.id),
+                studio_notes:   studioNotes.filter(n => n.studio_id === s.id),
+                policies:       studioPolicies.filter(p => p.studio_id === s.id),
+                discounts:      studioDiscounts.filter(d => d.studio_id === s.id)
+            };
         });
 
-        function setupSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-            const logoutBtn = document.getElementById('logoutBtn');
+        categories = catRes.data || [];
+        links      = linksRes.data || [];
 
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
-                    overlay.classList.add('active');
-                } else {
-                    overlay.classList.remove('active');
-                }
-            });
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
 
-            overlay.addEventListener('click', () => {
-                sidebar.classList.add('collapsed');
-                overlay.classList.remove('active');
-            });
+        if (categories.length > 0) activeCategory = categories[0].id;
 
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to logout?')) {
-                    window.location.href = 'index.html';
-                }
-            });
-        }
+        renderZoneFilterTabs();
+        renderBrands();
+        renderTabs();
+        renderTabContents();
 
-        async function loadData() {
-            try {
-                const [brandsResult, zonesResult, categoriesResult, linksResult] = await Promise.all([
-                    supabaseClient.from('brands').select('*'),
-                    supabaseClient.from('zones').select('*'),
-                    supabaseClient.from('categories').select('*').order('order_index'),
-                    supabaseClient.from('quick_links').select('*').order('order_index')
-                ]);
+        document.getElementById('brandSearch').addEventListener('input', renderBrands);
 
-                if (brandsResult.error) throw brandsResult.error;
-                if (zonesResult.error) throw zonesResult.error;
-                if (categoriesResult.error) throw categoriesResult.error;
-                if (linksResult.error) throw linksResult.error;
+        // Close modals on overlay click
+        document.getElementById('studioModal').addEventListener('click', e => { if (e.target.id === 'studioModal') closeModal(); });
+        document.getElementById('pickerOverlay').addEventListener('click', e => { if (e.target.id === 'pickerOverlay') closePicker(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closePicker(); } });
 
-                allZones = zonesResult.data || [];
-                allBrands = (brandsResult.data || []).map(brand => ({
-                    ...brand,
-                    zone: allZones.find(z => z.id === brand.zone_id)
-                }));
-                categories = categoriesResult.data || [];
-                links = linksResult.data || [];
+    } catch(err) {
+        console.error(err);
+        document.getElementById('loading').innerHTML = '<p style="color:red;">Error loading data. Please refresh.</p>';
+    }
+}
 
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('content').style.display = 'block';
+/* ── ZONE TABS ── */
+function renderZoneFilterTabs() {
+    const container = document.getElementById('zoneFilterTabs');
+    const zonesWithBrands = allZones.filter(z => allBrands.some(b => b.zone_id === z.id));
+    let html = `<button class="zone-tab ${activeZone==='all'?'active':''}" onclick="filterByZone('all')">All Zones</button>`;
+    html += zonesWithBrands.map(z => `
+        <button class="zone-tab ${activeZone===z.id?'active':''}" onclick="filterByZone('${z.id}')">${z.zone_name}</button>
+    `).join('');
+    container.innerHTML = html;
+}
 
-                if (categories.length > 0) {
-                    activeCategory = categories[0].id;
-                }
+function filterByZone(zoneId) {
+    activeZone = zoneId;
+    localStorage.setItem('teamQuickLinksZone', zoneId);
+    renderZoneFilterTabs();
+    renderBrands();
+}
 
-                renderZoneFilterTabs();
-                renderBrands();
-                renderTabs();
-                renderTabContents();
-                setupSearch();
-            } catch (error) {
-                console.error('Error loading data:', error);
-                document.getElementById('loading').innerHTML = `
-                    <p style="color: red;">Error loading data. Please refresh the page.</p>
-                `;
-            }
-        }
+/* ── BRAND CARDS ── */
+function renderBrands() {
+    const container = document.getElementById('brandsGrid');
+    const q = (document.getElementById('brandSearch')?.value || '').toLowerCase();
 
-        function renderZoneFilterTabs() {
-            const container = document.getElementById('zoneFilterTabs');
-            
-            // Get zones that have brands
-            const zonesWithBrands = allZones.filter(zone => 
-                allBrands.some(brand => brand.zone_id === zone.id)
-            );
+    let filtered = allBrands;
+    if (activeZone !== 'all') filtered = filtered.filter(b => b.zone_id === activeZone);
+    if (q) filtered = filtered.filter(b =>
+        (b.name||'').toLowerCase().includes(q) ||
+        (b.display_price||'').toLowerCase().includes(q) ||
+        (b.state||'').toLowerCase().includes(q)
+    );
 
-            let html = `<button class="zone-tab ${activeZone === 'all' ? 'active' : ''}" onclick="filterByZone('all')">All Zones</button>`;
-            
-            html += zonesWithBrands.map(zone => `
-                <button class="zone-tab ${activeZone === zone.id ? 'active' : ''}" onclick="filterByZone('${zone.id}')">
-                    ${zone.zone_name}
-                </button>
-            `).join('');
+    if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-building"></i><p>No brands found</p></div>';
+        return;
+    }
 
-            container.innerHTML = html;
-        }
+    container.innerHTML = filtered.map(brand => {
+        const hasSchedule = brand.scheduling_link && brand.scheduling_link.trim();
+        const scheduleBtn = hasSchedule
+            ? `<a href="${brand.scheduling_link}" target="_blank" class="action-btn schedule"><i class="fas fa-calendar"></i> Schedule</a>`
+            : `<span class="action-btn schedule disabled"><i class="fas fa-calendar"></i> Schedule</span>`;
 
-        function filterByZone(zoneId) {
-            activeZone = zoneId;
-            localStorage.setItem('teamQuickLinksZone', zoneId);
-            renderZoneFilterTabs();
-            renderBrands();
-        }
-
-        function renderBrands() {
-            const container = document.getElementById('brandsGrid');
-            
-            // Get search term
-            const searchTerm = document.getElementById('brandSearch')?.value.toLowerCase() || '';
-            
-            // Filter by zone
-            let filteredBrands = allBrands;
-            if (activeZone !== 'all') {
-                filteredBrands = filteredBrands.filter(brand => brand.zone_id === activeZone);
-            }
-            
-            // Filter by search
-            if (searchTerm) {
-                filteredBrands = filteredBrands.filter(brand => 
-                    (brand.name || '').toLowerCase().includes(searchTerm) ||
-                    (brand.display_price || '').toLowerCase().includes(searchTerm) ||
-                    (brand.state || '').toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            if (filteredBrands.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-building"></i><p>No brands found</p></div>';
-                return;
-            }
-
-            container.innerHTML = filteredBrands.map(brand => {
-                const hasSchedulingLink = brand.scheduling_link && brand.scheduling_link.trim() !== '';
-                const tag = hasSchedulingLink ? 'a' : 'div';
-                const hrefAttr = hasSchedulingLink ? `href="${brand.scheduling_link}" target="_blank"` : '';
-                const clickableClass = hasSchedulingLink ? 'clickable' : 'no-link';
-                
-                return `
-                    <${tag} class="brand-card ${clickableClass}" ${hrefAttr}>
-                        <div class="brand-card-header">
-                            <div class="brand-name">${brand.name || 'Unnamed Brand'}</div>
-                            ${brand.state ? `<span class="brand-state-badge">${brand.state}</span>` : ''}
-                        </div>
-                        <div class="brand-info-row">
-                            <div class="brand-info-items">
-                                <div class="brand-info-item">
-                                    <i class="fas fa-phone"></i>
-                                    <span>${brand.phone_number || 'N/A'}</span>
-                                </div>
-                                <div class="brand-info-item">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span>${brand.display_price || 'Contact for pricing'}</span>
-                                </div>
-                                <div class="brand-info-item">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <span>${brand.display_annual_fee || 'N/A'}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="brand-card-footer">
-                            ${hasSchedulingLink ? 
-                                '<span class="brand-schedule-link">Schedule <i class="fas fa-arrow-right"></i></span>' :
-                                '<span class="no-schedule-text">No scheduling link</span>'
-                            }
-                        </div>
-                    </${tag}>
-                `;
-            }).join('');
-        }
-
-        function renderTabs() {
-            const tabsContainer = document.getElementById('categoryTabs');
-            
-            const tabsHTML = categories.map(category => `
-                <button class="tab ${activeCategory === category.id ? 'active' : ''}" 
-                        onclick="switchCategory('${category.id}')">
-                    ${category.name}
-                </button>
-            `).join('');
-
-            tabsContainer.innerHTML = tabsHTML;
-        }
-
-        function renderTabContents() {
-            const contentsContainer = document.getElementById('tabContents');
-            
-            const contentsHTML = categories.map(category => {
-                const categoryLinks = links.filter(l => l.category_id === category.id);
-                
-                return `
-                    <div class="tab-content ${activeCategory === category.id ? 'active' : ''}" id="category-${category.id}">
-                        ${categoryLinks.length === 0 ? `
-                            <div class="empty-state">
-                                <i class="fas fa-link"></i>
-                                <p>No links in this category</p>
-                            </div>
-                        ` : `
-                            <div class="links-grid">
-                                ${categoryLinks.map(link => `
-                                    <a href="${link.url}" class="link-card" target="_blank">
-                                        <div class="link-content">
-                                            <div class="link-title">${link.title}</div>
-                                            ${link.subtitle ? `<div class="link-subtitle">${link.subtitle}</div>` : ''}
-                                        </div>
-                                        <div class="link-arrow">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </div>
-                                    </a>
-                                `).join('')}
-                            </div>
-                        `}
+        return `
+            <div class="brand-card">
+                <div class="brand-card-header">
+                    <div class="brand-name">${brand.name || 'Unnamed Brand'}</div>
+                    ${brand.state ? `<span class="brand-state-badge">${brand.state}</span>` : ''}
+                </div>
+                <div class="brand-info-row">
+                    <div class="brand-info-items">
+                        <div class="brand-info-item"><i class="fas fa-phone"></i><span>${brand.phone_number || 'N/A'}</span></div>
+                        <div class="brand-info-item"><i class="fas fa-dollar-sign"></i><span>${brand.display_price || 'Contact for pricing'}</span></div>
+                        <div class="brand-info-item"><i class="fas fa-calendar-check"></i><span>${brand.display_annual_fee || 'N/A'}</span></div>
                     </div>
-                `;
-            }).join('');
+                </div>
+                <div class="brand-card-actions">
+                    ${scheduleBtn}
+                    <button class="action-btn info" onclick="handleInfoClick('${brand.id}')"><i class="fas fa-info-circle"></i> Info</button>
+                    <a href="teamteachers.html?brand=${encodeURIComponent(brand.name || '')}" class="action-btn teachers"><i class="fas fa-star"></i> Teachers</a>
+                    <a href="teamprograms.html?brand_id=${encodeURIComponent(brand.id || '')}" class="action-btn programs"><i class="fas fa-graduation-cap"></i> Programs</a>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
-            contentsContainer.innerHTML = contentsHTML;
-        }
+/* ── INFO BUTTON HANDLER ── */
+function handleInfoClick(brandId) {
+    const studios = allStudios.filter(s => s.brand_id === brandId);
+    if (!studios.length) {
+        alert('No studio information found for this brand.');
+        return;
+    }
+    if (studios.length === 1) {
+        openStudioModal(studios[0]);
+    } else {
+        openPicker(brandId, studios);
+    }
+}
 
-        function switchCategory(categoryId) {
-            activeCategory = categoryId;
-            renderTabs();
-            
-            // Show/hide tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            const activeContent = document.getElementById(`category-${categoryId}`);
-            if (activeContent) {
-                activeContent.classList.add('active');
-            }
-        }
+/* ── PICKER MODAL ── */
+let pickerStudios = []; // store for search filtering
 
-        function setupSearch() {
-            const brandSearch = document.getElementById('brandSearch');
-            brandSearch.addEventListener('input', function(e) {
-                renderBrands();
-            });
+function openPicker(brandId, studios) {
+    const brand = allBrands.find(b => b.id === brandId);
+    pickerStudios = studios;
+
+    document.getElementById('pickerTitle').textContent = brand?.name || 'Select a Studio';
+    document.getElementById('pickerSub').textContent = `${studios.length} locations — pick one to view details`;
+    document.getElementById('pickerSearch').value = '';
+
+    renderPickerGrid(studios);
+
+    // Live search inside picker
+    document.getElementById('pickerSearch').oninput = function() {
+        const q = this.value.toLowerCase().trim();
+        const filtered = q
+            ? pickerStudios.filter(s =>
+                (s.city||'').toLowerCase().includes(q) ||
+                (s.state||'').toLowerCase().includes(q) ||
+                (s.address||'').toLowerCase().includes(q)
+              )
+            : pickerStudios;
+        renderPickerGrid(filtered);
+    };
+
+    document.getElementById('pickerOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Focus search after animation
+    setTimeout(() => document.getElementById('pickerSearch').focus(), 300);
+}
+
+function renderPickerGrid(studios) {
+    const countEl = document.getElementById('pickerCount');
+    const gridEl  = document.getElementById('pickerBody');
+
+    countEl.textContent = `${studios.length} location${studios.length !== 1 ? 's' : ''}`;
+
+    if (!studios.length) {
+        gridEl.innerHTML = `
+            <div class="picker-empty">
+                <i class="fas fa-map-marker-alt"></i>
+                No locations match your search
+            </div>`;
+        return;
+    }
+
+    gridEl.innerHTML = studios.map(s => {
+        const city    = s.city  || '—';
+        const state   = s.state || '';
+        const address = s.address || '';
+        return `
+            <button class="picker-studio-btn" onclick="pickStudio('${s.id}')">
+                <div class="picker-city">${city}</div>
+                ${state ? `<div class="picker-state">${state}</div>` : ''}
+                ${address ? `<div class="picker-address">${address}</div>` : ''}
+                <i class="fas fa-chevron-right picker-arrow"></i>
+            </button>`;
+    }).join('');
+}
+
+function pickStudio(studioId) {
+    closePicker();
+    const studio = allStudios.find(s => s.id === studioId);
+    if (studio) openStudioModal(studio);
+}
+
+function closePicker() {
+    document.getElementById('pickerOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+/* ── STUDIO DETAIL MODAL ── */
+function openStudioModal(studio) {
+    const loc = [studio.city, studio.state].filter(Boolean).join(', ');
+    const brandName = studio.brand?.name || 'Unnamed Studio';
+
+    document.getElementById('modalTitle').textContent = brandName;
+    const zoneBadge = document.getElementById('modalZone');
+    if (studio.zone) { zoneBadge.textContent = studio.zone; zoneBadge.style.display = 'block'; }
+    else { zoneBadge.style.display = 'none'; }
+    document.getElementById('modalLocation').innerHTML = loc
+        ? `<i class="fas fa-map-marker-alt"></i><span>${loc}</span>` : '';
+
+    buildModalContent(studio);
+
+    const hasSchedule = studio.scheduling_link && studio.scheduling_link.trim();
+    document.getElementById('modalFooter').innerHTML = hasSchedule
+        ? `<a href="${studio.scheduling_link}" target="_blank" class="modal-action-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>`
+        : `<span class="modal-action-btn primary disabled"><i class="fas fa-calendar"></i> No Schedule Link</span>`;
+
+    document.querySelectorAll('.modal-tab').forEach((tab, i) => tab.classList.toggle('active', i === 0));
+
+    document.getElementById('studioModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('studioModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function switchModalTab(tabName, btn) {
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.modal-tab-content[data-tab="${tabName}"]`).classList.add('active');
+}
+
+function buildModalContent(s) {
+    const fullAddress = [s.address, s.city, s.state].filter(Boolean).join(', ');
+    const mapsUrl = fullAddress ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(fullAddress) : '';
+
+    // Basic Info
+    const basicContent = `
+        <div class="info-grid-2col">
+            ${renderInfoRow('fa-building','Brand', s.brand?.name)}
+            ${renderInfoRow('fa-layer-group','Zone', s.zone)}
+            ${renderInfoRow('fa-city','City', s.city)}
+            ${renderInfoRow('fa-flag-usa','State', s.state)}
+            ${renderInfoRow('fa-clock','Time Zone', s.time_zone)}
+            ${s.address ? `
+                <div class="info-row full-width">
+                    <i class="fas fa-location-dot"></i>
+                    <div class="info-row-content">
+                        <div class="info-row-label">Address</div>
+                        <div class="info-row-value"><a href="${mapsUrl}" target="_blank">${s.address} <i class="fas fa-external-link-alt" style="font-size:0.75rem;"></i></a></div>
+                    </div>
+                </div>` : ''}
+            ${renderInfoRow('fa-car','Parking', s.parking, true)}
+            ${renderInfoRow('fa-landmark','Landmarks', s.landmarks, true)}
+        </div>
+        ${s.general_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-file-alt"></i> General Notes</div><div class="info-rich-content">${s.general_notes}</div></div>` : ''}
+        ${s.summary_vibe ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-heart"></i> Studio Vibe</div><div class="info-rich-content">${s.summary_vibe}</div></div>` : ''}
+        ${s.security_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-shield-alt"></i> Safety & Supervision</div><div class="info-rich-content">${s.security_notes}</div></div>` : ''}
+    `;
+
+    // Contact
+    const adminsHtml = s.admins?.length ? `
+        <div class="info-section">
+            <div class="info-section-title"><i class="fas fa-users"></i> Studio Admins</div>
+            <div class="info-list-cards">
+                ${s.admins.map(a => `
+                    <div class="info-list-card">
+                        <div class="info-list-card-title">${a.name || 'Unnamed Admin'}</div>
+                        ${a.email ? `<div class="info-list-card-detail"><i class="fas fa-envelope"></i><a href="mailto:${a.email}">${a.email}</a></div>` : ''}
+                    </div>`).join('')}
+            </div>
+        </div>` : '';
+    const contactContent = `
+        <div class="info-list">
+            ${renderInfoRow('fa-phone','Phone Number', s.phone_number)}
+            ${renderInfoRow('fa-user-tie','Director Name', s.director_name)}
+            ${renderInfoRow('fa-envelope','Director Email', s.director_email, false, 'email')}
+            ${renderInfoRow('fa-calendar','Scheduling Link', s.scheduling_link, false, 'link')}
+            ${renderInfoRow('fa-clock','Admin Office Hours', s.admin_office_hours)}
+        </div>
+        ${adminsHtml}
+    `;
+
+    // Pricing
+    const pricingContent = `
+        <div class="info-grid-2col">
+            ${renderInfoRow('fa-dollar-sign','30-Min Rate', s.monthly_rate)}
+            ${renderInfoRow('fa-dollar-sign','45-Min Rate', s.price_45)}
+            ${renderInfoRow('fa-dollar-sign','60-Min Rate', s.price_60)}
+            ${renderInfoRow('fa-calendar-check','Annual Fee', s.annual_fee)}
+            ${renderInfoRow('fa-tag','Display Annual Fee', s.display_annual_fee)}
+        </div>
+    `;
+
+    // Details
+    const detailsContent = `
+        <div class="info-grid-2col">
+            ${renderInfoRow('fa-graduation-cap','Programs', s.programs_enabled ? 'Available' : 'Not Available')}
+            ${renderInfoRow('fa-guitar','Rentals', s.rentals_enabled ? 'Available' : 'Not Available')}
+        </div>
+        ${s.rentals_enabled && s.rental_info ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-guitar"></i> Rental Information</div><div class="info-rich-content">${s.rental_info}</div></div>` : ''}
+        ${s.rental_link ? `<div class="info-row full-width" style="margin-top:1rem;"><i class="fas fa-link"></i><div class="info-row-content"><div class="info-row-label">Rental Link</div><div class="info-row-value"><a href="${s.rental_link}" target="_blank">${s.rental_link}</a></div></div></div>` : ''}
+    `;
+
+    // Customer Care
+    const customerCareContent = `
+        <div class="info-list">
+            ${renderInfoRow('fa-heading','Title', s.customer_care_title)}
+            ${renderInfoRow('fa-text-height','Subtitle', s.customer_care_subtitle)}
+        </div>
+        ${s.customer_care_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-info-circle"></i> Notes</div><div class="info-rich-content">${s.customer_care_notes}</div></div>` : ''}
+    `;
+
+    // Discounts
+    const discountsContent = s.discounts?.length ? `
+        <div class="info-list-cards">
+            ${s.discounts.map(d => `
+                <div class="info-list-card">
+                    <div class="info-list-card-title">${d.title || 'Untitled Discount'}</div>
+                    ${d.description ? `<div class="info-list-card-desc">${d.description}</div>` : ''}
+                    ${d.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${d.link}" target="_blank">View Link</a></div>` : ''}
+                </div>`).join('')}
+        </div>` : '<div class="info-row-value empty">No discounts available</div>';
+
+    // Scholarships
+    const scholarshipsContent = s.scholarships?.length ? `
+        <div class="info-list-cards">
+            ${s.scholarships.map(sc => `
+                <div class="info-list-card">
+                    <div class="info-list-card-title">${sc.title || 'Untitled Scholarship'}</div>
+                    ${sc.notes ? `<div class="info-list-card-desc">${sc.notes}</div>` : ''}
+                    ${sc.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${sc.link}" target="_blank">Apply / Learn More</a></div>` : ''}
+                </div>`).join('')}
+        </div>` : '<div class="info-row-value empty">No scholarships available</div>';
+
+    // Policies
+    const defPolicies = (s.policies||[]).filter(p => p.policy_type === 'default');
+    const custPolicies = (s.policies||[]).filter(p => p.policy_type === 'custom' || (!p.policy_type && !p.policy_key));
+    const policiesContent = `
+        ${defPolicies.length ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-file-alt"></i> Standard Policies</div><div class="info-list-cards">${defPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>` : ''}
+        ${custPolicies.length ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-plus-circle"></i> Additional Policies</div><div class="info-list-cards">${custPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>` : ''}
+        ${!defPolicies.length && !custPolicies.length ? '<div class="info-row-value empty">No policies available</div>' : ''}
+    `;
+
+    // Notes
+    const notesContent = s.studio_notes?.length ? `
+        <div class="info-list-cards">
+            ${s.studio_notes.map(n => `
+                <div class="info-list-card">
+                    <div class="info-list-card-title">${n.title||'Untitled Note'}</div>
+                    ${n.subtitle?`<div class="info-list-card-subtitle">${n.subtitle}</div>`:''}
+                    ${n.notes?`<div class="info-list-card-desc">${n.notes}</div>`:''}
+                    ${n.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${n.link}" target="_blank">View Link</a></div>`:''}
+                </div>`).join('')}
+        </div>` : '<div class="info-row-value empty">No notes available</div>';
+
+    // Instruments
+    const instrumentsContent = s.instruments?.length ? `
+        <div class="info-list-cards">
+            ${s.instruments.map(inst => `
+                <div class="info-list-card instrument-card">
+                    <div class="info-list-card-title"><i class="fas fa-music"></i> ${inst.name||inst.instrument||'Unknown'}</div>
+                    ${inst.notes?`<div class="info-list-card-field"><span class="field-label">Notes:</span><span class="field-value">${inst.notes}</span></div>`:''}
+                    ${inst.materials?`<div class="info-list-card-field"><span class="field-label">Materials:</span><span class="field-value">${inst.materials}</span></div>`:''}
+                </div>`).join('')}
+        </div>` : '<div class="info-row-value empty">No instruments listed</div>';
+
+    // Links
+    const linksContent = s.custom_links?.length ? `
+        <div class="info-list-cards">
+            ${s.custom_links.map(l => `
+                <div class="info-list-card">
+                    <div class="info-list-card-title">${l.header||'Untitled Link'}</div>
+                    ${l.subheader?`<div class="info-list-card-subtitle">${l.subheader}</div>`:''}
+                    ${l.url?`<div class="info-list-card-detail"><i class="fas fa-external-link-alt"></i><a href="${l.url}" target="_blank">${l.url}</a></div>`:''}
+                </div>`).join('')}
+        </div>` : '<div class="info-row-value empty">No custom links available</div>';
+
+    document.getElementById('modalBody').innerHTML = `
+        <div class="modal-tab-content active" data-tab="basic">${basicContent}</div>
+        <div class="modal-tab-content" data-tab="contact">${contactContent}</div>
+        <div class="modal-tab-content" data-tab="pricing">${pricingContent}</div>
+        <div class="modal-tab-content" data-tab="details">${detailsContent}</div>
+        <div class="modal-tab-content" data-tab="customercare">${customerCareContent}</div>
+        <div class="modal-tab-content" data-tab="discounts">${discountsContent}</div>
+        <div class="modal-tab-content" data-tab="scholarships">${scholarshipsContent}</div>
+        <div class="modal-tab-content" data-tab="policies">${policiesContent}</div>
+        <div class="modal-tab-content" data-tab="notes">${notesContent}</div>
+        <div class="modal-tab-content" data-tab="instruments">${instrumentsContent}</div>
+        <div class="modal-tab-content" data-tab="links">${linksContent}</div>
+    `;
+}
+
+function renderInfoRow(icon, label, value, fullWidth = false, type = 'text') {
+    let displayValue = 'Not provided';
+    let emptyClass = 'empty';
+    if (value !== null && value !== undefined && value !== '') {
+        emptyClass = '';
+        displayValue = value;
+        if (type === 'link' && value) {
+            const url = value.startsWith('http') ? value : `https://${value}`;
+            displayValue = `<a href="${url}" target="_blank">${value}</a>`;
+        } else if (type === 'email' && value) {
+            displayValue = `<a href="mailto:${value}">${value}</a>`;
         }
-    </script>
+    }
+    return `
+        <div class="info-row ${fullWidth ? 'full-width' : ''}">
+            <i class="fas ${icon}"></i>
+            <div class="info-row-content">
+                <div class="info-row-label">${label}</div>
+                <div class="info-row-value ${emptyClass}">${displayValue}</div>
+            </div>
+        </div>`;
+}
+
+/* ── CATEGORY TABS ── */
+function renderTabs() {
+    document.getElementById('categoryTabs').innerHTML = categories.map(cat => `
+        <button class="tab ${activeCategory === cat.id ? 'active' : ''}" onclick="switchCategory('${cat.id}')">${cat.name}</button>
+    `).join('');
+}
+
+function renderTabContents() {
+    document.getElementById('tabContents').innerHTML = categories.map(cat => {
+        const catLinks = links.filter(l => l.category_id === cat.id);
+        return `
+            <div class="tab-content ${activeCategory === cat.id ? 'active' : ''}" id="category-${cat.id}">
+                ${!catLinks.length ? '<div class="empty-state"><i class="fas fa-link"></i><p>No links in this category</p></div>' : `
+                <div class="links-grid">
+                    ${catLinks.map(l => `
+                        <a href="${l.url}" class="link-card" target="_blank">
+                            <div class="link-content">
+                                <div class="link-title">${l.title}</div>
+                                ${l.subtitle ? `<div class="link-subtitle">${l.subtitle}</div>` : ''}
+                            </div>
+                            <div class="link-arrow"><i class="fas fa-arrow-right"></i></div>
+                        </a>`).join('')}
+                </div>`}
+            </div>`;
+    }).join('');
+}
+
+function switchCategory(catId) {
+    activeCategory = catId;
+    renderTabs();
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    const el = document.getElementById(`category-${catId}`);
+    if (el) el.classList.add('active');
+}
+</script>
 </body>
 </html>
