@@ -374,6 +374,8 @@
             border-radius: 8px; border-left: 3px solid var(--primary-light);
         }
         .card-bio-panel.open { display: block; }
+        .card-bio-panel p { margin-bottom: 0.5rem; }
+        .card-bio-panel p:last-child { margin-bottom: 0; }
 
         /* Badges at bottom of card */
         .teacher-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: auto; padding-top: 0.625rem; }
@@ -436,6 +438,31 @@
             border-left: 3px solid var(--primary-light);
         }
 
+        /* Modal dropdowns (bio, notes) */
+        .modal-dropdown {
+            border: 1.5px solid var(--gray-200); border-radius: 10px;
+            margin-bottom: 1rem; overflow: hidden;
+        }
+        .modal-dropdown-toggle {
+            width: 100%; display: flex; align-items: center; justify-content: space-between;
+            padding: 0.875rem 1.125rem; background: var(--gray-50);
+            border: none; cursor: pointer; font-size: 0.9375rem; font-weight: 600;
+            color: var(--text-primary); transition: background 0.2s;
+        }
+        .modal-dropdown-toggle:hover { background: var(--gray-100); }
+        .modal-dropdown-toggle span { display: flex; align-items: center; gap: 0.5rem; }
+        .modal-dropdown-toggle span i { color: var(--primary); font-size: 0.875rem; }
+        .modal-dropdown-arrow { color: var(--text-secondary); font-size: 0.75rem; transition: transform 0.2s; }
+        .modal-dropdown.open .modal-dropdown-arrow { transform: rotate(180deg); }
+        .modal-dropdown-body {
+            display: none; padding: 1rem 1.125rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        .modal-dropdown.open .modal-dropdown-body { display: block; }
+        .modal-bio p { margin-bottom: 0.625rem; }
+        .modal-bio p:last-child { margin-bottom: 0; }
+
+        /* Modal dropdowns (bio, notes) */
         .detail-section { margin-bottom: 1.5rem; }
         .detail-section-title {
             font-size: 0.8125rem; font-weight: 700; color: var(--primary);
@@ -1134,6 +1161,11 @@
             }).join('');
         }
 
+        // ============ MODAL DROPDOWN TOGGLES ============
+        function toggleModalDropdown(btn) {
+            btn.closest('.modal-dropdown').classList.toggle('open');
+        }
+
         // ============ CARD SECTION TOGGLES ============
         function toggleCardSection(btn) {
             btn.classList.toggle('open');
@@ -1166,10 +1198,32 @@
                 </div>
                 <div class="modal-inner">`;
 
-            // Bio — at the top if available
+            // Bio — collapsible at top
             if (t.bio) {
-                const bioText = t.bio.replace(/<[^>]*>/g, '');
-                html += `<div class="modal-bio">${bioText}</div>`;
+                html += `
+                <div class="modal-dropdown">
+                    <button class="modal-dropdown-toggle" onclick="toggleModalDropdown(this)">
+                        <span><i class="fas fa-user"></i> Bio</span>
+                        <i class="fas fa-chevron-down modal-dropdown-arrow"></i>
+                    </button>
+                    <div class="modal-dropdown-body">
+                        <div class="modal-bio">${t.bio}</div>
+                    </div>
+                </div>`;
+            }
+
+            // Additional notes — collapsible at top
+            if (t.additional_notes) {
+                html += `
+                <div class="modal-dropdown">
+                    <button class="modal-dropdown-toggle" onclick="toggleModalDropdown(this)">
+                        <span><i class="fas fa-sticky-note"></i> Additional Notes</span>
+                        <i class="fas fa-chevron-down modal-dropdown-arrow"></i>
+                    </button>
+                    <div class="modal-dropdown-body">
+                        <div style="font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.additional_notes}</div>
+                    </div>
+                </div>`;
             }
 
             // Comfort bar — high up
@@ -1244,15 +1298,6 @@
                         </div>
                     </div>`).join('');
                 html += `</div>`;
-            }
-
-            // Additional notes
-            if (t.additional_notes) {
-                html += `
-                    <div class="detail-section">
-                        <div class="detail-section-title">Additional Notes</div>
-                        <div style="font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.additional_notes}</div>
-                    </div>`;
             }
 
             html += `</div>`; // close modal-inner
