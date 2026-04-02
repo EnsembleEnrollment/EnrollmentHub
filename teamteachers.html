@@ -335,6 +335,28 @@
         }
         .card-comfort-label { font-size: 0.75rem; font-weight: 700; color: var(--primary-dark); min-width: 30px; }
 
+        /* Instrument chips in card header */
+        .card-header-instruments {
+            display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.75rem;
+        }
+        .card-header-chip {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(255,255,255,0.2);
+            border: 1.5px solid rgba(255,255,255,0.45);
+            border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
+            color: white; backdrop-filter: blur(4px);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .teacher-card:hover .card-header-chip {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.65);
+        }
+        .card-header-chip .level-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgba(255,255,255,0.7); }
+        .card-header-chip .level-dot.level-beginner { background: #6EE7B7; }
+        .card-header-chip .level-dot.level-intermediate { background: #FCD34D; }
+        .card-header-chip .level-dot.level-advanced { background: white; }
+
         /* Instrument chips on card — bigger and more prominent */
         .teacher-instruments-list { margin-top: 0.25rem; }
         .teacher-instruments-label {
@@ -1204,6 +1226,14 @@
                         <div class="card-header-text">
                             <div class="teacher-card-name">${t.first_name} ${t.last_name}</div>
                             <div class="teacher-card-brand">${t.brand || ''}${t.zone ? ' · ' + t.zone.zone_name : ''}</div>
+                            ${t.instruments.length > 0 ? `
+                            <div class="card-header-instruments">
+                                ${t.instruments.map(i => `
+                                    <span class="card-header-chip">
+                                        <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
+                                        ${i.instrument}
+                                    </span>`).join('')}
+                            </div>` : ''}
                         </div>
                     </div>
                     <div class="teacher-card-body">
@@ -1219,11 +1249,6 @@
                                 </div>
                             </div>
                             <span class="card-comfort-label">${comfortLevel}/10</span>
-                        </div>` : ''}
-                        ${t.instruments.length > 0 ? `
-                        <div class="teacher-instruments-list">
-                            <div class="teacher-instruments-label">Instruments</div>
-                            <div class="instrument-chip-row">${instrumentChips}</div>
                         </div>` : ''}
                         <div class="teacher-badges">
                             ${t.formal_music_education ? '<span class="teacher-badge badge-info">Formal Education</span>' : ''}
@@ -1272,7 +1297,23 @@
                 </div>
                 <div class="modal-inner">`;
 
-            // Bio — collapsible at top
+            // Instruments — right at the top, above bio
+            if (t.instruments.length > 0) {
+                html += `
+                <div class="detail-section">
+                    <div class="detail-section-title">Instruments <span style="font-size:0.6875rem;font-weight:500;color:var(--text-light);text-transform:none;letter-spacing:0;">— tap to see details</span></div>
+                    <div class="modal-instrument-chips">
+                        ${t.instruments.map((i, idx) => `
+                            <button class="modal-instrument-chip" onclick="openInstrumentOverlay('${t.id}', ${idx})">
+                                <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
+                                ${i.instrument}${i.teacher_level ? ` <span style="font-weight:400;opacity:0.65;">(${i.teacher_level})</span>` : ''}
+                                <i class="fas fa-chevron-right chip-arrow"></i>
+                            </button>`).join('')}
+                    </div>
+                </div>`;
+            }
+
+            // Bio — collapsible, below instruments
             if (t.bio) {
                 html += `
                 <div class="modal-dropdown">
@@ -1286,7 +1327,7 @@
                 </div>`;
             }
 
-            // Additional notes — collapsible at top
+            // Additional notes — collapsible
             if (t.additional_notes) {
                 html += `
                 <div class="modal-dropdown">
@@ -1300,7 +1341,7 @@
                 </div>`;
             }
 
-            // Comfort bar — high up
+            // Comfort bar
             if (comfortLevel > 0) {
                 html += `
                     <div class="detail-section">
@@ -1339,36 +1380,16 @@
                     </div>
                 </div>`;
 
-            // Education & Strengths — collapsible
+            // Education & Strengths — shown directly, no dropdown
             if (t.formal_music_education || t.formal_education_details || strengths.length > 0) {
-                html += `
-                <div class="modal-dropdown">
-                    <button class="modal-dropdown-toggle" onclick="toggleModalDropdown(this)">
-                        <span><i class="fas fa-graduation-cap"></i> Education & Strengths</span>
-                        <i class="fas fa-chevron-down modal-dropdown-arrow"></i>
-                    </button>
-                    <div class="modal-dropdown-body">
-                        ${t.formal_education_details ? `<div style="margin-bottom:${strengths.length > 0 ? '1rem' : '0'};font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>` : ''}
-                        ${strengths.length > 0 ? `<div class="strengths-pills">${strengths.map(s => `<span class="strength-pill"><i class="fas fa-check"></i>${s}</span>`).join('')}</div>` : ''}
-                    </div>
-                </div>`;
-            }
-
-            // Instruments — clickable chips that open overlay
-            if (t.instruments.length > 0) {
-                html += `
-                <div class="detail-section">
-                    <div class="detail-section-title">Instruments <span style="font-size:0.6875rem;font-weight:500;color:var(--text-light);text-transform:none;letter-spacing:0;">— tap to see details</span></div>
-                    <div class="modal-instrument-chips">
-                        ${t.instruments.map((i, idx) => `
-                            <button class="modal-instrument-chip" onclick="openInstrumentOverlay('${t.id}', ${idx})">
-                                <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
-                                ${i.instrument}${i.teacher_level ? ` <span style="font-weight:400;opacity:0.65;">(${i.teacher_level})</span>` : ''}
-                                <i class="fas fa-chevron-right chip-arrow"></i>
-                            </button>`).join('')}
-                    </div>
-                </div>`;
-
+                html += `<div class="detail-section"><div class="detail-section-title">Education & Strengths</div>`;
+                if (strengths.length > 0) {
+                    html += `<div class="strengths-pills" style="margin-bottom:${t.formal_education_details ? '1rem' : '0'}">${strengths.map(s => `<span class="strength-pill"><i class="fas fa-check"></i>${s}</span>`).join('')}</div>`;
+                }
+                if (t.formal_education_details) {
+                    html += `<div style="font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>`;
+                }
+                html += `</div>`;
             }
 
             html += `</div>`; // close modal-inner
