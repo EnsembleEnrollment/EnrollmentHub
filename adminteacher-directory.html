@@ -242,8 +242,20 @@
         .teacher-card-header.pending-header {
             background: linear-gradient(135deg, var(--pending) 0%, #A78BFA 100%);
         }
-        .teacher-card-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .teacher-card-studio { font-size: 0.875rem; opacity: 0.9; }
+        .teacher-card-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; padding-right: 60px; }
+        .teacher-card-studio { font-size: 0.875rem; opacity: 0.9; padding-right: 60px; }
+
+        /* Teacher card avatar */
+        .teacher-card-avatar {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; font-weight: 700; color: white;
+            flex-shrink: 0; overflow: hidden;
+            border: 2.5px solid rgba(255,255,255,0.45);
+            position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%);
+        }
+        .teacher-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         .teacher-card-body { padding: 1.25rem; }
         .teacher-info-row {
@@ -253,6 +265,15 @@
         .teacher-info-row:last-child { border-bottom: none; }
         .teacher-info-row i { color: var(--primary); width: 16px; text-align: center; }
         .teacher-info-row span { color: var(--text-secondary); }
+
+        /* Bio snippet on card */
+        .teacher-bio-snippet {
+            font-size: 0.8125rem; color: var(--text-secondary);
+            line-height: 1.5; padding: 0.625rem 0;
+            border-bottom: 1px solid var(--gray-100);
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
 
         .teacher-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
         .teacher-badge { padding: 0.25rem 0.625rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
@@ -267,6 +288,34 @@
         /* Pending Actions */
         .pending-actions { display: flex; gap: 0.5rem; flex: 1; }
         .pending-actions .btn { flex: 1; justify-content: center; }
+
+        /* Photo Upload */
+        .photo-upload-section {
+            display: flex; align-items: center; gap: 1.5rem;
+            padding: 1.25rem; background: var(--gray-50);
+            border-radius: 12px; margin-bottom: 1.25rem;
+            border: 1.5px solid var(--gray-200);
+        }
+        .photo-preview {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem; color: white; font-weight: 700;
+            flex-shrink: 0; overflow: hidden;
+            border: 3px solid var(--gray-200);
+            transition: border-color 0.2s;
+        }
+        .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-upload-info { flex: 1; }
+        .photo-upload-info strong { font-size: 0.9375rem; color: var(--text-primary); }
+        .photo-upload-info p { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .photo-remove-btn {
+            background: none; border: none; color: var(--danger);
+            font-size: 0.8125rem; cursor: pointer; font-weight: 600;
+            padding: 0; margin-top: 0.5rem; display: block;
+            transition: opacity 0.2s;
+        }
+        .photo-remove-btn:hover { opacity: 0.75; }
 
         /* Modal */
         .modal {
@@ -682,6 +731,28 @@
 
                     <!-- Basic Info Tab -->
                     <div id="basicTab" class="modal-tab-content active">
+
+                        <!-- Photo Upload -->
+                        <div class="photo-upload-section">
+                            <div class="photo-preview" id="photoPreview">
+                                <span id="photoInitials">?</span>
+                            </div>
+                            <div class="photo-upload-info">
+                                <strong>Profile Photo</strong>
+                                <p>JPG or PNG, max 5MB</p>
+                                <input type="file" id="teacherPhotoFile" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handlePhotoPreview(this)">
+                                <div style="display:flex;gap:0.75rem;align-items:center;margin-top:0.625rem;">
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById('teacherPhotoFile').click()">
+                                        <i class="fas fa-upload"></i> Upload Photo
+                                    </button>
+                                    <button type="button" class="photo-remove-btn" id="photoRemoveBtn" style="display:none" onclick="removePhoto()">
+                                        <i class="fas fa-times"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="teacherPhotoUrl">
+                        </div>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">First Name *</label>
@@ -725,6 +796,19 @@
                                 <option value="pending">Pending</option>
                                 <option value="inactive">Inactive</option>
                             </select>
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="form-group">
+                            <label class="form-label">Teacher Bio</label>
+                            <div class="rich-editor">
+                                <div class="rich-editor-toolbar">
+                                    <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherBio').focus();document.execCommand('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                                    <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherBio').focus();document.execCommand('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+                                </div>
+                                <div class="rich-editor-content" id="teacherBio" contenteditable="true" data-placeholder="e.g., Sarah has been teaching piano for 10 years and specializes in classical technique and music theory..."></div>
+                            </div>
+                            <div class="form-hint">A short paragraph about this teacher's background and teaching style.</div>
                         </div>
                     </div>
 
@@ -854,6 +938,10 @@
         let deletedLanguageIds = [];
         let deletedInstrumentIds = [];
 
+        // Photo state
+        let currentPhotoFile = null;
+        let photoRemoved = false;
+
         document.addEventListener('DOMContentLoaded', () => {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             setupSidebar();
@@ -866,6 +954,53 @@
 
         function updateComfortSliderDisplay(value) {
             document.getElementById('comfortSliderValue').textContent = value;
+        }
+
+        // ============ PHOTO HANDLING ============
+        function handlePhotoPreview(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Photo must be under 5MB', 'error');
+                input.value = '';
+                return;
+            }
+            currentPhotoFile = file;
+            photoRemoved = false;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('photoPreview').innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                document.getElementById('photoRemoveBtn').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePhoto() {
+            currentPhotoFile = null;
+            photoRemoved = true;
+            document.getElementById('teacherPhotoUrl').value = '';
+            document.getElementById('teacherPhotoFile').value = '';
+            document.getElementById('photoRemoveBtn').style.display = 'none';
+            refreshPhotoInitials();
+        }
+
+        function refreshPhotoInitials() {
+            const first = (document.getElementById('teacherFirstName').value || '?')[0];
+            const last = (document.getElementById('teacherLastName').value || '')[0] || '';
+            document.getElementById('photoPreview').innerHTML = `<span id="photoInitials">${(first + last).toUpperCase()}</span>`;
+        }
+
+        async function uploadPhoto(teacherId) {
+            if (!currentPhotoFile) return null;
+            const ext = currentPhotoFile.name.split('.').pop();
+            const path = `${teacherId}/profile.${ext}`;
+            const { error } = await supabaseClient.storage
+                .from('teacher-photos')
+                .upload(path, currentPhotoFile, { upsert: true });
+            if (error) throw error;
+            const { data } = supabaseClient.storage.from('teacher-photos').getPublicUrl(path);
+            // Bust cache so updated photo shows immediately
+            return data.publicUrl + '?t=' + Date.now();
         }
 
         function setupSidebar() {
@@ -980,13 +1115,23 @@
             container.innerHTML = teachersList.map(teacher => {
                 const isPending = teacher.status === 'pending';
                 const comfortLevel = teacher.learning_needs_comfort;
+                const initials = ((teacher.first_name || '?')[0] + (teacher.last_name || '')[0]).toUpperCase();
+                const avatarHtml = teacher.photo_url
+                    ? `<img src="${teacher.photo_url}" alt="${teacher.first_name}">`
+                    : initials;
+
+                // Strip HTML tags from bio for plain-text snippet
+                const bioText = teacher.bio ? teacher.bio.replace(/<[^>]*>/g, '') : '';
+
                 return `
                 <div class="teacher-card ${isPending ? 'pending-card' : ''}">
                     <div class="teacher-card-header ${isPending ? 'pending-header' : ''}">
+                        <div class="teacher-card-avatar">${avatarHtml}</div>
                         <div class="teacher-card-name">${teacher.first_name} ${teacher.last_name}</div>
                         <div class="teacher-card-studio">${teacher.brand || 'N/A'}</div>
                     </div>
                     <div class="teacher-card-body">
+                        ${bioText ? `<div class="teacher-bio-snippet">${bioText}</div>` : ''}
                         ${teacher.state ? `<div class="teacher-info-row"><i class="fas fa-map-marker-alt"></i><span>${teacher.state}</span></div>` : ''}
                         ${teacher.instruments && teacher.instruments.length > 0 ? `<div class="teacher-info-row"><i class="fas fa-music"></i><span>${teacher.instruments.map(i => i.instrument).join(', ')}</span></div>` : ''}
                         ${comfortLevel ? `<div class="teacher-info-row"><i class="fas fa-heart"></i><span>Learning Needs Comfort: ${comfortLevel}/10</span></div>` : ''}
@@ -1136,33 +1281,25 @@
                         teaching_strength_3: row.teaching_strength_3 || null,
                         special_needs_willing: row.special_needs_willing === 'true' || row.special_needs_willing === true,
                         learning_needs_comfort: row.learning_needs_comfort ? parseInt(row.learning_needs_comfort) : null,
-                        additional_notes: row.additional_notes || null
+                        additional_notes: row.additional_notes || null,
+                        bio: row.bio || null
                     };
 
                     const teacherResult = await supabaseClient.from('teachers').insert([teacherData]).select();
                     if (teacherResult.error) { console.error('Error importing:', row, teacherResult.error); continue; }
                     const teacherId = teacherResult.data[0].id;
 
-                    // Cities
                     if (row.cities) {
                         const cityList = row.cities.split(';').map(c => c.trim()).filter(Boolean);
-                        if (cityList.length > 0) {
-                            await supabaseClient.from('teacher_cities').insert(cityList.map((c, i) => ({ teacher_id: teacherId, city: c, order_index: i })));
-                        }
+                        if (cityList.length > 0) await supabaseClient.from('teacher_cities').insert(cityList.map((c, i) => ({ teacher_id: teacherId, city: c, order_index: i })));
                     }
-                    // Languages
                     if (row.languages) {
                         const langList = row.languages.split(';').map(l => l.trim()).filter(Boolean);
-                        if (langList.length > 0) {
-                            await supabaseClient.from('teacher_languages').insert(langList.map((l, i) => ({ teacher_id: teacherId, language: l, order_index: i })));
-                        }
+                        if (langList.length > 0) await supabaseClient.from('teacher_languages').insert(langList.map((l, i) => ({ teacher_id: teacherId, language: l, order_index: i })));
                     }
-                    // Instruments
                     if (row.instruments) {
                         const instList = row.instruments.split(';').map(inst => inst.trim()).filter(Boolean);
-                        if (instList.length > 0) {
-                            await supabaseClient.from('teacher_instruments').insert(instList.map((inst, i) => ({ teacher_id: teacherId, instrument: inst, order_index: i })));
-                        }
+                        if (instList.length > 0) await supabaseClient.from('teacher_instruments').insert(instList.map((inst, i) => ({ teacher_id: teacherId, instrument: inst, order_index: i })));
                     }
                     successCount++;
                 }
@@ -1181,7 +1318,7 @@
 
         function downloadTemplate(type) {
             if (type === 'csv') {
-                const csv = 'first_name,last_name,brand,state,gender,year_started_at_studio,formal_music_education,formal_education_details,teaching_strength_1,teaching_strength_2,teaching_strength_3,special_needs_willing,learning_needs_comfort,additional_notes,cities,languages,instruments\nJane,Smith,Music Academy,Utah,Female,2020,true,Berklee - BM,Patient with beginners,Strong technique,,true,7,,Salt Lake City;Provo,English;Spanish,Piano;Guitar';
+                const csv = 'first_name,last_name,brand,state,gender,year_started_at_studio,formal_music_education,formal_education_details,teaching_strength_1,teaching_strength_2,teaching_strength_3,special_needs_willing,learning_needs_comfort,additional_notes,bio,cities,languages,instruments\nJane,Smith,Music Academy,Utah,Female,2020,true,Berklee - BM,Patient with beginners,Strong technique,,true,7,,Jane has taught piano for 10 years.,Salt Lake City;Provo,English;Spanish,Piano;Guitar';
                 downloadFile(csv, 'teacher_import_template.csv', 'text/csv');
             } else {
                 const json = JSON.stringify([{
@@ -1190,7 +1327,8 @@
                     formal_education_details: "Berklee - BM", teaching_strength_1: "Patient with beginners",
                     teaching_strength_2: "Strong technique", teaching_strength_3: "",
                     special_needs_willing: true, learning_needs_comfort: 7,
-                    additional_notes: "", cities: "Salt Lake City;Provo", languages: "English;Spanish",
+                    additional_notes: "", bio: "Jane has taught piano for 10 years.",
+                    cities: "Salt Lake City;Provo", languages: "English;Spanish",
                     instruments: "Piano;Guitar"
                 }], null, 2);
                 downloadFile(json, 'teacher_import_template.json', 'application/json');
@@ -1206,6 +1344,15 @@
         }
 
         // ============ TEACHER MODAL (Edit/Add) ============
+        function resetPhotoState() {
+            currentPhotoFile = null;
+            photoRemoved = false;
+            document.getElementById('teacherPhotoUrl').value = '';
+            document.getElementById('teacherPhotoFile').value = '';
+            document.getElementById('photoRemoveBtn').style.display = 'none';
+            document.getElementById('photoPreview').innerHTML = '<span id="photoInitials">?</span>';
+        }
+
         function openTeacherModal() {
             document.getElementById('teacherModalTitle').textContent = 'Add Teacher';
             document.getElementById('teacherForm').reset();
@@ -1214,11 +1361,13 @@
             document.querySelectorAll('.modal-tab-content').forEach((tc, i) => tc.classList.toggle('active', i === 0));
             document.getElementById('teacherEducationDetails').innerHTML = '';
             document.getElementById('teacherNotes').innerHTML = '';
+            document.getElementById('teacherBio').innerHTML = '';
             document.getElementById('teacherLearningNeedsComfort').value = 5;
             updateComfortSliderDisplay(5);
             currentCities = []; currentLanguages = []; currentInstruments = [];
             deletedCityIds = []; deletedLanguageIds = []; deletedInstrumentIds = [];
             renderCities(); renderLanguages(); renderInstruments();
+            resetPhotoState();
             document.getElementById('teacherModal').classList.add('active');
         }
 
@@ -1246,18 +1395,35 @@
             document.getElementById('teacherLearningNeedsComfort').value = comfortVal;
             updateComfortSliderDisplay(comfortVal);
             document.getElementById('teacherNotes').innerHTML = teacher.additional_notes || '';
+            document.getElementById('teacherBio').innerHTML = teacher.bio || '';
+
+            // Photo
+            currentPhotoFile = null;
+            photoRemoved = false;
+            const existingUrl = teacher.photo_url || '';
+            document.getElementById('teacherPhotoUrl').value = existingUrl;
+            document.getElementById('teacherPhotoFile').value = '';
+            if (existingUrl) {
+                document.getElementById('photoPreview').innerHTML = `<img src="${existingUrl}" alt="${teacher.first_name}">`;
+                document.getElementById('photoRemoveBtn').style.display = 'block';
+            } else {
+                const initials = ((teacher.first_name || '?')[0] + (teacher.last_name || '')[0]).toUpperCase();
+                document.getElementById('photoPreview').innerHTML = `<span id="photoInitials">${initials}</span>`;
+                document.getElementById('photoRemoveBtn').style.display = 'none';
+            }
+
             currentCities = (teacher.cities || []).map(c => ({ id: c.id, city: c.city, isNew: false })); deletedCityIds = []; renderCities();
             currentLanguages = (teacher.languages || []).map(l => ({ id: l.id, language: l.language, isNew: false })); deletedLanguageIds = []; renderLanguages();
-            currentInstruments = (teacher.instruments || []).map(i => ({ 
-                id: i.id, 
-                instrument: i.instrument, 
-                teacher_level: i.teacher_level || '', 
-                youngest_age_preference: i.youngest_age_preference || '', 
-                achievements_credentials: i.achievements_credentials || '', 
-                year_started: i.year_started || '', 
-                genres: i.genres || '', 
-                notes: i.notes || '', 
-                isNew: false 
+            currentInstruments = (teacher.instruments || []).map(i => ({
+                id: i.id,
+                instrument: i.instrument,
+                teacher_level: i.teacher_level || '',
+                youngest_age_preference: i.youngest_age_preference || '',
+                achievements_credentials: i.achievements_credentials || '',
+                year_started: i.year_started || '',
+                genres: i.genres || '',
+                notes: i.notes || '',
+                isNew: false
             }));
             deletedInstrumentIds = []; renderInstruments();
             document.getElementById('teacherModal').classList.add('active');
@@ -1276,19 +1442,19 @@
         function renderLanguages() { const c = document.getElementById('languagesContainer'); if (currentLanguages.length === 0) { c.innerHTML = '<span style="color:var(--text-light);font-size:0.875rem;">No languages added yet</span>'; return; } c.innerHTML = currentLanguages.map((l, i) => `<span class="tag">${l.language}<button type="button" onclick="removeLanguage(${i})"><i class="fas fa-times"></i></button></span>`).join(''); }
 
         // Instruments
-        function addInstrument() { 
-            currentInstruments.push({ 
-                id: null, instrument: '', teacher_level: '', youngest_age_preference: '', 
-                achievements_credentials: '', year_started: '', genres: '', notes: '', isNew: true 
-            }); 
-            renderInstruments(); 
+        function addInstrument() {
+            currentInstruments.push({
+                id: null, instrument: '', teacher_level: '', youngest_age_preference: '',
+                achievements_credentials: '', year_started: '', genres: '', notes: '', isNew: true
+            });
+            renderInstruments();
         }
-        function removeInstrument(i) { 
+        function removeInstrument(i) {
             if (!confirm('Are you sure you want to remove this instrument?')) return;
-            const inst = currentInstruments[i]; 
-            if (inst.id && !inst.isNew) deletedInstrumentIds.push(inst.id); 
-            currentInstruments.splice(i, 1); 
-            renderInstruments(); 
+            const inst = currentInstruments[i];
+            if (inst.id && !inst.isNew) deletedInstrumentIds.push(inst.id);
+            currentInstruments.splice(i, 1);
+            renderInstruments();
         }
         function updateInstrument(i, f, v) { currentInstruments[i][f] = v; }
 
@@ -1362,7 +1528,9 @@
                 teaching_strength_3: document.getElementById('teacherStrength3').value,
                 special_needs_willing: document.getElementById('teacherSpecialNeeds').checked,
                 learning_needs_comfort: parseInt(document.getElementById('teacherLearningNeedsComfort').value),
-                additional_notes: document.getElementById('teacherNotes').innerHTML || null
+                additional_notes: document.getElementById('teacherNotes').innerHTML || null,
+                bio: document.getElementById('teacherBio').innerHTML || null,
+                photo_url: photoRemoved ? null : (document.getElementById('teacherPhotoUrl').value || null)
             };
 
             try {
@@ -1370,10 +1538,24 @@
                 if (id) {
                     const result = await supabaseClient.from('teachers').update(teacherData).eq('id', id);
                     if (result.error) throw result.error;
+                    teacherId = id;
                 } else {
                     const result = await supabaseClient.from('teachers').insert([teacherData]).select();
                     if (result.error) throw result.error;
                     teacherId = result.data[0].id;
+                }
+
+                // Upload photo if a new file was selected
+                if (currentPhotoFile) {
+                    try {
+                        const photoUrl = await uploadPhoto(teacherId);
+                        if (photoUrl) {
+                            await supabaseClient.from('teachers').update({ photo_url: photoUrl }).eq('id', teacherId);
+                        }
+                    } catch (photoErr) {
+                        console.error('Photo upload failed:', photoErr);
+                        showToast('Teacher saved, but photo upload failed.', 'error');
+                    }
                 }
 
                 if (deletedCityIds.length > 0) await supabaseClient.from('teacher_cities').delete().in('id', deletedCityIds);
@@ -1385,16 +1567,16 @@
 
                 for (let i = 0; i < currentInstruments.length; i++) {
                     const inst = currentInstruments[i];
-                    const instData = { 
-                        teacher_id: teacherId, 
-                        instrument: inst.instrument, 
-                        teacher_level: inst.teacher_level || null, 
-                        youngest_age_preference: inst.youngest_age_preference ? parseInt(inst.youngest_age_preference) : null, 
-                        achievements_credentials: inst.achievements_credentials || null, 
-                        year_started: inst.year_started ? parseInt(inst.year_started) : null, 
-                        genres: inst.genres || null, 
-                        notes: inst.notes || null, 
-                        order_index: i 
+                    const instData = {
+                        teacher_id: teacherId,
+                        instrument: inst.instrument,
+                        teacher_level: inst.teacher_level || null,
+                        youngest_age_preference: inst.youngest_age_preference ? parseInt(inst.youngest_age_preference) : null,
+                        achievements_credentials: inst.achievements_credentials || null,
+                        year_started: inst.year_started ? parseInt(inst.year_started) : null,
+                        genres: inst.genres || null,
+                        notes: inst.notes || null,
+                        order_index: i
                     };
                     if (inst.isNew) await supabaseClient.from('teacher_instruments').insert(instData);
                     else await supabaseClient.from('teacher_instruments').update(instData).eq('id', inst.id);
