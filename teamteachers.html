@@ -463,6 +463,80 @@
         .modal-bio p:last-child { margin-bottom: 0; }
 
         /* Modal dropdowns (bio, notes) */
+        /* ============ INSTRUMENT OVERLAY ============ */
+        .instrument-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000; align-items: center; justify-content: center; padding: 1rem;
+        }
+        .instrument-overlay.active { display: flex; }
+        .instrument-overlay-backdrop {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.35);
+        }
+        .instrument-overlay-card {
+            position: relative; background: white; border-radius: 16px;
+            max-width: 480px; width: 100%; box-shadow: var(--shadow-xl);
+            z-index: 1; overflow: hidden;
+            animation: overlayPop 0.2s ease;
+        }
+        @keyframes overlayPop {
+            from { opacity: 0; transform: scale(0.95) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .instrument-overlay-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 1.25rem 1.5rem; color: white;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .instrument-overlay-name { font-size: 1.25rem; font-weight: 700; }
+        .instrument-overlay-level { font-size: 0.875rem; opacity: 0.9; margin-top: 0.125rem; }
+        .instrument-overlay-close {
+            width: 32px; height: 32px; border: none;
+            background: rgba(255,255,255,0.2); color: white; border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; flex-shrink: 0;
+        }
+        .instrument-overlay-close:hover { background: rgba(255,255,255,0.35); }
+        .instrument-overlay-body { padding: 1.5rem; }
+        .instrument-overlay-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+        }
+        .instrument-overlay-item label {
+            display: block; font-size: 0.6875rem; font-weight: 600;
+            color: var(--text-light); text-transform: uppercase;
+            letter-spacing: 0.04em; margin-bottom: 0.25rem;
+        }
+        .instrument-overlay-item p { font-size: 0.9375rem; color: var(--text-primary); font-weight: 500; }
+        .instrument-overlay-full { grid-column: 1 / -1; }
+        .instrument-overlay-divider {
+            border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;
+        }
+
+        /* Clickable instrument chips in modal */
+        .modal-instrument-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .modal-instrument-chip {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 20px; font-size: 0.875rem; font-weight: 600;
+            color: var(--text-primary); cursor: pointer; transition: all 0.2s;
+            user-select: none;
+        }
+        .modal-instrument-chip:hover {
+            border-color: var(--primary);
+            background: rgba(250,128,114,0.08);
+            color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(250,128,114,0.2);
+        }
+        .modal-instrument-chip .level-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .modal-instrument-chip .chip-arrow {
+            font-size: 0.625rem; color: var(--text-light); margin-left: 0.125rem;
+            transition: transform 0.2s, color 0.2s;
+        }
+        .modal-instrument-chip:hover .chip-arrow { color: var(--primary); transform: translateX(2px); }
+
+        /* ============ INSTRUMENT OVERLAY ============ */
         .detail-section { margin-bottom: 1.5rem; }
         .detail-section-title {
             font-size: 0.8125rem; font-weight: 700; color: var(--primary);
@@ -699,6 +773,23 @@
                 <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Instrument Detail Overlay -->
+    <div id="instrumentOverlay" class="instrument-overlay">
+        <div class="instrument-overlay-backdrop" onclick="closeInstrumentOverlay()"></div>
+        <div class="instrument-overlay-card">
+            <div class="instrument-overlay-header">
+                <div>
+                    <div class="instrument-overlay-name" id="overlayInstrumentName"></div>
+                    <div class="instrument-overlay-level" id="overlayInstrumentLevel"></div>
+                </div>
+                <button class="instrument-overlay-close" onclick="closeInstrumentOverlay()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="instrument-overlay-body" id="overlayInstrumentBody"></div>
         </div>
     </div>
 
@@ -1263,25 +1354,21 @@
                 </div>`;
             }
 
-            // Instruments
+            // Instruments — clickable chips that open overlay
             if (t.instruments.length > 0) {
-                html += `<div class="detail-section"><div class="detail-section-title">Instruments</div>`;
-                html += t.instruments.map(i => `
-                    <div class="detail-instrument-card">
-                        <div class="detail-instrument-name">
-                            <span class="level-dot level-${i.teacher_level || 'beginner'}" style="width:9px;height:9px;"></span>
-                            ${i.instrument}${i.teacher_level ? ` <span style="font-weight:500;font-size:0.875rem;color:var(--text-secondary);">(${i.teacher_level})</span>` : ''}
-                        </div>
-                        <div class="detail-instrument-grid">
-                            <div class="detail-item"><label>Highest Teaching Level</label><p>${i.teacher_level || 'N/A'}</p></div>
-                            <div class="detail-item"><label>Youngest Age</label><p>${i.youngest_age_preference ? i.youngest_age_preference + '+' : 'N/A'}</p></div>
-                            <div class="detail-item"><label>Year Started Teaching</label><p>${i.year_started || 'N/A'}</p></div>
-                            <div class="detail-item"><label>Genres</label><p>${i.genres || 'N/A'}</p></div>
-                            ${i.achievements_credentials ? `<div class="detail-item" style="grid-column:1/-1;"><label>Certifications & Experience</label><p>${i.achievements_credentials}</p></div>` : ''}
-                            ${i.notes ? `<div class="detail-item" style="grid-column:1/-1;"><label>Notes</label><div style="font-size:0.875rem;color:var(--text-secondary);line-height:1.5;">${i.notes}</div></div>` : ''}
-                        </div>
-                    </div>`).join('');
-                html += `</div>`;
+                html += `
+                <div class="detail-section">
+                    <div class="detail-section-title">Instruments <span style="font-size:0.6875rem;font-weight:500;color:var(--text-light);text-transform:none;letter-spacing:0;">— tap to see details</span></div>
+                    <div class="modal-instrument-chips">
+                        ${t.instruments.map((i, idx) => `
+                            <button class="modal-instrument-chip" onclick="openInstrumentOverlay('${t.id}', ${idx})">
+                                <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
+                                ${i.instrument}${i.teacher_level ? ` <span style="font-weight:400;opacity:0.65;">(${i.teacher_level})</span>` : ''}
+                                <i class="fas fa-chevron-right chip-arrow"></i>
+                            </button>`).join('')}
+                    </div>
+                </div>`;
+
             }
 
             html += `</div>`; // close modal-inner
@@ -1290,9 +1377,74 @@
             document.getElementById('teacherModal').classList.add('active');
         }
 
+        // ============ INSTRUMENT OVERLAY ============
+        function openInstrumentOverlay(teacherId, instrumentIndex) {
+            const t = teachers.find(x => x.id === teacherId);
+            if (!t) return;
+            const i = t.instruments[instrumentIndex];
+            if (!i) return;
+
+            document.getElementById('overlayInstrumentName').textContent = i.instrument;
+            document.getElementById('overlayInstrumentLevel').textContent = i.teacher_level
+                ? `${i.teacher_level.charAt(0).toUpperCase() + i.teacher_level.slice(1)} level`
+                : 'Level not specified';
+
+            const levelColors = { beginner: 'var(--success)', intermediate: 'var(--warning)', advanced: 'var(--primary)' };
+            const levelColor = levelColors[i.teacher_level] || 'var(--primary)';
+
+            let body = `<div class="instrument-overlay-grid">
+                <div class="instrument-overlay-item">
+                    <label>Highest Teaching Level</label>
+                    <p style="color:${levelColor}">${i.teacher_level ? i.teacher_level.charAt(0).toUpperCase() + i.teacher_level.slice(1) : 'N/A'}</p>
+                </div>
+                <div class="instrument-overlay-item">
+                    <label>Youngest Age</label>
+                    <p>${i.youngest_age_preference ? i.youngest_age_preference + '+ years' : 'N/A'}</p>
+                </div>
+                <div class="instrument-overlay-item">
+                    <label>Year Started Teaching</label>
+                    <p>${i.year_started || 'N/A'}</p>
+                </div>
+                <div class="instrument-overlay-item">
+                    <label>Genres</label>
+                    <p>${i.genres || 'N/A'}</p>
+                </div>`;
+
+            if (i.achievements_credentials) {
+                body += `<div class="instrument-overlay-item instrument-overlay-full">
+                    <label>Certifications & Experience</label>
+                    <p>${i.achievements_credentials}</p>
+                </div>`;
+            }
+
+            if (i.notes) {
+                body += `<hr class="instrument-overlay-divider">
+                <div class="instrument-overlay-item instrument-overlay-full">
+                    <label>Notes</label>
+                    <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;font-weight:400;">${i.notes}</p>
+                </div>`;
+            }
+
+            body += `</div>`;
+            document.getElementById('overlayInstrumentBody').innerHTML = body;
+            document.getElementById('instrumentOverlay').classList.add('active');
+        }
+
+        function closeInstrumentOverlay() {
+            document.getElementById('instrumentOverlay').classList.remove('active');
+        }
+
         function closeModal() { document.getElementById('teacherModal').classList.remove('active'); }
         document.addEventListener('click', e => { if (e.target.id === 'teacherModal') closeModal(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('instrumentOverlay').classList.contains('active')) {
+                    closeInstrumentOverlay();
+                } else {
+                    closeModal();
+                }
+            }
+        });
     </script>
 </body>
 </html>
