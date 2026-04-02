@@ -55,15 +55,12 @@
             border-right: 1px solid var(--gray-200);
             box-shadow: var(--shadow-sm);
             transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
-            z-index: 1000;
-            display: flex; flex-direction: column;
+            z-index: 1000; display: flex; flex-direction: column;
         }
         .sidebar.collapsed { width: var(--sidebar-collapsed); }
-
         .sidebar-header {
-            padding: 1.5rem 1.25rem;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 1.25rem; display: flex; align-items: center;
+            justify-content: space-between; border-bottom: 1px solid var(--gray-200);
         }
         .logo-section { display: flex; align-items: center; gap: 0.75rem; transition: opacity var(--transition-speed) ease; }
         .sidebar.collapsed .logo-section { opacity: 0; pointer-events: none; }
@@ -83,12 +80,10 @@
         .toggle-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
         .sidebar.collapsed .toggle-icon { transform: rotate(180deg); }
         .toggle-icon { transition: transform var(--transition-speed) ease; font-size: 1rem; }
-
         .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1rem 0; }
         .sidebar-nav::-webkit-scrollbar { width: 4px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
-
         .nav-item {
             display: flex; align-items: center; gap: 0.875rem;
             padding: 0.875rem 1.5rem; margin: 0.25rem 0.75rem;
@@ -127,35 +122,71 @@
         .page-header h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -0.02em; }
         .page-header p { color: var(--text-secondary); font-size: 1rem; }
 
-        /* Filter Section */
+        /* ============ FILTER SECTION ============ */
         .filter-section {
             background: var(--white); border-radius: 16px; padding: 1.5rem;
             box-shadow: var(--shadow-md); margin-bottom: 1.5rem;
         }
         .filter-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1rem; cursor: pointer; user-select: none;
+            cursor: pointer; user-select: none;
         }
-        .filter-header h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
-        .filter-header h3 i { color: var(--primary); }
-        .filter-toggle { color: var(--text-secondary); font-size: 0.875rem; transition: transform 0.2s ease; }
-        .filter-toggle.collapsed { transform: rotate(-90deg); }
+        .filter-header-left { display: flex; align-items: center; gap: 0.625rem; }
+        .filter-header-left h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+        .filter-header-left h3 i { color: var(--primary); }
 
+        /* Active filter count badge */
+        .filter-count-badge {
+            display: none; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; font-size: 0.6875rem; font-weight: 700;
+            width: 20px; height: 20px; border-radius: 50%;
+        }
+        .filter-count-badge.visible { display: flex; }
+
+        .filter-header-right { display: flex; align-items: center; gap: 0.75rem; }
         .reset-filters-btn {
             display: flex; align-items: center; gap: 0.375rem;
             padding: 0.5rem 0.875rem;
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white; border: none; border-radius: 8px;
-            font-size: 0.8125rem; font-weight: 600;
-            cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(250, 128, 114, 0.3);
+            font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 6px rgba(250, 128, 114, 0.3);
         }
         .reset-filters-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(250, 128, 114, 0.4); }
-        .reset-filters-btn i { font-size: 0.75rem; }
+        .filter-toggle-icon { color: var(--text-secondary); font-size: 0.875rem; transition: transform 0.2s ease; }
+        .filter-toggle-icon.collapsed { transform: rotate(-90deg); }
 
-        .filter-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-        .filter-body.collapsed { display: none; }
+        /* Primary filters — always visible */
+        .filter-primary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem; margin-top: 1.25rem;
+        }
+        .filter-primary.hidden { display: none; }
 
+        /* More filters — toggleable */
+        .more-filters-toggle {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-top: 1rem; padding: 0.5rem 0;
+            border: none; background: none; cursor: pointer;
+            font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .more-filters-toggle:hover { color: var(--primary); }
+        .more-filters-toggle i { font-size: 0.75rem; transition: transform 0.2s; }
+        .more-filters-toggle.open i { transform: rotate(180deg); }
+        .more-filters-toggle.open { color: var(--primary); }
+
+        .filter-secondary {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem; margin-top: 0.75rem;
+            padding-top: 0.75rem; border-top: 1px dashed var(--gray-200);
+        }
+        .filter-secondary.open { display: grid; }
+
+        /* Search */
         .search-input-wrapper { position: relative; grid-column: 1 / -1; }
         .search-input-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--primary); }
         .search-input {
@@ -167,7 +198,8 @@
 
         .filter-group label {
             display: block; font-size: 0.75rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 0.375rem; text-transform: uppercase; letter-spacing: 0.03em;
+            color: var(--text-secondary); margin-bottom: 0.375rem;
+            text-transform: uppercase; letter-spacing: 0.03em;
         }
         .filter-select {
             width: 100%; padding: 0.625rem 0.875rem;
@@ -176,6 +208,50 @@
         }
         .filter-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1); }
 
+        /* Zone Tabs */
+        .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; grid-column: 1 / -1; }
+        .zone-tab {
+            padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
+            color: var(--text-secondary); background: var(--gray-50);
+            border: 1.5px solid var(--gray-200); border-radius: 20px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .zone-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .zone-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white; border-color: transparent;
+            box-shadow: 0 2px 8px rgba(250, 128, 114, 0.3);
+        }
+
+        /* Instrument Checkboxes */
+        .instrument-filter-section { grid-column: 1 / -1; }
+        .instrument-filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .instrument-checkbox-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .instrument-checkbox {
+            display: flex; align-items: center; gap: 0.375rem;
+            padding: 0.5rem 0.875rem; background: var(--gray-50);
+            border: 1.5px solid var(--gray-200); border-radius: 20px;
+            cursor: pointer; transition: all 0.2s; user-select: none;
+            font-size: 0.8125rem; font-weight: 500; color: var(--text-primary);
+        }
+        .instrument-checkbox:hover { border-color: var(--primary-light); }
+        .instrument-checkbox.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(250,128,114,0.12), rgba(255,160,122,0.12));
+            color: var(--primary-dark);
+        }
+        .instrument-checkbox .check-icon {
+            width: 16px; height: 16px; border: 2px solid var(--gray-300); border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.625rem; color: transparent; transition: all 0.2s; flex-shrink: 0;
+        }
+        .instrument-checkbox.selected .check-icon {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-color: transparent; color: white;
+        }
+        .selected-instruments-info { margin-top: 0.5rem; font-size: 0.75rem; color: var(--primary-dark); font-style: italic; font-weight: 500; }
+
+        /* Active filter chips */
         .active-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; grid-column: 1 / -1; }
         .active-filters:empty { display: none; }
         .filter-chip {
@@ -195,81 +271,112 @@
         }
         .clear-all-btn:hover { border-color: var(--danger); color: var(--danger); }
 
-        /* Zone Filter Tabs */
-        .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; grid-column: 1 / -1; margin-bottom: 0.25rem; }
-        .zone-tab {
-            padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-secondary); background: var(--gray-50);
-            border: 1.5px solid var(--gray-200); border-radius: 20px;
-            cursor: pointer; transition: all 0.2s ease;
-        }
-        .zone-tab:hover { border-color: var(--primary); color: var(--primary); }
-        .zone-tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; border-color: transparent;
-            box-shadow: 0 2px 8px rgba(250, 128, 114, 0.3);
-        }
-
-        /* Results Info */
+        /* ============ RESULTS ============ */
         .results-info {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
         }
         .results-count { font-size: 0.9375rem; color: var(--text-secondary); font-weight: 500; }
         .results-count strong { color: var(--text-primary); }
-        .view-toggle { display: flex; gap: 0.25rem; }
-        .view-btn {
-            width: 36px; height: 36px; border: 1.5px solid var(--gray-200);
-            background: var(--white); color: var(--text-secondary); border-radius: 8px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-        }
-        .view-btn.active { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; border-color: transparent; }
-        .view-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
 
-        /* Teachers Grid */
-        .teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
-        .teachers-grid.list-view { grid-template-columns: 1fr; }
+        /* ============ TEACHER GRID ============ */
+        .teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
 
-        /* Teacher Card */
+        /* ============ TEACHER CARD ============ */
         .teacher-card {
             background: var(--white); border: 1px solid var(--gray-200);
             border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm);
             transition: all 0.2s ease; display: flex; flex-direction: column;
+            cursor: pointer;
         }
         .teacher-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
         .teacher-card-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             padding: 1.25rem; color: white; position: relative;
+            display: flex; align-items: center; gap: 1rem;
         }
-        .teacher-card-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.125rem; }
-        .teacher-card-brand { font-size: 0.8125rem; opacity: 0.9; }
 
-        .teacher-card-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+        /* Photo avatar on card */
+        .card-avatar {
+            width: 54px; height: 54px; border-radius: 50%;
+            background: rgba(255,255,255,0.25); border: 2.5px solid rgba(255,255,255,0.5);
+            flex-shrink: 0; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; font-weight: 700; color: white;
+        }
+        .card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-header-text { flex: 1; min-width: 0; }
+        .teacher-card-name { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .teacher-card-brand { font-size: 0.8125rem; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .teacher-card-body { padding: 1rem 1.25rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
 
         .teacher-info-row {
-            display: flex; align-items: center; gap: 0.625rem;
-            padding: 0.4rem 0; font-size: 0.875rem;
+            display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem;
         }
-        .teacher-info-row i { color: var(--primary); width: 16px; text-align: center; font-size: 0.8125rem; }
+        .teacher-info-row i { color: var(--primary); width: 15px; text-align: center; font-size: 0.8125rem; flex-shrink: 0; }
         .teacher-info-row span { color: var(--text-secondary); line-height: 1.4; }
 
-        .teacher-instruments-list { margin-top: 0.75rem; }
-        .teacher-instruments-label { font-size: 0.75rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
+        /* Mini comfort bar on card */
+        .card-comfort-row {
+            display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem;
+        }
+        .card-comfort-row i { color: var(--primary); width: 15px; text-align: center; font-size: 0.8125rem; flex-shrink: 0; }
+        .card-comfort-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0.5rem; }
+        .card-comfort-bar {
+            flex: 1; height: 6px; background: var(--gray-200);
+            border-radius: 3px; overflow: hidden;
+        }
+        .card-comfort-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+        .card-comfort-label { font-size: 0.75rem; font-weight: 700; color: var(--primary-dark); min-width: 30px; }
 
+        /* Instrument chips on card — bigger and more prominent */
+        .teacher-instruments-list { margin-top: 0.25rem; }
+        .teacher-instruments-label {
+            font-size: 0.6875rem; font-weight: 700; color: var(--text-primary);
+            text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem;
+        }
         .instrument-chip-row { display: flex; flex-wrap: wrap; gap: 0.375rem; }
         .instrument-chip {
-            display: inline-flex; align-items: center; gap: 0.25rem;
-            padding: 0.3rem 0.625rem; background: var(--gray-50);
-            border: 1px solid var(--gray-200); border-radius: 8px;
-            font-size: 0.75rem; font-weight: 600; color: var(--text-primary); transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--text-primary); transition: all 0.15s;
         }
-        .instrument-chip .level-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .teacher-card:hover .instrument-chip { border-color: var(--primary-light); }
+        .instrument-chip .level-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
         .level-beginner { background: var(--success); }
         .level-intermediate { background: var(--warning); }
         .level-advanced { background: var(--primary); }
 
-        .teacher-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: auto; padding-top: 0.75rem; }
+        /* Bio expand on card */
+        .card-bio-toggle {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            background: none; border: 1.5px solid var(--gray-200);
+            color: var(--text-secondary); border-radius: 20px;
+            padding: 0.3rem 0.75rem; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
+        }
+        .card-bio-toggle:hover { border-color: var(--primary); color: var(--primary); }
+        .card-bio-toggle.open { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.06); }
+        .card-bio-toggle i { font-size: 0.625rem; transition: transform 0.2s; }
+        .card-bio-toggle.open i { transform: rotate(180deg); }
+        .card-bio-panel {
+            display: none; font-size: 0.8125rem; color: var(--text-secondary);
+            line-height: 1.6; margin-top: 0.625rem;
+            padding: 0.75rem; background: var(--gray-50);
+            border-radius: 8px; border-left: 3px solid var(--primary-light);
+        }
+        .card-bio-panel.open { display: block; }
+
+        /* Badges at bottom of card */
+        .teacher-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: auto; padding-top: 0.625rem; }
         .teacher-badge {
             padding: 0.2rem 0.5rem; border-radius: 6px;
             font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
@@ -278,7 +385,7 @@
         .badge-info { background: rgba(250, 128, 114, 0.1); color: var(--primary); }
         .badge-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
 
-        /* Teacher Detail Modal */
+        /* ============ MODAL ============ */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2000;
@@ -301,7 +408,33 @@
             display: flex; align-items: center; justify-content: center; transition: all 0.2s;
         }
         .modal-close:hover { background: var(--gray-200); }
-        .modal-body { padding: 1.5rem; }
+        .modal-body { padding: 0; }
+
+        /* Modal hero with photo */
+        .modal-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 1.75rem 1.5rem; display: flex; align-items: center; gap: 1.25rem;
+        }
+        .modal-avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.25); border: 3px solid rgba(255,255,255,0.5);
+            flex-shrink: 0; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 700; color: white;
+        }
+        .modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-hero-text h2 { font-size: 1.375rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
+        .modal-hero-text p { font-size: 0.9375rem; color: rgba(255,255,255,0.9); }
+
+        .modal-inner { padding: 1.5rem; }
+
+        /* Bio at top of modal */
+        .modal-bio {
+            background: var(--gray-50); border-radius: 10px;
+            padding: 1rem 1.125rem; margin-bottom: 1.5rem;
+            font-size: 0.9375rem; color: var(--text-primary); line-height: 1.65;
+            border-left: 3px solid var(--primary-light);
+        }
 
         .detail-section { margin-bottom: 1.5rem; }
         .detail-section-title {
@@ -313,61 +446,53 @@
         .detail-item label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.125rem; }
         .detail-item p { font-size: 0.9375rem; color: var(--text-primary); }
 
+        /* Comfort bar in modal — moved up */
+        .modal-comfort-display {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1rem 1.125rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
+        }
+        .modal-comfort-bar-wrap { flex: 1; }
+        .modal-comfort-bar-label { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .modal-comfort-bar { height: 10px; background: var(--gray-200); border-radius: 5px; overflow: hidden; }
+        .modal-comfort-fill {
+            height: 100%; border-radius: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transition: width 0.4s ease;
+        }
+        .modal-comfort-value { font-size: 1.375rem; font-weight: 700; color: var(--primary); min-width: 52px; text-align: center; }
+
+        /* Strengths as pill badges */
+        .strengths-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .strength-pill {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.5rem 0.875rem;
+            background: rgba(250, 128, 114, 0.08);
+            border: 1.5px solid rgba(250, 128, 114, 0.2);
+            border-radius: 20px; font-size: 0.875rem; font-weight: 500;
+            color: var(--primary-dark);
+        }
+        .strength-pill i { font-size: 0.75rem; color: var(--primary); }
+
         .detail-instrument-card {
             background: var(--gray-50); border: 1px solid var(--gray-200);
             border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;
         }
-        .detail-instrument-name { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+        .detail-instrument-name { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
         .detail-instrument-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
         .detail-instrument-grid label { font-size: 0.6875rem; }
         .detail-instrument-grid p { font-size: 0.8125rem; }
 
-        .strength-item {
-            display: flex; align-items: flex-start; gap: 0.5rem;
-            padding: 0.5rem 0; font-size: 0.9375rem; color: var(--text-primary);
+        .special-needs-row {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.9375rem; color: var(--text-primary); margin-top: 0.5rem;
         }
-        .strength-item i { color: var(--primary); margin-top: 0.125rem; font-size: 0.75rem; }
-
-        .comfort-level-display {
-            display: flex; align-items: center; gap: 1rem;
-            padding: 1rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
-        }
-        .comfort-level-bar { flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; }
-        .comfort-level-fill { height: 100%; border-radius: 4px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
-        .comfort-level-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); min-width: 50px; text-align: center; }
-        .comfort-level-label { font-size: 0.875rem; color: var(--text-secondary); }
-
-        /* Instrument Checkbox Filter */
-        .instrument-filter-section { grid-column: 1 / -1; margin-top: 0.5rem; }
-        .instrument-filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
-        .instrument-checkbox-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .instrument-checkbox {
-            display: flex; align-items: center; gap: 0.375rem;
-            padding: 0.5rem 0.75rem; background: var(--gray-50);
-            border: 1.5px solid var(--gray-200); border-radius: 8px;
-            cursor: pointer; transition: all 0.2s; user-select: none;
-            font-size: 0.8125rem; font-weight: 500; color: var(--text-primary);
-        }
-        .instrument-checkbox:hover { border-color: var(--primary-light); }
-        .instrument-checkbox.selected { border-color: var(--primary); background: rgba(250, 128, 114, 0.1); color: var(--primary-dark); }
-        .instrument-checkbox .check-icon {
-            width: 16px; height: 16px; border: 2px solid var(--gray-300); border-radius: 3px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.625rem; color: transparent; transition: all 0.2s; flex-shrink: 0;
-        }
-        .instrument-checkbox.selected .check-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); border-color: transparent; color: white; }
-        .selected-instruments-info { margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-light); font-style: italic; }
+        .special-needs-row i { color: var(--success); }
 
         /* Empty & Loading */
-        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
-        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; }
+        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); grid-column: 1 / -1; }
+        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; display: block; }
         .empty-state p { font-size: 1rem; }
         .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
-
-        /* List view */
-        .teachers-grid.list-view .teacher-card { flex-direction: row; }
-        .teachers-grid.list-view .teacher-card-header { min-width: 220px; display: flex; flex-direction: column; justify-content: center; }
-        .teachers-grid.list-view .teacher-card-body { flex-direction: row; flex-wrap: wrap; gap: 1rem; align-items: center; }
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
@@ -375,12 +500,11 @@
             .main-content { margin-left: 0; padding: 1.5rem; }
             .sidebar.collapsed ~ .main-content { margin-left: 0; }
             .teachers-grid { grid-template-columns: 1fr; }
-            .teachers-grid.list-view .teacher-card { flex-direction: column; }
-            .teachers-grid.list-view .teacher-card-header { min-width: unset; }
-            .filter-body { grid-template-columns: 1fr 1fr; }
+            .filter-primary { grid-template-columns: 1fr 1fr; }
             .detail-grid, .detail-instrument-grid { grid-template-columns: 1fr; }
+            .modal-hero { flex-direction: column; text-align: center; }
         }
-        @media (max-width: 500px) { .filter-body { grid-template-columns: 1fr; } }
+        @media (max-width: 500px) { .filter-primary { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -390,43 +514,17 @@
                 <div class="logo-icon">EH</div>
                 <span class="logo-text">Enrollment Hub</span>
             </div>
-            <button id="sidebarToggle" class="toggle-btn">
-                <span class="toggle-icon">‹</span>
-            </button>
+            <button id="sidebarToggle" class="toggle-btn"><span class="toggle-icon">‹</span></button>
         </div>
         <nav class="sidebar-nav">
-            <a href="teamdashboard.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="teamquicklinks.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-link"></i></span>
-                <span class="nav-text">Quick Links</span>
-            </a>
-            <a href="teamstudio-directory.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-building"></i></span>
-                <span class="nav-text">Studio Directory</span>
-            </a>
-            <a href="teamteachers.html" class="nav-item active">
-                <span class="nav-icon"><i class="fas fa-star"></i></span>
-                <span class="nav-text">Teacher Directory</span>
-            </a>
-            <a href="teammap.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span>
-                <span class="nav-text">Map</span>
-            </a>
-            <a href="teamprograms.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
-                <span class="nav-text">Programs</span>
-            </a>
-            <a href="teamsnippets.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
-                <span class="nav-text">Snippets</span>
-            </a>
-            <a href="teamtraining-hub.html" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-book-open"></i></span>
-                <span class="nav-text">Training</span>
-            </a>
+            <a href="teamdashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-chart-line"></i></span><span class="nav-text">Dashboard</span></a>
+            <a href="teamquicklinks.html" class="nav-item"><span class="nav-icon"><i class="fas fa-link"></i></span><span class="nav-text">Quick Links</span></a>
+            <a href="teamstudio-directory.html" class="nav-item"><span class="nav-icon"><i class="fas fa-building"></i></span><span class="nav-text">Studio Directory</span></a>
+            <a href="teamteachers.html" class="nav-item active"><span class="nav-icon"><i class="fas fa-star"></i></span><span class="nav-text">Teacher Directory</span></a>
+            <a href="teammap.html" class="nav-item"><span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span><span class="nav-text">Map</span></a>
+            <a href="teamprograms.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-text">Programs</span></a>
+            <a href="teamsnippets.html" class="nav-item"><span class="nav-icon"><i class="fas fa-file-alt"></i></span><span class="nav-text">Snippets</span></a>
+            <a href="teamtraining-hub.html" class="nav-item"><span class="nav-icon"><i class="fas fa-book-open"></i></span><span class="nav-text">Training</span></a>
         </nav>
         <a href="EnsembleDirectors.html" class="nav-item" style="margin: 0 0.75rem;">
             <span class="nav-icon"><i class="far fa-user"></i></span>
@@ -449,16 +547,22 @@
         </div>
 
         <div class="filter-section">
+            <!-- Filter Header -->
             <div class="filter-header" onclick="toggleFilters()">
-                <h3><i class="fas fa-sliders-h"></i> Filters</h3>
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <button class="reset-filters-btn" onclick="event.stopPropagation(); clearAllFilters();" title="Reset all filters">
+                <div class="filter-header-left">
+                    <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+                    <span class="filter-count-badge" id="filterCountBadge"></span>
+                </div>
+                <div class="filter-header-right">
+                    <button class="reset-filters-btn" onclick="event.stopPropagation(); clearAllFilters();">
                         <i class="fas fa-redo-alt"></i> Reset
                     </button>
-                    <i id="filterToggleIcon" class="fas fa-chevron-down filter-toggle"></i>
+                    <i id="filterToggleIcon" class="fas fa-chevron-down filter-toggle-icon"></i>
                 </div>
             </div>
-            <div id="filterBody" class="filter-body">
+
+            <!-- Primary filters — always visible when expanded -->
+            <div id="filterPrimary" class="filter-primary">
                 <div class="search-input-wrapper">
                     <i class="fas fa-search"></i>
                     <input type="text" id="teacherSearch" class="search-input" placeholder="Search by teacher name...">
@@ -481,6 +585,16 @@
                     <div id="instrumentCheckboxGrid" class="instrument-checkbox-grid"></div>
                     <div id="selectedInstrumentsInfo" class="selected-instruments-info"></div>
                 </div>
+                <div id="activeFilters" class="active-filters"></div>
+            </div>
+
+            <!-- More filters toggle button -->
+            <button class="more-filters-toggle" id="moreFiltersToggle" onclick="toggleMoreFilters()">
+                <i class="fas fa-chevron-down"></i> More filters
+            </button>
+
+            <!-- Secondary / less-used filters -->
+            <div id="filterSecondary" class="filter-secondary">
                 <div class="filter-group">
                     <label>Highest Level</label>
                     <select id="filterLevel" class="filter-select">
@@ -535,7 +649,6 @@
                         <option value="yes">Has Formal Education</option>
                     </select>
                 </div>
-                <div id="activeFilters" class="active-filters"></div>
             </div>
         </div>
 
@@ -546,19 +659,12 @@
         <div id="content" style="display: none;">
             <div class="results-info">
                 <span id="resultsCount" class="results-count"></span>
-                <div class="view-toggle">
-                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">
-                        <i class="fas fa-th-large"></i>
-                    </button>
-                    <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">
-                        <i class="fas fa-list"></i>
-                    </button>
-                </div>
             </div>
             <div id="teachersGrid" class="teachers-grid"></div>
         </div>
     </main>
 
+    <!-- Teacher Detail Modal -->
     <div id="teacherModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -577,9 +683,10 @@
         let teachers = [];
         let brands = [];
         let zones = [];
-        let currentView = 'grid';
         let activeZone = 'all';
         let selectedInstruments = [];
+        let filtersExpanded = true;
+        let moreFiltersOpen = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -594,16 +701,10 @@
             const overlay = document.getElementById('sidebarOverlay');
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.toggle('collapsed');
-                if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
-                    overlay.classList.add('active');
-                } else {
-                    overlay.classList.remove('active');
-                }
+                if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) overlay.classList.add('active');
+                else overlay.classList.remove('active');
             });
-            overlay.addEventListener('click', () => {
-                sidebar.classList.add('collapsed');
-                overlay.classList.remove('active');
-            });
+            overlay.addEventListener('click', () => { sidebar.classList.add('collapsed'); overlay.classList.remove('active'); });
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 if (confirm('Are you sure you want to logout?')) window.location.href = 'index.html';
             });
@@ -611,10 +712,35 @@
 
         function setupFilterListeners() {
             document.getElementById('teacherSearch').addEventListener('input', applyFilters);
-            ['filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+            ['filterCity', 'filterLevel', 'filterGenre', 'filterAge', 'filterLanguage', 'filterComfort', 'filterSpecialNeeds', 'filterFormalEd']
                 .forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
         }
 
+        // ============ TOGGLE FILTERS ============
+        function toggleFilters() {
+            filtersExpanded = !filtersExpanded;
+            document.getElementById('filterPrimary').classList.toggle('hidden', !filtersExpanded);
+            document.getElementById('moreFiltersToggle').style.display = filtersExpanded ? '' : 'none';
+            if (!filtersExpanded && moreFiltersOpen) {
+                moreFiltersOpen = false;
+                document.getElementById('filterSecondary').classList.remove('open');
+                document.getElementById('moreFiltersToggle').classList.remove('open');
+            }
+            document.getElementById('filterToggleIcon').classList.toggle('collapsed', !filtersExpanded);
+        }
+
+        function toggleMoreFilters() {
+            moreFiltersOpen = !moreFiltersOpen;
+            document.getElementById('filterSecondary').classList.toggle('open', moreFiltersOpen);
+            document.getElementById('moreFiltersToggle').classList.toggle('open', moreFiltersOpen);
+            document.getElementById('moreFiltersToggle').querySelector('span') &&
+                (document.getElementById('moreFiltersToggle').childNodes[1].textContent = moreFiltersOpen ? ' Fewer filters' : ' More filters');
+            // update text node
+            const btn = document.getElementById('moreFiltersToggle');
+            btn.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = moreFiltersOpen ? ' Fewer filters' : ' More filters'; });
+        }
+
+        // ============ LOAD DATA ============
         async function loadData() {
             try {
                 const [teachersRes, citiesRes, languagesRes, instrumentsRes, brandsRes, zonesRes] = await Promise.all([
@@ -625,7 +751,6 @@
                     supabaseClient.from('brands').select('*'),
                     supabaseClient.from('zones').select('*')
                 ]);
-
                 if (teachersRes.error) throw teachersRes.error;
 
                 zones = zonesRes.data || [];
@@ -650,8 +775,6 @@
                 document.getElementById('content').style.display = 'block';
 
                 applyFilters();
-
-                // Check for ?brand= URL param and pre-filter
                 checkUrlForBrand();
 
             } catch (error) {
@@ -660,22 +783,17 @@
             }
         }
 
-        // Read ?brand= from URL and apply it as a filter
         function checkUrlForBrand() {
             const params = new URLSearchParams(window.location.search);
             const brand = params.get('brand');
             if (!brand) return;
-
             const brandSelect = document.getElementById('filterBrand');
             const match = [...brandSelect.options].find(o => o.value === brand);
             if (match) {
                 brandSelect.value = brand;
                 updateCityOptions();
                 applyFilters();
-                // Give the DOM a tick to render results, then scroll into view
-                setTimeout(() => {
-                    document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                setTimeout(() => document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
             }
         }
 
@@ -688,11 +806,9 @@
             const languageNames = [...new Set(teachers.flatMap(t => t.languages.map(l => l.language)).filter(Boolean))].sort();
             populateSelect('filterLanguage', languageNames, 'All Languages');
             const allGenres = new Set();
-            teachers.forEach(t => {
-                t.instruments.forEach(i => {
-                    if (i.genres) i.genres.split(',').forEach(g => { const trimmed = g.trim(); if (trimmed) allGenres.add(trimmed); });
-                });
-            });
+            teachers.forEach(t => t.instruments.forEach(i => {
+                if (i.genres) i.genres.split(',').forEach(g => { const tr = g.trim(); if (tr) allGenres.add(tr); });
+            }));
             populateSelect('filterGenre', [...allGenres].sort(), 'All Genres');
         }
 
@@ -712,23 +828,23 @@
 
         function updateBrandOptions() {
             const selectedState = document.getElementById('filterState').value;
-            let filteredTeachers = selectedState ? teachers.filter(t => t.state === selectedState) : teachers;
-            const brandNames = [...new Set(filteredTeachers.map(t => t.brand).filter(Boolean))].sort();
-            const currentBrand = document.getElementById('filterBrand').value;
+            const filtered = selectedState ? teachers.filter(t => t.state === selectedState) : teachers;
+            const brandNames = [...new Set(filtered.map(t => t.brand).filter(Boolean))].sort();
+            const cur = document.getElementById('filterBrand').value;
             populateSelect('filterBrand', brandNames, 'All Brands');
-            if (brandNames.includes(currentBrand)) document.getElementById('filterBrand').value = currentBrand;
+            if (brandNames.includes(cur)) document.getElementById('filterBrand').value = cur;
         }
 
         function updateCityOptions() {
             const selectedState = document.getElementById('filterState').value;
             const selectedBrand = document.getElementById('filterBrand').value;
-            let filteredTeachers = teachers;
-            if (selectedState) filteredTeachers = filteredTeachers.filter(t => t.state === selectedState);
-            if (selectedBrand) filteredTeachers = filteredTeachers.filter(t => t.brand === selectedBrand);
-            const cityNames = [...new Set(filteredTeachers.flatMap(t => t.cities.map(c => c.city)).filter(Boolean))].sort();
-            const currentCity = document.getElementById('filterCity').value;
+            let filtered = teachers;
+            if (selectedState) filtered = filtered.filter(t => t.state === selectedState);
+            if (selectedBrand) filtered = filtered.filter(t => t.brand === selectedBrand);
+            const cityNames = [...new Set(filtered.flatMap(t => t.cities.map(c => c.city)).filter(Boolean))].sort();
+            const cur = document.getElementById('filterCity').value;
             populateSelect('filterCity', cityNames, 'All Cities');
-            if (cityNames.includes(currentCity)) document.getElementById('filterCity').value = currentCity;
+            if (cityNames.includes(cur)) document.getElementById('filterCity').value = cur;
         }
 
         function renderInstrumentCheckboxes() {
@@ -736,11 +852,10 @@
             const container = document.getElementById('instrumentCheckboxGrid');
             container.innerHTML = instrumentNames.map(inst => {
                 const isSelected = selectedInstruments.includes(inst);
-                return `
-                    <div class="instrument-checkbox ${isSelected ? 'selected' : ''}" onclick="toggleInstrumentFilter('${inst}', this)">
-                        <span class="check-icon"><i class="fas fa-check"></i></span>
-                        <span>${inst}</span>
-                    </div>`;
+                return `<div class="instrument-checkbox ${isSelected ? 'selected' : ''}" onclick="toggleInstrumentFilter('${inst}', this)">
+                    <span class="check-icon"><i class="fas fa-check"></i></span>
+                    <span>${inst}</span>
+                </div>`;
             }).join('');
             updateSelectedInstrumentsInfo();
         }
@@ -763,20 +878,15 @@
         function populateSelect(id, values, defaultLabel) {
             const select = document.getElementById(id);
             select.innerHTML = `<option value="">${defaultLabel}</option>`;
-            values.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v; opt.textContent = v;
-                select.appendChild(opt);
-            });
+            values.forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt); });
         }
 
         function renderZoneTabs() {
             const container = document.getElementById('zoneFilterTabs');
             const zonesWithTeachers = zones.filter(z => teachers.some(t => t.zone && t.zone.id === z.id));
+            if (zonesWithTeachers.length === 0) { container.style.display = 'none'; return; }
             let html = `<button class="zone-tab ${activeZone === 'all' ? 'active' : ''}" onclick="filterByZone('all')">All Zones</button>`;
-            html += zonesWithTeachers.map(z => `
-                <button class="zone-tab ${activeZone === z.id ? 'active' : ''}" onclick="filterByZone('${z.id}')">${z.zone_name}</button>
-            `).join('');
+            html += zonesWithTeachers.map(z => `<button class="zone-tab ${activeZone === z.id ? 'active' : ''}" onclick="filterByZone('${z.id}')">${z.zone_name}</button>`).join('');
             container.innerHTML = html;
         }
 
@@ -784,13 +894,6 @@
             activeZone = zoneId;
             renderZoneTabs();
             applyFilters();
-        }
-
-        function toggleFilters() {
-            const body = document.getElementById('filterBody');
-            const icon = document.getElementById('filterToggleIcon');
-            body.classList.toggle('collapsed');
-            icon.classList.toggle('collapsed');
         }
 
         function getActiveFilters() {
@@ -802,6 +905,16 @@
                 .forEach(id => { const val = document.getElementById(id).value; if (val) filters[id] = val; });
             if (selectedInstruments.length > 0) filters.selectedInstruments = [...selectedInstruments];
             return filters;
+        }
+
+        function countActiveFilters(filters) {
+            let count = 0;
+            if (filters.search) count++;
+            if (filters.zone) count++;
+            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+                .forEach(id => { if (filters[id]) count++; });
+            if (filters.selectedInstruments) count += filters.selectedInstruments.length;
+            return count;
         }
 
         function applyFilters() {
@@ -817,8 +930,8 @@
                 if (filters.filterCity && !t.cities.some(c => c.city === filters.filterCity)) return false;
                 if (filters.filterLanguage && !t.languages.some(l => l.language === filters.filterLanguage)) return false;
                 if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
-                    const teacherInstruments = t.instruments.map(i => i.instrument);
-                    if (!filters.selectedInstruments.every(inst => teacherInstruments.includes(inst))) return false;
+                    const teacherInsts = t.instruments.map(i => i.instrument);
+                    if (!filters.selectedInstruments.every(inst => teacherInsts.includes(inst))) return false;
                 }
                 if (filters.filterLevel) {
                     const targetLevel = levelOrder[filters.filterLevel] || 0;
@@ -837,19 +950,30 @@
                     if (filters.selectedInstruments?.length > 0) rel = rel.filter(i => filters.selectedInstruments.includes(i.instrument));
                     if (!rel.some(i => i.youngest_age_preference && parseInt(i.youngest_age_preference) <= age)) return false;
                 }
-                if (filters.filterComfort) {
-                    if (!t.learning_needs_comfort || t.learning_needs_comfort < parseInt(filters.filterComfort)) return false;
-                }
+                if (filters.filterComfort && (!t.learning_needs_comfort || t.learning_needs_comfort < parseInt(filters.filterComfort))) return false;
                 if (filters.filterSpecialNeeds === 'yes' && !t.special_needs_willing) return false;
                 if (filters.filterFormalEd === 'yes' && !t.formal_music_education) return false;
                 return true;
             });
 
-            renderActiveFilters(filters);
+            // Update filter count badge
+            const count = countActiveFilters(filters);
+            const badge = document.getElementById('filterCountBadge');
+            if (count > 0) { badge.textContent = count; badge.classList.add('visible'); }
+            else badge.classList.remove('visible');
+
+            // Auto-open more filters if a secondary filter is active
+            if (!moreFiltersOpen && ['filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd'].some(id => filters[id])) {
+                moreFiltersOpen = true;
+                document.getElementById('filterSecondary').classList.add('open');
+                document.getElementById('moreFiltersToggle').classList.add('open');
+            }
+
+            renderActiveFilterChips(filters);
             renderTeachers(filtered);
         }
 
-        function renderActiveFilters(filters) {
+        function renderActiveFilterChips(filters) {
             const container = document.getElementById('activeFilters');
             const chips = [];
             const labels = {
@@ -895,8 +1019,7 @@
             if (filterId === 'filterState') {
                 document.getElementById('filterBrand').value = '';
                 document.getElementById('filterCity').value = '';
-                updateBrandOptions();
-                updateCityOptions();
+                updateBrandOptions(); updateCityOptions();
             } else if (filterId === 'filterBrand') {
                 document.getElementById('filterCity').value = '';
                 updateCityOptions();
@@ -917,64 +1040,153 @@
             applyFilters();
         }
 
-        function setView(view) {
-            currentView = view;
-            document.getElementById('teachersGrid').classList.toggle('list-view', view === 'list');
-            document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
-            document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+        // ============ HELPERS ============
+        function getInitials(first, last) {
+            return ((first || '?')[0] + (last || '')[0]).toUpperCase();
         }
 
+        function getYearsAtStudio(yearStarted) {
+            if (!yearStarted) return null;
+            const years = new Date().getFullYear() - parseInt(yearStarted);
+            if (years <= 0) return null;
+            return `${years} yr${years !== 1 ? 's' : ''} at studio`;
+        }
+
+        // ============ RENDER CARDS ============
         function renderTeachers(teachersList) {
             const container = document.getElementById('teachersGrid');
             document.getElementById('resultsCount').innerHTML = `<strong>${teachersList.length}</strong> teacher${teachersList.length !== 1 ? 's' : ''} found`;
+
             if (teachersList.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-chalkboard-teacher"></i><p>No teachers match your filters</p></div>`;
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-chalkboard-teacher"></i><p>No teachers match your filters</p></div>`;
                 return;
             }
+
             container.innerHTML = teachersList.map(t => {
+                const initials = getInitials(t.first_name, t.last_name);
+                const avatarHtml = t.photo_url
+                    ? `<img src="${t.photo_url}" alt="${t.first_name}">`
+                    : initials;
+
                 const instrumentChips = t.instruments.map(i => `
                     <span class="instrument-chip">
                         <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
-                        ${i.instrument}${i.teacher_level ? ` (${i.teacher_level})` : ''}
+                        ${i.instrument}${i.teacher_level ? ` <span style="font-weight:400;opacity:0.7;">(${i.teacher_level})</span>` : ''}
                     </span>`).join('');
+
                 const cityList = t.cities.map(c => c.city).join(', ');
                 const languageList = t.languages.map(l => l.language).join(', ');
                 const comfortLevel = t.learning_needs_comfort;
+                const yearsAtStudio = getYearsAtStudio(t.year_started_at_studio);
+
                 return `
-                    <div class="teacher-card" onclick="openTeacherDetail('${t.id}')" style="cursor:pointer;">
-                        <div class="teacher-card-header">
+                <div class="teacher-card" onclick="openTeacherDetail('${t.id}')">
+                    <div class="teacher-card-header">
+                        <div class="card-avatar">${avatarHtml}</div>
+                        <div class="card-header-text">
                             <div class="teacher-card-name">${t.first_name} ${t.last_name}</div>
                             <div class="teacher-card-brand">${t.brand || ''}${t.zone ? ' · ' + t.zone.zone_name : ''}</div>
                         </div>
-                        <div class="teacher-card-body">
-                            ${t.state ? `<div class="teacher-info-row"><i class="fas fa-map-marker-alt"></i><span>${t.state}${cityList ? ' — ' + cityList : ''}</span></div>` : ''}
-                            ${languageList ? `<div class="teacher-info-row"><i class="fas fa-language"></i><span>${languageList}</span></div>` : ''}
-                            ${comfortLevel ? `<div class="teacher-info-row"><i class="fas fa-heart"></i><span>Learning Needs Comfort: ${comfortLevel}/10</span></div>` : ''}
-                            ${t.instruments.length > 0 ? `
-                                <div class="teacher-instruments-list">
-                                    <div class="teacher-instruments-label">Instruments</div>
-                                    <div class="instrument-chip-row">${instrumentChips}</div>
-                                </div>` : ''}
-                            <div class="teacher-badges">
-                                ${t.formal_music_education ? '<span class="teacher-badge badge-info">Formal Education</span>' : ''}
-                                ${t.special_needs_willing ? '<span class="teacher-badge badge-success">Special Needs</span>' : ''}
-                                ${comfortLevel && comfortLevel >= 8 ? '<span class="teacher-badge badge-purple">High Comfort w/ Learning Needs</span>' : ''}
+                    </div>
+                    <div class="teacher-card-body">
+                        ${t.state ? `<div class="teacher-info-row"><i class="fas fa-map-marker-alt"></i><span>${t.state}${cityList ? ' — ' + cityList : ''}</span></div>` : ''}
+                        ${yearsAtStudio ? `<div class="teacher-info-row"><i class="fas fa-calendar-alt"></i><span>${yearsAtStudio}</span></div>` : ''}
+                        ${languageList ? `<div class="teacher-info-row"><i class="fas fa-language"></i><span>${languageList}</span></div>` : ''}
+                        ${comfortLevel ? `
+                        <div class="card-comfort-row">
+                            <i class="fas fa-heart"></i>
+                            <div class="card-comfort-bar-wrap">
+                                <div class="card-comfort-bar">
+                                    <div class="card-comfort-fill" style="width:${comfortLevel * 10}%"></div>
+                                </div>
                             </div>
+                            <span class="card-comfort-label">${comfortLevel}/10</span>
+                        </div>` : ''}
+                        ${t.instruments.length > 0 ? `
+                        <div class="teacher-instruments-list">
+                            <div class="teacher-instruments-label">Instruments</div>
+                            <div class="instrument-chip-row">${instrumentChips}</div>
+                        </div>` : ''}
+                        <div class="teacher-badges">
+                            ${t.formal_music_education ? '<span class="teacher-badge badge-info">Formal Education</span>' : ''}
+                            ${t.special_needs_willing ? '<span class="teacher-badge badge-success">Special Needs</span>' : ''}
+                            ${comfortLevel && comfortLevel >= 8 ? '<span class="teacher-badge badge-purple">High Learning Needs Comfort</span>' : ''}
                         </div>
-                    </div>`;
+                        ${t.bio ? `
+                        <button class="card-bio-toggle" onclick="event.stopPropagation(); toggleCardBio(this)">
+                            <i class="fas fa-chevron-down"></i> Bio
+                        </button>
+                        <div class="card-bio-panel">${t.bio.replace(/<[^>]*>/g, '')}</div>
+                        ` : ''}
+                    </div>
+                </div>`;
             }).join('');
         }
 
+        // ============ CARD BIO TOGGLE ============
+        function toggleCardBio(btn) {
+            btn.classList.toggle('open');
+            btn.nextElementSibling.classList.toggle('open');
+        }
+
+        // ============ MODAL ============
         function openTeacherDetail(teacherId) {
             const t = teachers.find(x => x.id === teacherId);
             if (!t) return;
+
             document.getElementById('modalTeacherName').textContent = `${t.first_name} ${t.last_name}`;
+
+            const initials = getInitials(t.first_name, t.last_name);
+            const avatarHtml = t.photo_url ? `<img src="${t.photo_url}" alt="${t.first_name}">` : initials;
+            const yearsAtStudio = getYearsAtStudio(t.year_started_at_studio);
             const strengths = [t.teaching_strength_1, t.teaching_strength_2, t.teaching_strength_3].filter(Boolean);
             const cityList = t.cities.map(c => c.city).join(', ') || 'N/A';
             const languageList = t.languages.map(l => l.language).join(', ') || 'N/A';
             const comfortLevel = t.learning_needs_comfort || 0;
 
             let html = `
+                <!-- Hero with photo -->
+                <div class="modal-hero">
+                    <div class="modal-avatar">${avatarHtml}</div>
+                    <div class="modal-hero-text">
+                        <h2>${t.first_name} ${t.last_name}</h2>
+                        <p>${t.brand || ''}${t.zone ? ' · ' + t.zone.zone_name : ''}${yearsAtStudio ? ' · ' + yearsAtStudio : ''}</p>
+                    </div>
+                </div>
+                <div class="modal-inner">`;
+
+            // Bio — at the top if available
+            if (t.bio) {
+                const bioText = t.bio.replace(/<[^>]*>/g, '');
+                html += `<div class="modal-bio">${bioText}</div>`;
+            }
+
+            // Comfort bar — high up
+            if (comfortLevel > 0) {
+                html += `
+                    <div class="detail-section">
+                        <div class="detail-section-title">Learning Needs</div>
+                        <div class="modal-comfort-display">
+                            <div class="modal-comfort-bar-wrap">
+                                <div class="modal-comfort-bar-label">Comfort with diverse learning needs (ADHD, autism, dyslexia, etc.)</div>
+                                <div class="modal-comfort-bar">
+                                    <div class="modal-comfort-fill" style="width:${comfortLevel * 10}%"></div>
+                                </div>
+                            </div>
+                            <div class="modal-comfort-value">${comfortLevel}/10</div>
+                        </div>
+                        ${t.special_needs_willing ? `<div class="special-needs-row"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>` : ''}
+                    </div>`;
+            } else if (t.special_needs_willing) {
+                html += `
+                    <div class="detail-section">
+                        <div class="detail-section-title">Learning Needs</div>
+                        <div class="special-needs-row"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>
+                    </div>`;
+            }
+
+            // Overview
+            html += `
                 <div class="detail-section">
                     <div class="detail-section-title">Overview</div>
                     <div class="detail-grid">
@@ -988,41 +1200,29 @@
                     </div>
                 </div>`;
 
-            if (comfortLevel > 0) {
-                html += `
-                    <div class="detail-section">
-                        <div class="detail-section-title">Student Learning Needs</div>
-                        <div class="comfort-level-display">
-                            <div style="flex:1;">
-                                <div class="comfort-level-label">Comfort with diverse learning needs (ADHD, autism, dyslexia, etc.)</div>
-                                <div class="comfort-level-bar" style="margin-top:0.5rem;">
-                                    <div class="comfort-level-fill" style="width:${comfortLevel * 10}%;"></div>
-                                </div>
-                            </div>
-                            <div class="comfort-level-value">${comfortLevel}/10</div>
-                        </div>
-                        ${t.special_needs_willing ? `<div class="strength-item"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>` : ''}
-                    </div>`;
-            } else if (t.special_needs_willing) {
-                html += `
-                    <div class="detail-section">
-                        <div class="detail-section-title">Student Learning Needs</div>
-                        <div class="strength-item"><i class="fas fa-check-circle"></i><span>Willing to teach special needs students</span></div>
-                    </div>`;
-            }
-
+            // Education & Strengths
             if (t.formal_music_education || t.formal_education_details || strengths.length > 0) {
                 html += `<div class="detail-section"><div class="detail-section-title">Education & Strengths</div>`;
-                if (t.formal_education_details) html += `<div style="margin-bottom:1rem;font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>`;
-                if (strengths.length > 0) html += strengths.map(s => `<div class="strength-item"><i class="fas fa-check-circle"></i><span>${s}</span></div>`).join('');
+                if (t.formal_education_details) {
+                    html += `<div style="margin-bottom:1rem;font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>`;
+                }
+                if (strengths.length > 0) {
+                    html += `<div class="strengths-pills">`;
+                    html += strengths.map(s => `<span class="strength-pill"><i class="fas fa-check"></i>${s}</span>`).join('');
+                    html += `</div>`;
+                }
                 html += `</div>`;
             }
 
+            // Instruments
             if (t.instruments.length > 0) {
                 html += `<div class="detail-section"><div class="detail-section-title">Instruments</div>`;
                 html += t.instruments.map(i => `
                     <div class="detail-instrument-card">
-                        <div class="detail-instrument-name">${i.instrument}</div>
+                        <div class="detail-instrument-name">
+                            <span class="level-dot level-${i.teacher_level || 'beginner'}" style="width:9px;height:9px;"></span>
+                            ${i.instrument}${i.teacher_level ? ` <span style="font-weight:500;font-size:0.875rem;color:var(--text-secondary);">(${i.teacher_level})</span>` : ''}
+                        </div>
                         <div class="detail-instrument-grid">
                             <div class="detail-item"><label>Highest Teaching Level</label><p>${i.teacher_level || 'N/A'}</p></div>
                             <div class="detail-item"><label>Youngest Age</label><p>${i.youngest_age_preference ? i.youngest_age_preference + '+' : 'N/A'}</p></div>
@@ -1035,6 +1235,7 @@
                 html += `</div>`;
             }
 
+            // Additional notes
             if (t.additional_notes) {
                 html += `
                     <div class="detail-section">
@@ -1042,6 +1243,8 @@
                         <div style="font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.additional_notes}</div>
                     </div>`;
             }
+
+            html += `</div>`; // close modal-inner
 
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('teacherModal').classList.add('active');
