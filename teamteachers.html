@@ -1139,23 +1139,6 @@
                             ${t.special_needs_willing ? '<span class="teacher-badge badge-success">Special Needs</span>' : ''}
                             ${comfortLevel && comfortLevel >= 8 ? '<span class="teacher-badge badge-purple">High Learning Needs Comfort</span>' : ''}
                         </div>
-                        ${t.bio ? `
-                        <button class="card-bio-toggle" onclick="event.stopPropagation(); toggleCardSection(this)">
-                            <i class="fas fa-chevron-down"></i> Bio
-                        </button>
-                        <div class="card-bio-panel">${t.bio.replace(/<[^>]*>/g, '')}</div>
-                        ` : ''}
-                        ${(t.formal_music_education || t.formal_education_details || t.teaching_strength_1 || t.teaching_strength_2 || t.teaching_strength_3) ? `
-                        <button class="card-bio-toggle" onclick="event.stopPropagation(); toggleCardSection(this)">
-                            <i class="fas fa-chevron-down"></i> Education
-                        </button>
-                        <div class="card-bio-panel">
-                            ${t.formal_education_details ? `<div style="margin-bottom:${(t.teaching_strength_1||t.teaching_strength_2||t.teaching_strength_3)?'0.625rem':'0'}">${t.formal_education_details.replace(/<[^>]*>/g,'')}</div>` : ''}
-                            ${[t.teaching_strength_1, t.teaching_strength_2, t.teaching_strength_3].filter(Boolean).map(s =>
-                                `<div style="display:flex;align-items:flex-start;gap:0.375rem;margin-top:0.375rem;"><i class="fas fa-check" style="color:var(--primary);font-size:0.625rem;margin-top:0.25rem;flex-shrink:0;"></i><span>${s}</span></div>`
-                            ).join('')}
-                        </div>
-                        ` : ''}
                     </div>
                 </div>`;
             }).join('');
@@ -1265,18 +1248,19 @@
                     </div>
                 </div>`;
 
-            // Education & Strengths
+            // Education & Strengths — collapsible
             if (t.formal_music_education || t.formal_education_details || strengths.length > 0) {
-                html += `<div class="detail-section"><div class="detail-section-title">Education & Strengths</div>`;
-                if (t.formal_education_details) {
-                    html += `<div style="margin-bottom:1rem;font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>`;
-                }
-                if (strengths.length > 0) {
-                    html += `<div class="strengths-pills">`;
-                    html += strengths.map(s => `<span class="strength-pill"><i class="fas fa-check"></i>${s}</span>`).join('');
-                    html += `</div>`;
-                }
-                html += `</div>`;
+                html += `
+                <div class="modal-dropdown">
+                    <button class="modal-dropdown-toggle" onclick="toggleModalDropdown(this)">
+                        <span><i class="fas fa-graduation-cap"></i> Education & Strengths</span>
+                        <i class="fas fa-chevron-down modal-dropdown-arrow"></i>
+                    </button>
+                    <div class="modal-dropdown-body">
+                        ${t.formal_education_details ? `<div style="margin-bottom:${strengths.length > 0 ? '1rem' : '0'};font-size:0.9375rem;color:var(--text-primary);line-height:1.6;">${t.formal_education_details}</div>` : ''}
+                        ${strengths.length > 0 ? `<div class="strengths-pills">${strengths.map(s => `<span class="strength-pill"><i class="fas fa-check"></i>${s}</span>`).join('')}</div>` : ''}
+                    </div>
+                </div>`;
             }
 
             // Instruments
