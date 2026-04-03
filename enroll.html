@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll — Enrollment Hub</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --primary: #FA8072;
+  --primary-light: #FFB4A2;
+  --primary-dark: #E96E5D;
+  --secondary: #FF6B9D;
+  --accent: #FFA07A;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --text-primary: #2D3748;
+  --text-secondary: #718096;
+  --text-light: #A0AEC0;
+  --white: #FFFFFF;
+  --gray-50: #F8F9FA;
+  --gray-100: #F1F3F5;
+  --gray-200: #E9ECEF;
+  --gray-300: #DEE2E6;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --shadow-sm: 0 2px 4px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px 0 rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px 0 rgba(0,0,0,0.12);
+  --transition-speed: 0.3s;
+  /* Aliases for compatibility */
+  --coral: #FA8072;
+  --coral-l: rgba(250,128,114,0.1);
+  --coral-d: #E96E5D;
+  --peach: #FFA07A;
+  --bg: #F8F9FA;
+  --wh: #FFFFFF;
+  --ink: #2D3748;
+  --ink2: #718096;
+  --ink3: #A0AEC0;
+  --bdr: #E9ECEF;
+  --bdr2: #DEE2E6;
+  --green: #10B981;
+  --green-bg: rgba(16,185,129,0.08);
+  --yellow: #F59E0B;
+  --yellow-bg: rgba(245,158,11,0.08);
+  --red: #EF4444;
+  --sh: 0 2px 4px 0 rgba(0,0,0,0.05);
+  --sh2: 0 4px 12px 0 rgba(0,0,0,0.08);
+  --sh3: 0 10px 30px 0 rgba(0,0,0,0.12);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-d: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --r: 0.2s ease;
+  --sb: 48px;
+  --lp: 272px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { height:100%; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg-secondary); color:var(--text-primary); height:100vh; overflow:hidden; }
+
+/* ══ SIDEBAR — matches Studio Directory ══ */
+.sb { position:fixed; top:0; left:0; width:260px; height:100vh; background:var(--white); border-right:1px solid var(--gray-200); box-shadow:var(--shadow-sm); transition:width var(--transition-speed) ease; z-index:1000; display:flex; flex-direction:column; }
+.sb.collapsed { width:70px; }
+.sb-header { padding:1.25rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--gray-200); }
+.sb-logo-section { display:flex; align-items:center; gap:.75rem; transition:opacity var(--transition-speed) ease; }
+.sb.collapsed .sb-logo-section { opacity:0; pointer-events:none; }
+.sb-logo { width:36px; height:36px; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:.875rem; font-weight:700; flex-shrink:0; }
+.sb-logo-text { font-size:1.125rem; font-weight:700; color:var(--text-primary); white-space:nowrap; }
+.sb-toggle { width:28px; height:28px; border:1px solid var(--gray-200); background:var(--white); color:var(--text-secondary); border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; flex-shrink:0; font-size:.75rem; }
+.sb-toggle:hover { background:var(--gray-50); }
+.sb.collapsed .sb-toggle-icon { transform:rotate(180deg); }
+.sb-toggle-icon { transition:transform var(--transition-speed) ease; }
+.sb-nav { flex:1; overflow-y:auto; padding:.75rem 0; }
+.sbl { display:flex; align-items:center; gap:.75rem; padding:.75rem 1.25rem; margin:.2rem .625rem; color:var(--text-secondary); text-decoration:none; border-radius:9px; transition:all .2s ease; cursor:pointer; border:none; background:transparent; width:calc(100% - 1.25rem); font-size:.9rem; font-weight:500; white-space:nowrap; }
+.sbl:hover { background:var(--gray-100); color:var(--text-primary); }
+.sbl.act { background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; box-shadow:0 4px 12px rgba(250,128,114,.3); }
+.sb-nav-icon { font-size:1rem; flex-shrink:0; width:18px; text-align:center; }
+.sb-nav-text { transition:opacity var(--transition-speed) ease; }
+.sb.collapsed .sb-nav-text { opacity:0; pointer-events:none; }
+.sb.collapsed .sbl { justify-content:center; padding:.75rem; }
+.sb-footer { padding:.4rem 0 .75rem; border-top:1px solid var(--gray-200); }
+.sb-lo { display:flex; align-items:center; gap:.75rem; padding:.75rem 1.25rem; margin:.2rem .625rem; color:var(--secondary) !important; text-decoration:none; border-radius:9px; transition:all .2s ease; cursor:pointer; border:none; background:transparent; width:calc(100% - 1.25rem); font-size:.9rem; font-weight:500; white-space:nowrap; }
+.sb-lo:hover { background:rgba(255,107,157,.08) !important; }
+.sb-div { height:1px; background:var(--gray-200); margin:.375rem .625rem; }
+
+/* ══ MAIN ══ */
+.main { margin-left:260px; display:flex; flex-direction:column; height:100vh; overflow:hidden; transition:margin-left var(--transition-speed) ease; }
+.sb.collapsed ~ .main { margin-left:70px; }
+body { display:block; }
+
+/* ══ TOPBAR ══ */
+.topbar { height:56px; background:var(--white); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; flex-shrink:0; box-shadow:var(--shadow-sm); }
+.tb-left { display:flex; align-items:center; gap:.75rem; }
+.tb-title { font-size:1.125rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:.5rem; }
+.ldot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,.15); animation:lp 2.5s infinite; }
+@keyframes lp { 0%,100%{box-shadow:0 0 0 3px rgba(22,163,74,.15);} 50%{box-shadow:0 0 0 6px rgba(22,163,74,.06);} }
+.tb-sep { width:1px; height:20px; background:var(--bdr); }
+
+/* Context pills in topbar */
+.tb-ctx { display:flex; align-items:center; gap:.5rem; flex:1; }
+.ctx-brand-btn { display:flex; align-items:center; gap:.375rem; padding:.35rem .875rem; border-radius:20px; border:1.5px solid var(--coral); background:var(--coral-l); color:var(--coral-d); font-size:.8125rem; font-weight:600; font-family:var(--font); cursor:pointer; transition:all var(--r); }
+.ctx-brand-btn:hover { background:rgba(241,123,107,.15); }
+.ctx-brand-btn.selected { background:var(--coral); color:#fff; border-color:var(--coral); }
+.ctx-brand-btn .chg { background:none; border:none; color:rgba(255,255,255,.8); cursor:pointer; margin-left:.25rem; font-size:.625rem; }
+.ctx-city-btn { display:flex; align-items:center; gap:.375rem; padding:.35rem .875rem; border-radius:20px; border:1.5px solid var(--bdr); background:var(--wh); color:var(--ink2); font-size:.8125rem; font-weight:600; font-family:var(--font); cursor:pointer; transition:all var(--r); }
+.ctx-city-btn:hover:not(:disabled) { border-color:var(--coral); color:var(--coral); }
+.ctx-city-btn:disabled { opacity:.4; cursor:not-allowed; }
+.ctx-city-btn.selected { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+.ctx-city-btn.selected .chg { background:none; border:none; color:var(--green); cursor:pointer; margin-left:.25rem; font-size:.625rem; opacity:.7; }
+.ctx-arrow { color:var(--ink3); font-size:.5625rem; }
+
+/* Mode toggle */
+.mode-toggle { display:flex; align-items:center; gap:.25rem; margin-left:auto; }
+.mode-btn { padding:.35rem .875rem; border-radius:20px; border:1.5px solid var(--gray-200); background:transparent; font-size:.75rem; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all .2s ease; }
+.mode-btn.on { background:var(--text-primary); border-color:var(--text-primary); color:#fff; }
+
+.tb-right { display:flex; align-items:center; gap:.5rem; }
+.new-call-btn { display:flex; align-items:center; gap:.375rem; padding:.5rem 1rem; border:1.5px solid var(--gray-200); border-radius:8px; background:var(--white); color:var(--text-secondary); font-size:.8125rem; font-weight:600; cursor:pointer; transition:all .2s ease; }
+.new-call-btn:hover { border-color:var(--secondary); color:var(--secondary); background:rgba(255,107,157,.05); }
+.sum-btn-top { display:flex; align-items:center; gap:.375rem; padding:.5rem 1rem; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; border:none; border-radius:8px; font-size:.8125rem; font-weight:600; cursor:pointer; transition:all .2s ease; box-shadow:0 2px 8px rgba(250,128,114,.3); }
+.sum-btn-top:hover { box-shadow:0 4px 12px rgba(250,128,114,.4); transform:translateY(-1px); }
+.close-jump-btn { display:flex; align-items:center; gap:.375rem; padding:.5rem 1rem; background:var(--success); color:#fff; border:none; border-radius:8px; font-size:.8125rem; font-weight:600; cursor:pointer; transition:all .2s ease; }
+.close-jump-btn:hover { background:#15803D; }
+
+/* ══ STAGE NAV ══ */
+.stage-nav { background:var(--white); border-bottom:2px solid var(--gray-200); display:flex; align-items:center; padding:0 1.5rem; height:48px; overflow-x:auto; gap:.25rem; flex-shrink:0; }
+.stage-nav::-webkit-scrollbar { display:none; }
+.snbtn { display:flex; align-items:center; gap:.375rem; padding:.625rem 1rem; border-radius:0; border:none; border-bottom:3px solid transparent; background:transparent; cursor:pointer; font-size:.875rem; font-weight:600; color:var(--text-secondary); transition:all .2s ease; white-space:nowrap; position:relative; margin-bottom:-2px; }
+.snbtn:hover { color:var(--text-primary); background:var(--gray-100); }
+.snbtn.on { color:var(--primary); border-bottom-color:var(--primary); background:var(--white); }
+.snbtn.vis .sdot { background:var(--success); border-color:var(--success); }
+.snbtn.on .sdot { background:var(--primary); border-color:var(--primary); }
+.sdot { width:6px; height:6px; border-radius:50%; border:1.5px solid var(--gray-300); background:var(--gray-100); transition:all .2s ease; }
+.sn-sep { width:1px; height:16px; background:var(--gray-200); flex-shrink:0; margin:0 .125rem; }
+
+/* ══ BODY ══ */
+.body { flex:1; display:flex; overflow:hidden; min-height:0; position:relative; }
+
+/* ══ STAGE CONTENT ══ */
+.stage-wrap { flex:1; overflow-y:auto; display:flex; flex-direction:column; min-width:0; }
+.stage-pane { display:none; flex-direction:column; flex:1; }
+.stage-pane.on { display:flex; }
+
+/* ══ SCRIPT STAGE LAYOUT ══ */
+.script-stage { display:flex; flex-direction:column; flex:1; padding:2rem 2.5rem 1.5rem; max-width:780px; margin:0 auto; width:100%; gap:1.25rem; }
+
+/* Call type selector */
+.call-type-bar { display:flex; gap:.5rem; align-items:center; }
+.call-type-bar label { font-size:.6875rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.06em; }
+.ct-btn { padding:.375rem .875rem; border:1.5px solid var(--bdr); border-radius:20px; background:var(--wh); font-size:.75rem; font-weight:600; color:var(--ink2); cursor:pointer; font-family:var(--font); transition:all var(--r); }
+.ct-btn:hover { border-color:var(--coral); color:var(--coral); }
+.ct-btn.on { background:var(--coral); border-color:var(--coral); color:#fff; }
+
+/* THE SCRIPT — hero element */
+.script-hero { background:var(--white); border-radius:14px; padding:1.5rem; box-shadow:var(--shadow-md); position:relative; border:1px solid var(--gray-200); }
+.script-hero-label { font-size:.6875rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.875rem; display:flex; align-items:center; justify-content:space-between; }
+.script-hero-label span { display:flex; align-items:center; gap:.375rem; }
+.script-copy-btn { display:flex; align-items:center; gap:.3rem; padding:.3rem .75rem; border:1px solid var(--gray-200); border-radius:8px; background:var(--gray-50); color:var(--text-secondary); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s ease; }
+.script-copy-btn:hover { border-color:var(--primary); color:var(--primary); background:rgba(250,128,114,.05); }
+.script-copy-btn.copied { background:rgba(16,185,129,.08); border-color:var(--success); color:var(--success); }
+.script-text { font-size:1.125rem; line-height:1.75; color:var(--text-primary); font-style:italic; }
+.script-text strong { color:var(--primary-dark); font-style:normal; font-weight:700; }
+
+/* Sendoff is green-tinted */
+.script-hero.sendoff { background:var(--green-bg); border-color:rgba(22,163,74,.2); }
+.script-hero.sendoff .script-hero-label { color:var(--green); }
+.script-hero.sendoff .script-text strong { color:var(--green); }
+
+/* Supporting section — visually secondary */
+.supporting { display:flex; flex-direction:column; gap:.75rem; }
+.help-toggle { display:flex; align-items:center; gap:.375rem; background:none; border:none; cursor:pointer; font-size:.75rem; font-weight:600; color:var(--ink3); font-family:var(--font); padding:0; transition:color var(--r); }
+.help-toggle:hover { color:var(--ink); }
+.help-toggle i { font-size:.625rem; transition:transform var(--r); }
+.help-toggle.open i { transform:rotate(180deg); }
+.help-body { display:none; flex-direction:column; gap:.625rem; }
+.help-body.open { display:flex; }
+.tip-item { display:flex; align-items:flex-start; gap:.5rem; font-size:.875rem; color:var(--text-secondary); line-height:1.55; padding:.625rem .875rem; background:var(--gray-50); border-radius:10px; }
+.tip-icon { color:var(--ink3); flex-shrink:0; margin-top:2px; font-size:.5rem; }
+.tip-item.training-only { display:none; }
+body.training .tip-item.training-only { display:flex; }
+
+/* Highlight tip */
+.tip-item.hl { background:rgba(250,128,114,.08); border-left:3px solid var(--primary); padding-left:.75rem; }
+.tip-item.hl .tip-icon { color:var(--coral); font-size:.875rem; }
+
+/* Pricing tiles */
+.price-row { display:flex; gap:.75rem; flex-wrap:wrap; }
+.price-tile { background:var(--wh); border:1px solid var(--bdr); border-radius:12px; padding:1rem 1.25rem; text-align:center; flex:1; min-width:100px; box-shadow:var(--sh); }
+.pt-lbl { font-size:.6875rem; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.03em; margin-bottom:.3rem; }
+.pt-val { font-size:1.375rem; font-weight:800; color:var(--text-primary); }
+.pt-sub { font-size:.5rem; color:var(--ink3); margin-top:.125rem; }
+.price-notes-row { display:flex; gap:.625rem; flex-wrap:wrap; }
+.pnote { display:flex; align-items:center; gap:.375rem; font-size:.8125rem; color:var(--ink2); padding:.4375rem .75rem; background:var(--green-bg); border-radius:8px; border:1px solid rgba(22,163,74,.15); flex:1; min-width:140px; }
+.pnote i { color:var(--green); flex-shrink:0; font-size:.75rem; }
+
+/* Reaction picker */
+.reaction-label { font-size:.6875rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.625rem; }
+.reaction-pills { display:flex; flex-wrap:wrap; gap:.5rem; }
+.rpill { padding:.5rem 1rem; border:1.5px solid var(--gray-200); border-radius:20px; background:var(--white); font-size:.8125rem; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all .2s ease; display:flex; align-items:center; gap:.375rem; }
+.rpill:hover { border-color:var(--primary); color:var(--primary); background:rgba(250,128,114,.05); }
+.rpill.on { background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); border-color:transparent; color:#fff; box-shadow:0 2px 8px rgba(250,128,114,.3); }
+.rpill i { font-size:.6875rem; }
+
+/* Reaction response */
+.reaction-response { background:var(--wh); border:1px solid var(--bdr); border-radius:12px; overflow:hidden; animation:slideDown .2s ease; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-6px);} to{opacity:1;transform:translateY(0);} }
+.rr-header { padding:.75rem 1.125rem; font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; display:flex; align-items:center; gap:.375rem; }
+.rr-header.ok { background:var(--green-bg); color:var(--green); }
+.rr-header.warn { background:var(--yellow-bg); color:var(--yellow); }
+.rr-header.info { background:var(--coral-l); color:var(--coral-d); }
+.rr-body { padding:1.125rem; }
+
+/* Sub-reactions */
+.sub-pills { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.875rem; }
+.spill { padding:.375rem .875rem; border:1.5px solid var(--bdr); border-radius:20px; background:var(--bg); font-size:.75rem; font-weight:600; color:var(--ink2); cursor:pointer; font-family:var(--font); transition:all var(--r); display:flex; align-items:center; gap:.3rem; }
+.spill:hover { border-color:var(--coral); color:var(--coral); }
+.spill.on { background:var(--coral-l); border-color:var(--coral); color:var(--coral-d); }
+.sub-response { animation:slideDown .2s ease; }
+
+/* Upsell tiles */
+.upsell-tiles { display:grid; grid-template-columns:1fr 1fr; gap:.625rem; margin-top:.625rem; }
+.ut { background:var(--bg); border:1.5px solid var(--bdr); border-radius:10px; padding:.875rem; text-align:center; transition:all var(--r); }
+.ut:hover { border-color:var(--coral); box-shadow:var(--sh); }
+.ut-lbl { font-size:.5rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.04em; margin-bottom:.2rem; }
+.ut-val { font-size:1.25rem; font-weight:800; color:var(--ink); }
+.ut-diff { font-size:.6875rem; color:var(--coral); font-weight:700; margin-top:.2rem; }
+.ut-sub { font-size:.5rem; color:var(--ink3); margin-top:.1rem; }
+
+/* Inline script (for objections) */
+.inline-script { background:var(--coral-l); border-left:3px solid var(--coral); border-radius:0 8px 8px 0; padding:.875rem 1rem; font-size:.9375rem; color:var(--ink); line-height:1.7; font-style:italic; margin:.625rem 0; position:relative; }
+.inline-script strong { color:var(--coral-d); font-style:normal; }
+.inline-script.green-script { background:var(--green-bg); border-left-color:var(--green); }
+.inline-script.green-script strong { color:var(--green); }
+.inline-copy { position:absolute; top:.5rem; right:.5rem; width:24px; height:24px; border-radius:5px; border:1px solid rgba(241,123,107,.3); background:rgba(241,123,107,.08); color:var(--coral); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.5625rem; transition:all var(--r); }
+.inline-copy:hover { background:var(--coral); color:#fff; }
+.inline-copy.copied { background:var(--green); border-color:var(--green); color:#fff; }
+
+/* Date/text inputs in reactions */
+.fu-row { display:flex; flex-direction:column; gap:.25rem; margin-top:.625rem; }
+.fu-lbl { font-size:.5rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; }
+.fu-input { padding:.5rem .75rem; border:1.5px solid var(--bdr); border-radius:8px; font-size:.875rem; font-family:var(--font); color:var(--ink); background:var(--bg); transition:all var(--r); width:100%; }
+.fu-input:focus { outline:none; border-color:var(--coral); background:var(--wh); }
+
+/* Close stage */
+.close-fields { display:grid; grid-template-columns:1fr 1fr; gap:.625rem; margin-bottom:1rem; }
+.cf label { display:block; font-size:.5rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.3rem; }
+.cf-in { width:100%; padding:.75rem 1rem; border:1.5px solid var(--gray-200); border-radius:10px; font-size:.9375rem; color:var(--text-primary); background:var(--white); transition:all .2s ease; }
+.cf-in:focus { outline:none; border-color:var(--coral); background:var(--wh); }
+.cf-in::placeholder { color:var(--ink3); font-size:.8125rem; }
+.checklist { display:flex; flex-direction:column; gap:.375rem; }
+.cc { display:flex; align-items:center; gap:.625rem; padding:.75rem .875rem; border:1.5px solid var(--gray-200); border-radius:10px; background:var(--gray-50); cursor:pointer; font-size:.875rem; font-weight:500; color:var(--text-secondary); transition:all .2s ease; }
+.cc:hover { border-color:var(--bdr); }
+.cc.on { background:var(--green-bg); border-color:rgba(22,163,74,.25); color:var(--ink); }
+.cc-box { width:16px; height:16px; border-radius:4px; border:2px solid var(--bdr); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all var(--r); }
+.cc.on .cc-box { background:var(--green); border-color:var(--green); }
+.cc-box i { color:#fff; font-size:.375rem; opacity:0; }
+.cc.on .cc-box i { opacity:1; }
+
+/* Sched btn */
+.sched-btn { display:flex; align-items:center; justify-content:center; gap:.5rem; padding:.875rem; border-radius:10px; width:100%; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; border:none; font-size:.9375rem; font-weight:600; cursor:pointer; text-decoration:none; box-shadow:0 4px 12px rgba(250,128,114,.3); transition:all .2s ease; }
+.sched-btn:hover { background:var(--coral-d); transform:translateY(-1px); }
+.sched-btn.dis { opacity:.4; pointer-events:none; }
+.nearby-btn { display:flex; align-items:center; justify-content:center; gap:.375rem; padding:.625rem; border-radius:8px; width:100%; margin-top:.4375rem; border:1.5px solid var(--bdr); background:var(--wh); color:var(--ink2); font-size:.8125rem; font-weight:600; font-family:var(--font); cursor:pointer; transition:all var(--r); }
+.nearby-btn:hover { border-color:var(--coral); color:var(--coral); }
+
+/* Ref accordion */
+.ref-acc { border:1px solid var(--gray-200); border-radius:12px; overflow:hidden; }
+.ref-tog { width:100%; display:flex; align-items:center; justify-content:space-between; padding:.875rem 1.125rem; background:var(--gray-50); border:none; cursor:pointer; font-size:.875rem; font-weight:600; color:var(--text-secondary); transition:all .2s ease; }
+.ref-tog:hover { background:var(--bdr); color:var(--ink); }
+.ref-tog.open { background:var(--wh); }
+.ref-arr { color:var(--ink3); font-size:.5625rem; transition:transform var(--r); }
+.ref-tog.open .ref-arr { transform:rotate(180deg); }
+.ref-body { display:none; padding:.875rem 1rem; border-top:1px solid var(--bdr); background:var(--wh); }
+.ref-body.open { display:block; }
+.pol-item { padding:.625rem .875rem; background:var(--bg); border-radius:7px; border-left:3px solid var(--coral); margin-bottom:.375rem; }
+.pol-t { font-size:.8125rem; font-weight:700; margin-bottom:.175rem; }
+.pol-d { font-size:.6875rem; color:var(--ink2); line-height:1.5; }
+.ir { padding:.375rem .5rem; background:var(--bg); border-radius:6px; margin-bottom:.25rem; }
+.ir-l { font-size:.4375rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.125rem; }
+.ir-v { font-size:.8125rem; color:var(--ink); font-weight:500; }
+.nb-item { padding:.5625rem .875rem; border:1.5px solid var(--bdr); border-radius:7px; cursor:pointer; transition:all var(--r); margin-bottom:.25rem; }
+.nb-item:hover { border-color:var(--coral); background:var(--coral-l); }
+.nb-nm { font-size:.875rem; font-weight:700; }
+.nb-loc { font-size:.6875rem; color:var(--ink2); }
+.nb-cta { font-size:.5625rem; color:var(--coral); font-weight:600; margin-top:.2rem; }
+
+/* Next step footer */
+.stage-footer { background:var(--white); border-top:1px solid var(--gray-200); padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.stage-progress { font-size:.8125rem; font-weight:500; color:var(--text-secondary); }
+.stage-progress strong { color:var(--text-primary); font-weight:700; }
+.next-btn { display:flex; align-items:center; gap:.375rem; padding:.625rem 1.25rem; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; border:none; border-radius:10px; font-size:.875rem; font-weight:600; cursor:pointer; transition:all .2s ease; box-shadow:0 4px 12px rgba(250,128,114,.3); }
+.next-btn:hover { box-shadow:0 4px 16px rgba(250,128,114,.4); transform:translateY(-1px); }
+.next-btn i { font-size:.625rem; }
+.skip-btn { background:none; border:none; color:var(--text-light); font-size:.8125rem; font-weight:500; cursor:pointer; transition:color .2s ease; }
+.skip-btn:hover { color:var(--text-secondary); }
+
+/* ══ DISCOVERY STAGE ══ */
+.disc-stage { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+.disc-timeline { display:flex; align-items:center; justify-content:center; gap:.375rem; padding:.625rem 1.5rem; background:var(--white); border-bottom:1px solid var(--gray-200); flex-shrink:0; flex-wrap:wrap; }
+.dt-dot { width:26px; height:26px; border-radius:50%; border:2px solid var(--gray-200); background:var(--gray-100); display:flex; align-items:center; justify-content:center; font-size:.5rem; font-weight:800; color:var(--text-light); cursor:default; transition:all .2s ease; flex-shrink:0; }
+.dt-dot.done { border-color:var(--success); background:rgba(16,185,129,.1); color:var(--success); cursor:pointer; }
+.dt-dot.done:hover { background:rgba(16,185,129,.2); transform:scale(1.1); }
+.dt-dot.active { border-color:var(--primary); background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; box-shadow:0 2px 8px rgba(250,128,114,.3); }
+.dt-line { width:14px; height:2px; background:var(--gray-200); border-radius:1px; flex-shrink:0; }
+.dt-line.done { background:rgba(16,185,129,.3); }
+.disc-content { flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1.5rem 2rem; max-width:640px; margin:0 auto; width:100%; }
+.disc-counter { font-size:.6875rem; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.625rem; text-align:center; }
+.disc-question { font-size:1.375rem; font-weight:700; color:var(--text-primary); text-align:center; line-height:1.4; margin-bottom:1.375rem; }
+.disc-search-wrap { position:relative; width:100%; max-width:420px; margin-bottom:.625rem; }
+.disc-search-icon { position:absolute; left:.875rem; top:50%; transform:translateY(-50%); color:var(--primary); font-size:.875rem; pointer-events:none; }
+.disc-search-input { width:100%; padding:.75rem 1rem .75rem 2.5rem; border:1.5px solid var(--gray-200); border-radius:10px; font-size:.9375rem; color:var(--text-primary); background:var(--white); transition:all .2s ease; box-shadow:var(--shadow-sm); }
+.disc-search-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(250,128,114,.1); background:var(--white); }
+.disc-search-input::placeholder { color:var(--text-light); }
+.disc-search-results { width:100%; max-width:420px; display:flex; flex-direction:column; gap:.25rem; max-height:190px; overflow-y:auto; margin-bottom:.625rem; }
+.disc-sr-item { display:flex; align-items:center; justify-content:space-between; padding:.625rem .875rem; border:1.5px solid var(--gray-200); border-radius:9px; background:var(--white); cursor:pointer; transition:all .2s ease; box-shadow:var(--shadow-sm); }
+.disc-sr-item:hover { border-color:var(--primary); background:rgba(250,128,114,.04); }
+.disc-sr-nm { font-size:.9375rem; font-weight:600; color:var(--text-primary); }
+.disc-sr-mt { font-size:.6875rem; color:var(--text-secondary); margin-top:.1rem; }
+.disc-sr-arr { color:var(--text-light); font-size:.625rem; transition:color .2s ease; }
+.disc-sr-item:hover .disc-sr-arr { color:var(--primary); }
+.disc-sel-pill { display:inline-flex; align-items:center; gap:.375rem; padding:.4rem .875rem; background:rgba(250,128,114,.1); border:1.5px solid rgba(250,128,114,.25); border-radius:20px; font-size:.875rem; font-weight:600; color:var(--primary-dark); margin-bottom:.625rem; }
+.disc-sel-pill .chg { background:none; border:none; color:var(--primary-dark); cursor:pointer; opacity:.7; font-size:.5625rem; padding:0 0 0 .25rem; }
+.disc-sel-pill .chg:hover { opacity:1; }
+.disc-answers { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; width:100%; }
+.disc-ans { padding:.5rem 1.125rem; border:1.5px solid var(--gray-200); border-radius:20px; background:var(--white); font-size:.9rem; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all .2s ease; box-shadow:var(--shadow-sm); }
+.disc-ans:hover { border-color:var(--primary); color:var(--primary); transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.disc-ans.on { background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); border-color:transparent; color:#fff; box-shadow:0 4px 12px rgba(250,128,114,.3); }
+.disc-ans.multi.on { background:rgba(250,128,114,.1); border-color:var(--primary); color:var(--primary-dark); }
+.disc-free-wrap { display:flex; flex-direction:column; align-items:center; gap:.5rem; margin-top:.5rem; width:100%; }
+.disc-free-input { max-width:200px; padding:.625rem 1rem; border:2px solid var(--gray-200); border-radius:10px; font-size:1rem; color:var(--text-primary); background:var(--white); text-align:center; transition:all .2s ease; box-shadow:var(--shadow-sm); width:100%; }
+.disc-free-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(250,128,114,.1); }
+.disc-free-input::placeholder { color:var(--text-light); }
+.disc-next-btn { padding:.5rem 1.25rem; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; border:none; border-radius:8px; font-size:.875rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:.375rem; transition:all .2s ease; box-shadow:0 2px 8px rgba(250,128,114,.3); }
+.disc-next-btn:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(250,128,114,.4); }
+.disc-next-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+.disc-nav { display:flex; align-items:center; justify-content:space-between; width:100%; margin-top:1.25rem; padding-top:.875rem; border-top:1px solid var(--gray-200); }
+.disc-back { display:flex; align-items:center; gap:.3rem; background:none; border:none; color:var(--text-light); font-size:.8125rem; font-weight:600; cursor:pointer; transition:color .2s ease; }
+.disc-back:hover { color:var(--text-secondary); }
+.disc-back:disabled { opacity:0; pointer-events:none; }
+.triage { display:flex; align-items:flex-start; gap:.4375rem; padding:.5rem .75rem; border-radius:8px; font-size:.8125rem; font-weight:500; margin-top:.375rem; }
+.triage.ok { background:rgba(16,185,129,.08); color:var(--success); border:1px solid rgba(16,185,129,.2); }
+.triage.warn { background:rgba(245,158,11,.08); color:var(--warning); border:1px solid rgba(245,158,11,.2); }
+.triage.err { background:rgba(239,68,68,.08); color:var(--danger); border:1px solid rgba(239,68,68,.2); }
+.student-cards { display:flex; flex-direction:column; gap:.75rem; width:100%; margin-top:.75rem; }
+.student-card { background:var(--white); border:1.5px solid var(--gray-200); border-radius:14px; padding:1rem; box-shadow:var(--shadow-sm); }
+.sc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; }
+.sc-title { font-size:.875rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:.5rem; }
+.sc-num { width:20px; height:20px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; font-size:.5rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sc-remove { background:none; border:none; color:var(--text-light); cursor:pointer; font-size:.75rem; transition:color .2s ease; padding:.2rem; }
+.sc-remove:hover { color:var(--danger); }
+.sc-lbl { font-size:.5rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.3rem; }
+.sc-row { margin-bottom:.625rem; }
+.sc-name-input { width:100%; padding:.4rem .625rem; border:1.5px solid var(--gray-200); border-radius:7px; font-size:.8125rem; color:var(--text-primary); background:var(--gray-50); transition:all .2s ease; }
+.sc-name-input:focus { outline:none; border-color:var(--primary); background:var(--white); }
+.sc-name-input::placeholder { color:var(--text-light); font-size:.75rem; }
+.sc-chips { display:flex; flex-wrap:wrap; gap:.3rem; }
+.sc-chip { padding:.275rem .5625rem; border:1.5px solid var(--gray-200); border-radius:20px; background:var(--gray-50); font-size:.6875rem; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all .15s ease; }
+.sc-chip:hover { border-color:var(--primary); color:var(--primary); }
+.sc-chip.on { background:rgba(250,128,114,.1); border-color:var(--primary); color:var(--primary-dark); }
+.sc-chip.age-on { background:linear-gradient(135deg,var(--primary),var(--accent)); border-color:transparent; color:#fff; }
+.teacher-recs { margin-top:.625rem; padding:.625rem .75rem; background:rgba(250,128,114,.04); border:1px solid rgba(250,128,114,.15); border-radius:9px; }
+.teacher-recs-lbl { font-size:.5rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.4375rem; display:flex; align-items:center; gap:.3rem; }
+.teacher-rec-chips { display:flex; flex-wrap:wrap; gap:.3rem; }
+.teacher-rec-chip { display:flex; align-items:center; gap:.3rem; padding:.25rem .5rem; background:var(--white); border:1px solid var(--gray-200); border-radius:20px; font-size:.6875rem; font-weight:600; color:var(--text-primary); box-shadow:var(--shadow-sm); }
+.level-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.level-dot.beginner { background:var(--success); }
+.level-dot.intermediate { background:var(--warning); }
+.level-dot.advanced { background:var(--primary); }
+.add-student-btn { display:flex; align-items:center; gap:.375rem; padding:.625rem 1rem; border:1.5px dashed var(--primary); border-radius:10px; background:rgba(250,128,114,.04); color:var(--primary-dark); font-size:.8125rem; font-weight:600; cursor:pointer; width:100%; justify-content:center; transition:all .2s ease; margin-top:.375rem; }
+.add-student-btn:hover { background:rgba(250,128,114,.09); }
+.prox-section { border-top:1px solid var(--gray-200); margin-top:.625rem; padding-top:.625rem; }
+.prox-toggle { display:flex; align-items:center; gap:.375rem; background:none; border:none; font-size:.8125rem; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:color .2s ease; padding:0; }
+.prox-toggle:hover { color:var(--primary); }
+.prox-body { display:none; margin-top:.5rem; }
+.prox-body.open { display:block; }
+.prox-results { display:flex; flex-direction:column; gap:.2rem; margin-top:.375rem; max-height:140px; overflow-y:auto; }
+.prox-item { padding:.5rem .75rem; border-radius:8px; background:var(--gray-50); cursor:pointer; transition:all .2s ease; display:flex; align-items:center; justify-content:space-between; border:1px solid var(--gray-200); }
+.prox-item:hover { background:rgba(250,128,114,.05); border-color:var(--primary); }
+.prox-nm { font-size:.875rem; font-weight:700; color:var(--text-primary); }
+.prox-dist { font-size:.6875rem; color:var(--primary); font-weight:600; }
+.prox-addr { font-size:.5625rem; color:var(--text-secondary); margin-top:.1rem; }
+
+/* ══ DROPDOWN OVERLAY ══ */
+.dd-overlay { position:fixed; inset:0; z-index:90; display:none; }
+.dd-overlay.open { display:block; }
+.dd-panel { position:absolute; top:calc(100% + 8px); left:0; background:var(--wh); border:1.5px solid var(--bdr); border-radius:14px; box-shadow:var(--sh3); z-index:100; min-width:300px; padding:.875rem; animation:ddFade .15s ease; }
+@keyframes ddFade { from{opacity:0;transform:translateY(-4px);} to{opacity:1;transform:translateY(0);} }
+.dd-search-w { position:relative; margin-bottom:.5rem; }
+.dd-search-i { position:absolute; left:.75rem; top:50%; transform:translateY(-50%); color:var(--ink3); font-size:.8125rem; pointer-events:none; }
+.dd-search { width:100%; padding:.5625rem .75rem .5625rem 2.25rem; border:1.5px solid var(--bdr); border-radius:9px; font-size:.9rem; font-family:var(--font); color:var(--ink); background:var(--bg); transition:all var(--r); }
+.dd-search:focus { outline:none; border-color:var(--coral); background:var(--wh); }
+.dd-results { max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:.2rem; }
+.dd-item { display:flex; align-items:center; justify-content:space-between; padding:.5625rem .75rem; border-radius:8px; cursor:pointer; transition:all var(--r); }
+.dd-item:hover { background:var(--coral-l); }
+.dd-nm { font-size:.9rem; font-weight:600; color:var(--ink); }
+.dd-mt { font-size:.6875rem; color:var(--ink3); }
+.dd-arr { color:var(--ink3); font-size:.5625rem; }
+.dd-item:hover .dd-arr { color:var(--coral); }
+
+/* Proximity finder */
+.prox-section { margin-top:.625rem; border-top:1px solid var(--bdr); padding-top:.625rem; }
+.prox-toggle { display:flex; align-items:center; gap:.375rem; background:none; border:none; font-size:.75rem; font-weight:600; color:var(--ink3); cursor:pointer; font-family:var(--font); transition:color var(--r); }
+.prox-toggle:hover { color:var(--coral); }
+.prox-toggle i { font-size:.625rem; }
+.prox-body { display:none; margin-top:.5rem; }
+.prox-body.open { display:block; }
+.prox-results { display:flex; flex-direction:column; gap:.25rem; margin-top:.375rem; max-height:140px; overflow-y:auto; }
+.prox-item { padding:.4375rem .625rem; border-radius:7px; background:var(--bg); cursor:pointer; transition:all var(--r); display:flex; align-items:center; justify-content:space-between; }
+.prox-item:hover { background:var(--coral-l); }
+.prox-nm { font-size:.8125rem; font-weight:700; color:var(--ink); }
+.prox-dist { font-size:.6875rem; color:var(--coral); font-weight:600; }
+.prox-addr { font-size:.5625rem; color:var(--ink3); margin-top:.1rem; }
+
+/* ══ LEAD PANEL ══ */
+.lead-tab { position:absolute; right:0; top:50%; transform:translateY(-50%); width:22px; background:var(--wh); border:1px solid var(--bdr); border-right:none; border-radius:6px 0 0 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.25rem; padding:.5rem .25rem; cursor:pointer; z-index:10; box-shadow:-2px 0 6px rgba(26,23,20,.06); transition:right var(--r); }
+.lead-tab.open { right:var(--lp); }
+.lead-tab i { color:var(--ink3); font-size:.5rem; }
+.lead-tab:hover i { color:var(--coral); }
+.lead-tab-lbl { font-size:.3125rem; font-weight:800; color:var(--ink3); text-transform:uppercase; letter-spacing:.06em; writing-mode:vertical-rl; transform:rotate(180deg); }
+.lead-panel { width:var(--lp); background:var(--wh); border-left:1px solid var(--bdr); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; transform:translateX(100%); transition:transform var(--r); position:absolute; right:0; top:0; bottom:0; z-index:9; }
+.lead-panel.open { transform:translateX(0); }
+.lp-hd { padding:.75rem .875rem; border-bottom:1px solid var(--bdr); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.lp-title { font-size:.6875rem; font-weight:700; color:var(--text-primary); text-transform:uppercase; letter-spacing:.03em; display:flex; align-items:center; gap:.375rem; }
+.lp-title i { color:var(--primary); }
+.lp-body { flex:1; overflow-y:auto; padding:.75rem; display:flex; flex-direction:column; gap:.5rem; }
+.lp-body::-webkit-scrollbar { width:3px; }
+.lp-body::-webkit-scrollbar-thumb { background:var(--bdr); border-radius:2px; }
+.lf label { display:block; font-size:.4375rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.2rem; }
+.li { width:100%; padding:.375rem .5rem; border:1.5px solid var(--bdr); border-radius:6px; font-size:.75rem; font-family:var(--font); color:var(--ink); background:var(--bg); transition:all var(--r); }
+.li:focus { outline:none; border-color:var(--coral); background:var(--wh); }
+.li::placeholder { color:var(--ink3); font-size:.6875rem; }
+.li.ta { resize:vertical; min-height:48px; line-height:1.5; }
+.lc-row { display:flex; flex-wrap:wrap; gap:.2rem; }
+.lc { padding:.2rem .4375rem; border:1.5px solid var(--bdr); border-radius:20px; background:var(--bg); font-size:.625rem; font-weight:600; color:var(--ink2); cursor:pointer; font-family:var(--font); transition:all var(--r); }
+.lc:hover { border-color:var(--coral); color:var(--coral); }
+.lc.on { background:var(--coral-l); border-color:var(--coral); color:var(--coral-d); }
+.ld { height:1px; background:var(--bdr); }
+.ls { font-size:.4375rem; font-weight:800; color:var(--ink3); text-transform:uppercase; letter-spacing:.07em; display:flex; align-items:center; gap:.25rem; }
+.ls::after { content:''; flex:1; height:1px; background:var(--bdr); }
+.lp-ft { padding:.625rem; border-top:1px solid var(--bdr); flex-shrink:0; }
+.sum-btn { width:100%; padding:.625rem; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); color:#fff; border:none; border-radius:10px; font-size:.75rem; font-weight:700; font-family:var(--font); cursor:pointer; transition:all var(--r); display:flex; align-items:center; justify-content:center; gap:.3rem; }
+.sum-btn:hover { background:var(--coral-d); }
+
+/* ══ INFO BAR ══ */
+.info-bar { position:absolute; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--gray-200); z-index:20; box-shadow:0 -2px 8px rgba(0,0,0,.04); }
+.ib-top { height:38px; display:flex; align-items:center; padding:0 1.25rem; gap:.625rem; cursor:pointer; user-select:none; transition:background var(--r); }
+.ib-top:hover { background:var(--bg); }
+.ib-nm { font-size:.6875rem; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:.3rem; flex-shrink:0; }
+.ib-nm i { color:var(--coral); font-size:.5rem; }
+.ib-sep { width:1px; height:12px; background:var(--bdr); flex-shrink:0; }
+.ib-quick { display:flex; align-items:center; gap:.625rem; flex:1; overflow:hidden; }
+.ib-field { display:flex; align-items:center; gap:.25rem; font-size:.6875rem; color:var(--ink2); white-space:nowrap; }
+.ib-field i { color:var(--coral); font-size:.4375rem; }
+.ib-field a { color:var(--coral); text-decoration:none; font-weight:600; }
+.ib-expand { display:flex; align-items:center; gap:.25rem; font-size:.5625rem; font-weight:600; color:var(--ink3); margin-left:auto; flex-shrink:0; }
+.ib-expand i { transition:transform var(--r); }
+.info-bar.open .ib-expand i { transform:rotate(180deg); }
+.ib-full { display:none; padding:.625rem 1.25rem; border-top:1px solid var(--bdr); background:var(--bg); }
+.info-bar.open .ib-full { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:.375rem; }
+.ib-row { padding:.375rem .5rem; background:var(--wh); border-radius:6px; border:1px solid var(--bdr); }
+.ib-rl { font-size:.375rem; font-weight:700; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.125rem; }
+.ib-rv { font-size:.75rem; color:var(--ink); font-weight:500; }
+.ib-sched { display:flex; align-items:center; justify-content:center; gap:.3rem; padding:.375rem; border-radius:6px; background:var(--coral); color:#fff; text-decoration:none; font-size:.6875rem; font-weight:700; font-family:var(--font); border:none; cursor:pointer; transition:all var(--r); }
+.ib-sched:hover { background:var(--coral-d); }
+
+/* ══ MODALS ══ */
+.mov { position:fixed; inset:0; background:rgba(26,23,20,.45); backdrop-filter:blur(6px); z-index:200; display:flex; align-items:center; justify-content:center; padding:1.5rem; opacity:0; pointer-events:none; transition:opacity .25s; }
+.mov.on { opacity:1; pointer-events:all; }
+.mbox { background:#fff; border-radius:18px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; box-shadow:var(--sh3); transform:translateY(14px) scale(.98); transition:transform .25s; }
+.mov.on .mbox { transform:translateY(0) scale(1); }
+.mhd { background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); padding:1.375rem 1.5rem; border-radius:18px 18px 0 0; color:#fff; }
+.mhd h2 { font-family:var(--font-d); font-size:1.1875rem; margin-bottom:.2rem; }
+.mhd p { font-size:.75rem; opacity:.85; }
+.mbody { padding:1.125rem; }
+.sta { width:100%; min-height:180px; padding:.75rem; border:1.5px solid var(--bdr); border-radius:9px; font-size:.6875rem; font-family:'Courier New',monospace; color:var(--ink); background:var(--bg); resize:vertical; line-height:1.65; }
+.mact { display:flex; gap:.4375rem; margin-top:.625rem; }
+.cp-btn { flex:1; padding:.5625rem; background:var(--coral); color:#fff; border:none; border-radius:8px; font-size:.8125rem; font-weight:700; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.3rem; transition:all var(--r); }
+.cp-btn:hover { background:var(--coral-d); }
+.cl-btn { padding:.5625rem .875rem; background:var(--bg); color:var(--ink2); border:none; border-radius:8px; font-size:.8125rem; font-weight:600; font-family:var(--font); cursor:pointer; }
+.ncb { display:block; text-align:center; margin-top:.625rem; font-size:.75rem; color:var(--ink3); cursor:pointer; text-decoration:underline; background:none; border:none; font-family:var(--font); width:100%; }
+
+.conf-box { max-width:360px; }
+.conf-t { font-size:1rem; font-weight:700; margin-bottom:.375rem; }
+.conf-s { font-size:.875rem; color:var(--ink2); line-height:1.5; margin-bottom:1.125rem; }
+.conf-acts { display:flex; gap:.5rem; }
+.conf-cancel { flex:1; padding:.5625rem; border:1.5px solid var(--bdr); border-radius:8px; background:var(--bg); color:var(--ink2); font-size:.875rem; font-weight:600; font-family:var(--font); cursor:pointer; }
+.conf-go { flex:1; padding:.5625rem; border:none; border-radius:8px; background:var(--coral); color:#fff; font-size:.875rem; font-weight:700; font-family:var(--font); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:.3rem; }
+.conf-reset-lnk { display:block; text-align:center; margin-top:.5rem; font-size:.75rem; color:var(--ink3); cursor:pointer; text-decoration:underline; background:none; border:none; font-family:var(--font); width:100%; }
+.conf-reset-lnk:hover { color:var(--red); }
+
+/* Training mode annotations */
+body.training .training-note { display:flex; }
+.training-note { display:none; background:#F0F9FF; border:1px solid #BAE6FD; border-radius:8px; padding:.5rem .75rem; font-size:.75rem; color:#0369A1; line-height:1.5; margin-top:.5rem; align-items:flex-start; gap:.375rem; }
+.training-note i { flex-shrink:0; margin-top:1px; }
+
+/* Ret banner */
+.ret-ban { display:flex; align-items:center; gap:.4375rem; padding:.625rem 1rem; border-radius:8px; background:var(--yellow-bg); border:1px solid rgba(217,119,6,.2); font-size:.875rem; color:var(--yellow); font-weight:500; }
+.ret-ban i { flex-shrink:0; }
+
+/* empty */
+.empty-msg { text-align:center; padding:1.25rem; color:var(--ink3); font-size:.875rem; }
+.empty-msg i { font-size:1.375rem; display:block; margin-bottom:.375rem; color:var(--bdr); }
+
+/* Animations */
+.fade-in { animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+</style>
+</head>
+<body>
+
+<!-- Sidebar — Studio Directory style -->
+<div id="sidebar" class="sb">
+  <div class="sb-header">
+    <div class="sb-logo-section">
+      <div class="sb-logo">EH</div>
+      <span class="sb-logo-text">Enrollment Hub</span>
+    </div>
+    <button class="sb-toggle" id="sbToggle"><span class="sb-toggle-icon">‹</span></button>
+  </div>
+  <nav class="sb-nav">
+    <a href="teamdashboard.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-chart-line"></i></span><span class="sb-nav-text">Dashboard</span></a>
+    <a href="teamquicklinks.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-link"></i></span><span class="sb-nav-text">Quick Links</span></a>
+    <a href="teamstudio-directory.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-building"></i></span><span class="sb-nav-text">Studio Directory</span></a>
+    <a href="teamteachers.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-star"></i></span><span class="sb-nav-text">Teacher Directory</span></a>
+    <a href="teammap.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-map-marked-alt"></i></span><span class="sb-nav-text">Map</span></a>
+    <a href="teamprograms.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="sb-nav-text">Programs</span></a>
+    <a href="teamsnippets.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-file-alt"></i></span><span class="sb-nav-text">Snippets</span></a>
+    <a href="teamtraining-hub.html" class="sbl"><span class="sb-nav-icon"><i class="fas fa-book-open"></i></span><span class="sb-nav-text">Training</span></a>
+    <a href="enroll.html" class="sbl act"><span class="sb-nav-icon"><i class="fas fa-phone-alt"></i></span><span class="sb-nav-text">Enroll</span></a>
+  </nav>
+  <a href="EnsembleDirectors.html" class="sbl" style="margin:0 .625rem;"><span class="sb-nav-icon"><i class="far fa-user"></i></span><span class="sb-nav-text">Directors Page</span></a>
+  <div class="sb-footer">
+    <button class="sb-lo" onclick="if(confirm('Logout?'))window.location.href='index.html'">
+      <span class="sb-nav-icon"><i class="fas fa-sign-out-alt"></i></span><span class="sb-nav-text">Logout</span>
+    </button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title"><div class="ldot"></div> Enroll</div>
+      <div class="tb-sep"></div>
+      <!-- Brand selector -->
+      <div style="position:relative;">
+        <button id="brandBtn" class="ctx-brand-btn" onclick="togDD('brand')">
+          <i class="fas fa-building" style="font-size:.625rem;"></i>
+          <span id="brandBtnTxt">Select Brand</span>
+          <i class="fas fa-chevron-down" style="font-size:.5rem; opacity:.6;"></i>
+        </button>
+        <div class="dd-panel" id="brandDD" style="display:none;">
+          <div class="dd-search-w"><i class="fas fa-search dd-search-i"></i><input type="text" class="dd-search" id="brandSrch" placeholder="Search brands..." oninput="filterBrands()"></div>
+          <div class="dd-results" id="brandRes"></div>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right ctx-arrow"></i>
+      <!-- City selector -->
+      <div style="position:relative;">
+        <button id="cityBtn" class="ctx-city-btn" onclick="togDD('city')" disabled>
+          <i class="fas fa-map-marker-alt" style="font-size:.5625rem;"></i>
+          <span id="cityBtnTxt">Select Location</span>
+          <i class="fas fa-chevron-down" style="font-size:.5rem; opacity:.6;"></i>
+        </button>
+        <div class="dd-panel" id="cityDD" style="display:none; min-width:320px;">
+          <div class="dd-search-w"><i class="fas fa-search dd-search-i"></i><input type="text" class="dd-search" id="citySrch" placeholder="Search locations..." oninput="filterCities()"></div>
+          <div class="dd-results" id="cityRes"></div>
+          <div class="prox-section">
+            <button class="prox-toggle" onclick="togProx()"><i class="fas fa-location-arrow"></i> Find nearest to prospect</button>
+            <div class="prox-body" id="proxBody">
+              <div class="dd-search-w" style="margin-top:.375rem;">
+                <i class="fas fa-search dd-search-i"></i>
+                <input type="text" class="dd-search" id="proxSrch" placeholder="Zip code or city..." oninput="runProx()">
+              </div>
+              <div class="prox-results" id="proxRes"></div>
+              <button class="prox-toggle" id="proxScopeBtn" style="display:none;margin-top:.375rem;" onclick="togProxScope()"><i class="fas fa-expand"></i> <span id="proxScopeTxt">Also search other brands</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn on" id="modeCall" onclick="setMode('call')"><i class="fas fa-phone-alt" style="font-size:.5625rem;"></i> Call</button>
+      <button class="mode-btn" id="modeTrain" onclick="setMode('train')"><i class="fas fa-book-open" style="font-size:.5625rem;"></i> Training</button>
+    </div>
+
+    <div class="tb-right">
+      <button class="close-jump-btn" onclick="goStage(6)"><i class="fas fa-check-circle" style="font-size:.625rem;"></i> Ready to Close</button>
+      <button class="new-call-btn" onclick="openConfirm()"><i class="fas fa-redo-alt" style="font-size:.5625rem;"></i> New Call</button>
+      <button class="sum-btn-top" onclick="openSum()"><i class="fas fa-clipboard-list" style="font-size:.625rem;"></i> Summarize</button>
+    </div>
+  </div>
+
+  <!-- DD overlay -->
+  <div class="dd-overlay" id="ddOverlay" onclick="closeAllDDs()"></div>
+
+  <!-- Stage nav -->
+  <div class="stage-nav">
+    <button class="snbtn on" id="sb2" onclick="goStage(2)"><span class="sdot"></span> Discovery</button>
+    <div class="sn-sep"></div>
+    <button class="snbtn" id="sb3" onclick="goStage(3)"><span class="sdot"></span> Expectations</button>
+    <div class="sn-sep"></div>
+    <button class="snbtn" id="sb4" onclick="goStage(4)"><span class="sdot"></span> Why Us</button>
+    <div class="sn-sep"></div>
+    <button class="snbtn" id="sb5" onclick="goStage(5)"><span class="sdot"></span> Pricing</button>
+    <div class="sn-sep"></div>
+    <button class="snbtn" id="sb6" onclick="goStage(6)"><span class="sdot"></span> Close</button>
+    <div class="sn-sep"></div>
+    <button class="snbtn" id="sb7" onclick="goStage(7)"><span class="sdot"></span> Send Off</button>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Stage 2: Discovery (starts active — no stage 1) -->
+    <div class="stage-pane on" id="sp2">
+      <div class="disc-stage">
+        <div class="disc-timeline" id="discTimeline"></div>
+        <div class="disc-content" id="discContent"></div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress" id="discProgressLabel"><strong>Step 2</strong> of 7</div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <button class="skip-btn" onclick="goStage(3)">Skip to Expectations</button>
+          <button class="next-btn" onclick="goStage(3)">Next Stage <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3: Expectations -->
+    <div class="stage-pane" id="sp3">
+      <div class="stage-wrap">
+        <div class="script-stage">
+          <div class="script-hero fade-in">
+            <div class="script-hero-label">
+              <span><i class="fas fa-microphone-alt"></i> Say This</span>
+              <button class="script-copy-btn" onclick="copyScript('s3txt',this)"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <div class="script-text" id="s3txt">"Private 1-on-1 lessons help students progress so much faster. Let me explain how lessons work and then we'll find a time that fits your schedule!"</div>
+          </div>
+
+          <div class="supporting">
+            <button class="help-toggle" onclick="togHelp(this)"><i class="fas fa-chevron-down"></i> How Lessons Work</button>
+            <div class="help-body">
+              <div class="tip-item hl"><span class="tip-icon"><i class="fas fa-check-circle"></i></span><strong>30-minute, weekly, private 1-on-1</strong> with a dedicated teacher.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Same teacher every week — consistency is what builds real progress.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Structured but fun — especially for younger students.</div>
+              <div class="tip-item" id="groupNote" style="display:none;"><span class="tip-icon"><i class="fas fa-users"></i></span><span id="groupNoteTxt">Group classes also available — confirm with the studio.</span></div>
+            </div>
+          </div>
+
+          <div class="training-note"><i class="fas fa-info-circle"></i> This is the "set expectations" moment. Don't rush past it — it's what makes the pricing conversation easier.</div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress"><strong>Step 3</strong> of 7</div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <button class="skip-btn" onclick="goStage(4)">Skip</button>
+          <button class="next-btn" onclick="goStage(4)">Why We're Different <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 4: Why Us -->
+    <div class="stage-pane" id="sp4">
+      <div class="stage-wrap">
+        <div class="script-stage">
+          <div class="script-hero fade-in" style="background:var(--bg);">
+            <div class="script-hero-label"><span><i class="fas fa-star"></i> Why We're Different</span></div>
+            <div style="display:flex;flex-direction:column;gap:.625rem;">
+              <div class="tip-item hl"><span class="tip-icon"><i class="fas fa-check-circle"></i></span><strong>30-min weekly private lessons</strong> — one teacher, one student, every week.</div>
+              <div class="tip-item hl"><span class="tip-icon"><i class="fas fa-check-circle"></i></span><strong>2 yearly recitals</strong> — students perform on a real stage twice a year.</div>
+              <div class="tip-item hl"><span class="tip-icon"><i class="fas fa-check-circle"></i></span><strong>Monthly activities + weekly incentive store</strong> — keeps students motivated.</div>
+              <div class="tip-item hl"><span class="tip-icon"><i class="fas fa-check-circle"></i></span><strong>Makeup lessons</strong> with 24-hr notice — life happens, we get it.</div>
+            </div>
+          </div>
+
+          <div class="supporting">
+            <button class="help-toggle" onclick="togHelp(this)"><i class="fas fa-chevron-down"></i> Tips</button>
+            <div class="help-body">
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>The recitals are huge for kids — mention with real enthusiasm.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>The incentive store keeps younger students excited to practice.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Makeup policy is a differentiator — most studios don't offer this.</div>
+            </div>
+          </div>
+
+          <div class="training-note"><i class="fas fa-info-circle"></i> Don't read this like a list. Pick the 2 that resonate most with what you learned in discovery and lead with those.</div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress"><strong>Step 4</strong> of 7</div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <button class="skip-btn" onclick="goStage(5)">Skip</button>
+          <button class="next-btn" onclick="goStage(5)">Pricing <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 5: Pricing -->
+    <div class="stage-pane" id="sp5">
+      <div class="stage-wrap">
+        <div class="script-stage">
+          <div id="retBan" class="ret-ban" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Returning Student</strong> — Annual fee may be waived. Confirm before quoting.</div></div>
+
+          <!-- Pricing tiles -->
+          <div>
+            <div class="script-hero-label" style="margin-bottom:.75rem;"><span><i class="fas fa-dollar-sign"></i> Lesson Pricing</span></div>
+            <div class="price-row" id="priceRow"></div>
+            <div class="price-notes-row" style="margin-top:.625rem;">
+              <div class="pnote"><i class="fas fa-check-circle"></i>First month <strong>prorated</strong> — only pay for days remaining.</div>
+              <div class="pnote"><i class="fas fa-check-circle"></i><strong>7-day money-back guarantee</strong> — zero risk.</div>
+            </div>
+          </div>
+
+          <!-- Reaction picker — CONDITIONAL -->
+          <div>
+            <div class="reaction-label">How did they react?</div>
+            <div class="reaction-pills">
+              <button class="rpill" id="rb-good" onclick="showReaction('good')"><i class="fas fa-thumbs-up"></i> Sounds good</button>
+              <button class="rpill" id="rb-more" onclick="showReaction('more')"><i class="fas fa-clock"></i> More time?</button>
+              <button class="rpill" id="rb-expensive" onclick="showReaction('expensive')"><i class="fas fa-dollar-sign"></i> Too expensive</button>
+              <button class="rpill" id="rb-think" onclick="showReaction('think')"><i class="fas fa-pause-circle"></i> Need to think</button>
+              <button class="rpill" id="rb-notready" onclick="showReaction('notready')"><i class="fas fa-calendar"></i> Not ready</button>
+              <button class="rpill" id="rb-biweekly" onclick="showReaction('biweekly')"><i class="fas fa-redo"></i> Bi-weekly?</button>
+            </div>
+
+            <!-- Reaction responses — only shown when triggered -->
+            <div id="reactionArea" style="margin-top:.75rem;"></div>
+          </div>
+
+          <div class="supporting">
+            <button class="help-toggle" onclick="togHelp(this)"><i class="fas fa-chevron-down"></i> Pricing Tips</button>
+            <div class="help-body">
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Lead with monthly rate — more accessible than annual.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Prorated first month removes the "partial month" objection.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>7-day guarantee removes all risk — use it when they're hesitant.</div>
+              <div class="tip-item training-only"><span class="tip-icon"><i class="fas fa-circle"></i></span>If price is the real objection, pivot to the free first lesson — it almost always breaks the stall.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress"><strong>Step 5</strong> of 7</div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <button class="skip-btn" onclick="goStage(6)">Skip</button>
+          <button class="next-btn" onclick="goStage(6)">Close <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 6: Close -->
+    <div class="stage-pane" id="sp6">
+      <div class="stage-wrap">
+        <div class="script-stage">
+          <div class="close-fields">
+            <div class="cf"><label>Day &amp; Time</label><input type="text" class="cf-in" id="closeDay" placeholder="e.g. Tuesdays at 4pm" oninput="updateSendoff()"></div>
+            <div class="cf"><label>Teacher</label><select class="cf-in" id="closeTeacher" onchange="updateSendoff()"><option value="">Select teacher...</option></select></div>
+            <div class="cf"><label>Annual Charge</label><input type="text" class="cf-in" id="closeAnnual" readonly></div>
+            <div class="cf"><label>Card on File (last 4)</label><input type="text" class="cf-in" id="closeCard" placeholder="Optional"></div>
+          </div>
+
+          <div class="checklist">
+            <div class="cc" onclick="togCC(this)"><div class="cc-box"><i class="fas fa-check"></i></div>Scheduled first lesson day &amp; time</div>
+            <div class="cc" onclick="togCC(this)"><div class="cc-box"><i class="fas fa-check"></i></div>Annual studio charge quoted — recitals, incentives, materials</div>
+            <div class="cc" onclick="togCC(this)"><div class="cc-box"><i class="fas fa-check"></i></div>24-hr cancellation explained — 30 days to use makeup</div>
+            <div class="cc" onclick="togCC(this)"><div class="cc-box"><i class="fas fa-check"></i></div>Cancel before the 25th for next month</div>
+            <div class="cc" onclick="togCC(this)"><div class="cc-box"><i class="fas fa-check"></i></div>Card info collected — no charge until first lesson</div>
+          </div>
+
+          <a href="#" target="_blank" class="sched-btn dis" id="schedLink"><i class="fas fa-calendar-check"></i> Open Scheduling Platform</a>
+          <button class="nearby-btn" onclick="togRefPanel('nearby')"><i class="fas fa-map-marker-alt"></i> No availability? Find a nearby studio</button>
+
+          <div class="supporting">
+            <button class="help-toggle" onclick="togHelp(this)"><i class="fas fa-chevron-down"></i> Policies &amp; Nearby</button>
+            <div class="help-body">
+              <div class="ref-acc">
+                <button class="ref-tog" onclick="togRef(this)"><span><i class="fas fa-file-alt" style="color:var(--coral);margin-right:.375rem;"></i>Policies</span><i class="fas fa-chevron-down ref-arr"></i></button>
+                <div class="ref-body" id="refPolicies"></div>
+              </div>
+              <div class="ref-acc" id="nearbyAcc">
+                <button class="ref-tog" onclick="togRef(this)"><span><i class="fas fa-map-marker-alt" style="color:var(--coral);margin-right:.375rem;"></i>Nearby Studios</span><i class="fas fa-chevron-down ref-arr"></i></button>
+                <div class="ref-body" id="refNearby"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress"><strong>Step 6</strong> of 7</div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <button class="skip-btn" onclick="goStage(7)">Skip</button>
+          <button class="next-btn" onclick="goStage(7)">Send Off <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 7: Send Off -->
+    <div class="stage-pane" id="sp7">
+      <div class="stage-wrap">
+        <div class="script-stage">
+          <div class="script-hero sendoff fade-in">
+            <div class="script-hero-label">
+              <span><i class="fas fa-paper-plane"></i> Say This</span>
+              <button class="script-copy-btn" onclick="copyScript('sendoffTxt',this)" style="border-color:rgba(22,163,74,.3);color:var(--green);background:var(--green-bg);"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <div class="script-text" id="sendoffTxt">"You're all set! We can't wait to get started!"</div>
+          </div>
+
+          <div class="script-hero fade-in" style="margin-top:0;">
+            <div class="script-hero-label">
+              <span><i class="fas fa-users"></i> Before You Hang Up</span>
+              <button class="script-copy-btn" onclick="copyScript('s7ref',this)"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <div class="script-text" id="s7ref">"One last thing — is there anyone else you know who might be interested in lessons? We'd love to help!"</div>
+          </div>
+
+          <div class="supporting">
+            <button class="help-toggle" onclick="togHelp(this)"><i class="fas fa-chevron-down"></i> Referral Tips</button>
+            <div class="help-body">
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Ask every single time — even a casual mention plants the seed.</div>
+              <div class="tip-item"><span class="tip-icon"><i class="fas fa-circle"></i></span>Parents with multiple kids are the best referral source — ask about siblings.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stage-footer">
+        <div class="stage-progress"><strong>Step 7</strong> of 7 — 🎉 Done!</div>
+        <button class="sum-btn-top" onclick="openSum()"><i class="fas fa-clipboard-list"></i> Generate Summary</button>
+      </div>
+    </div>
+
+    <!-- Lead tab + panel -->
+    <div class="lead-tab open" id="leadTab" onclick="togLP()">
+      <i class="fas fa-chevron-right" id="leadTabIco"></i>
+      <span class="lead-tab-lbl">Lead</span>
+    </div>
+    <div class="lead-panel open" id="leadPanel">
+      <div class="lp-hd">
+        <div class="lp-title"><i class="fas fa-user-circle"></i> Lead Card</div>
+      </div>
+      <div class="lp-body" id="lpBody"></div>
+      <div class="lp-ft"><button class="sum-btn" onclick="openSum()"><i class="fas fa-clipboard-list"></i> Summarize</button></div>
+    </div>
+
+    <!-- Info bar -->
+    <div class="info-bar" id="infoBar">
+      <div class="ib-top" onclick="togInfoBar()">
+        <div class="ib-nm"><i class="fas fa-building"></i><span id="ibNm">No studio selected</span></div>
+        <div class="ib-sep"></div>
+        <div class="ib-quick" id="ibQuick"><span style="font-size:.6875rem;color:var(--ink3);">Select a brand to see studio info</span></div>
+        <div class="ib-expand"><span id="ibTxt">Details</span><i class="fas fa-chevron-up" id="ibArr"></i></div>
+      </div>
+      <div class="ib-full" id="ibFull"></div>
+    </div>
+
+  </div><!-- /body -->
+</div><!-- /main -->
+
+<!-- Summary Modal -->
+<div class="mov" id="sumMov">
+  <div class="mbox">
+    <div class="mhd"><h2>Call Summary</h2><p>Copy and paste directly into HubSpot</p></div>
+    <div class="mbody">
+      <textarea class="sta" id="sumTxt" readonly></textarea>
+      <div class="mact">
+        <button class="cp-btn" onclick="copySum()"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+        <button class="cl-btn" onclick="closeSum()">Close</button>
+      </div>
+      <button class="ncb" onclick="openConfirm()">Start a new call</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Call Confirm -->
+<div class="mov" id="confMov">
+  <div class="mbox conf-box">
+    <div class="mbody">
+      <div class="conf-t">Start a new call?</div>
+      <div class="conf-s">We'll generate a summary first so you don't lose anything.</div>
+      <div class="conf-acts">
+        <button class="conf-cancel" onclick="closeConfirm()">Cancel</button>
+        <button class="conf-go" onclick="sumThenReset()"><i class="fas fa-clipboard-list"></i> Summary &amp; Reset</button>
+      </div>
+      <button class="conf-reset-lnk" onclick="resetAll()">Skip summary and reset immediately</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SU='https://kvyvjwepfrqqkvyyutdw.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
+
+let sb, brands=[], studios=[], teachers=[], tInst=[], tCities=[];
+let sBrand=null, sStudio=null, sInsts=[], sEnroll=null, callType='inbound';
+let chips={}, timerSecs=0, timerInt=null, lpOpen=true, ibOpen=false;
+let proxAllBrands=false, activeReaction=null, activeObjPath=null, mode='call';
+
+// Discovery state
+let disc = { instConf:[], stuFor:null, age:null, experience:null, hasInst:null, goals:[], days:[] };
+let discStep = 0;
+
+// New discovery questions — brand/city/instrument first
+const DISC_STEPS = [
+  { id:'setup',     label:'Setup',       icon:'fa-phone-alt' },
+  { id:'students',  label:'Students',    icon:'fa-users' },
+  { id:'stuFor',    label:'Who',         icon:'fa-user' },
+  { id:'experience',label:'Experience',  icon:'fa-music' },
+  { id:'hasInst',   label:'Instrument',  icon:'fa-guitar' },
+  { id:'goals',     label:'Goals',       icon:'fa-star' },
+  { id:'days',      label:'Days',        icon:'fa-calendar' },
+];
+
+// Student records for multi-student
+let students = [{ name:'', rel:null, age:null, instruments:[] }];
+
+function getAvailableInsts() {
+  const bt = teachers.filter(t => t.brand === sBrand?.name);
+  let st = bt;
+  if (sStudio?.city) {
+    const ids = tCities.filter(c => c.city === sStudio.city).map(c => c.teacher_id);
+    const cf = bt.filter(t => ids.includes(t.id));
+    if (cf.length) st = cf;
+  }
+  return [...new Set(tInst.filter(i => st.map(t => t.id).includes(i.teacher_id)).map(i => i.instrument))].sort();
+}
+
+function renderDiscTimeline() {
+  const el = document.getElementById('discTimeline');
+  if (!el) return;
+  // Determine which steps to show based on brand/city status
+  const steps = getVisibleSteps();
+  let html = '';
+  steps.forEach((s, i) => {
+    const isDone = i < discStep;
+    const isActive = i === discStep;
+    const cls = isDone ? 'done' : isActive ? 'active' : '';
+    const onclick = isDone ? `onclick="jumpDisc(${i})"` : '';
+    html += `<div class="dt-dot ${cls}" ${onclick} title="${s.label}"><i class="fas ${s.icon}" style="font-size:.45rem;"></i></div>`;
+    if (i < steps.length - 1) html += `<div class="dt-line ${isDone ? 'done' : ''}"></div>`;
+  });
+  el.innerHTML = html;
+  // Update counter
+  const lbl = document.getElementById('discProgressLabel');
+  if (lbl) lbl.innerHTML = `<strong>Discovery ${discStep + 1}</strong> of ${steps.length}`;
+}
+
+function getVisibleSteps() {
+  // Always show all steps
+  return DISC_STEPS;
+}
+
+function renderDiscStep() {
+  renderDiscTimeline();
+  const el = document.getElementById('discContent');
+  if (!el) return;
+  el.innerHTML = buildDiscStepHTML(discStep);
+  // Focus search inputs
+  setTimeout(() => {
+    const srch = el.querySelector('.disc-search-input');
+    if (srch) srch.focus();
+  }, 80);
+}
+
+function buildDiscStepHTML(step) {
+  const steps = getVisibleSteps();
+  const s = steps[step];
+  let html = `<div class="disc-counter">Step ${step + 1} of ${steps.length}</div>`;
+
+  if (s.id === 'setup') {
+    html += `<div class="disc-question">Let's get started</div>`;
+    
+    // Inbound / Outbound
+    html += `<div style="margin-bottom:1.25rem;width:100%;max-width:420px;">
+      <div style="font-size:.625rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;">Call Type</div>
+      <div style="display:flex;gap:.5rem;">
+        <button class="disc-ans${callType==='inbound'?' on':''}" data-ct="inbound" onclick="setCallType('inbound')" style="flex:1;"><i class="fas fa-phone-volume" style="font-size:.75rem;margin-right:.25rem;"></i>Inbound</button>
+        <button class="disc-ans${callType==='outbound'?' on':''}" data-ct="outbound" onclick="setCallType('outbound')" style="flex:1;"><i class="fas fa-phone-alt" style="font-size:.75rem;margin-right:.25rem;"></i>Outbound</button>
+      </div>
+    </div>`;
+
+    // Brand
+    html += `<div style="margin-bottom:1rem;width:100%;max-width:420px;">
+      <div style="font-size:.625rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;">Brand</div>`;
+    if (sBrand) {
+      html += `<div class="disc-sel-pill" style="width:fit-content;"><i class="fas fa-building" style="font-size:.75rem;"></i> ${sBrand.name} <button class="chg" onclick="clearDiscBrand()"><i class="fas fa-times"></i></button></div>`;
+    } else {
+      html += `<div class="disc-search-wrap" style="margin-bottom:.375rem;"><i class="fas fa-search disc-search-icon"></i><input type="text" class="disc-search-input" id="discBrandSrch" placeholder="Search brands..." oninput="filterDiscBrands()"></div>
+      <div class="disc-search-results" id="discBrandRes"></div>`;
+    }
+    html += `</div>`;
+
+    // City (only if brand selected)
+    if (sBrand) {
+      const studios2 = studios.filter(s2 => s2.brand_id === sBrand.id);
+      if (studios2.length === 1 && !sStudio) { sStudio = studios2[0]; renderAll(); }
+      html += `<div style="margin-bottom:1rem;width:100%;max-width:420px;">
+        <div style="font-size:.625rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;">Location</div>`;
+      if (sStudio) {
+        html += `<div class="disc-sel-pill" style="width:fit-content;"><i class="fas fa-map-marker-alt" style="font-size:.75rem;"></i> ${sStudio.city||''}, ${sStudio.state||''} <button class="chg" onclick="clearDiscCity()"><i class="fas fa-times"></i></button></div>`;
+        html += buildTeacherCountLine();
+      } else {
+        html += `<div class="disc-search-wrap" style="margin-bottom:.375rem;"><i class="fas fa-search disc-search-icon"></i><input type="text" class="disc-search-input" id="discCitySrch" placeholder="Search locations..." oninput="filterDiscCities()"></div>
+        <div class="disc-search-results" id="discCityRes"></div>
+        <div class="prox-section"><button class="prox-toggle" onclick="togProx()"><i class="fas fa-location-arrow"></i> Find nearest to prospect</button><div class="prox-body" id="proxBody"><div class="disc-search-wrap" style="margin-top:.375rem;"><i class="fas fa-search disc-search-icon"></i><input type="text" class="disc-search-input" id="proxSrch" placeholder="Zip or city..." oninput="runProx()"></div><div class="prox-results" id="proxRes"></div></div></div>`;
+      }
+      html += `</div>`;
+    }
+
+    const canAdvance = !!sBrand && !!sStudio;
+    html += discNavHTML(step, steps.length, canAdvance);
+    // Auto-populate brand search
+    setTimeout(() => filterDiscBrands(), 60);
+    return html;
+  }
+
+  if (s.id === 'students') {
+    html += `<div class="disc-question">How many students are enrolling?</div>`;
+    html += `<div class="disc-answers" style="margin-bottom:1rem;">`;
+    [1,2,3,4,'5+'].forEach(n => {
+      const count = typeof n === 'number' ? n : 5;
+      const isOn = students.length === count || (n==='5+' && students.length >= 5);
+      html += `<button class="disc-ans${isOn?' on':''}" onclick="setStuCount(${typeof n==='number'?n:5},this)">${n}</button>`;
+    });
+    html += `</div>`;
+    html += buildStudentCards();
+    html += discNavHTML(step, steps.length, students.length > 0);
+    return html;
+  }
+
+  if (s.id === 'stuFor') {
+    html += `<div class="disc-question">Who are the lessons for?</div>`;
+    html += `<div class="disc-answers">`;
+    ['Myself','My child','Someone else'].forEach(o => {
+      html += `<button class="disc-ans${disc.stuFor===o?' on':''}" onclick="discSimple('stuFor','${o}',this)">${o}</button>`;
+    });
+    html += `</div>`;
+    html += discNavHTML(step, steps.length, !!disc.stuFor);
+    return html;
+  }
+
+  if (s.id === 'experience') {
+    html += `<div class="disc-question">Any prior experience with the instrument?</div>`;
+    html += `<div class="disc-answers">`;
+    ['Never played','Some experience','Transferring'].forEach(o => {
+      html += `<button class="disc-ans${disc.experience===o?' on':''}" onclick="discSimple('experience','${o}',this)">${o}</button>`;
+    });
+    html += `</div>`;
+    html += discNavHTML(step, steps.length, !!disc.experience);
+    return html;
+  }
+
+  if (s.id === 'hasInst') {
+    html += `<div class="disc-question">Do they have an instrument at home?</div>`;
+    html += `<div class="disc-answers">`;
+    ['Yes','No — needs rental'].forEach(o => {
+      html += `<button class="disc-ans${disc.hasInst===o?' on':''}" onclick="discSimple('hasInst','${o}',this)">${o}</button>`;
+    });
+    html += `</div>`;
+    html += discNavHTML(step, steps.length, !!disc.hasInst);
+    return html;
+  }
+
+  if (s.id === 'goals') {
+    html += `<div class="disc-question">What's their goal with lessons?</div>`;
+    html += `<div class="disc-answers">`;
+    ['Fun','Performance','School requirement','Hobby','Gift','College prep'].forEach(o => {
+      html += `<button class="disc-ans multi${disc.goals.includes(o)?' on':''}" onclick="discMulti('goals','${o}',this)">${o}</button>`;
+    });
+    html += `</div>`;
+    html += `<div style="margin-top:1rem;"><button class="disc-next-btn" onclick="advanceDisc()">Next <i class="fas fa-arrow-right"></i></button></div>`;
+    html += discNavHTML(step, steps.length, true);
+    return html;
+  }
+
+  if (s.id === 'days') {
+    html += `<div class="disc-question">What days generally work?</div>`;
+    html += `<div class="disc-answers">`;
+    ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(o => {
+      html += `<button class="disc-ans multi${disc.days.includes(o)?' on':''}" onclick="discMulti('days','${o}',this)">${o}</button>`;
+    });
+    html += `</div>`;
+    html += `<div style="margin-top:1rem;"><button class="disc-next-btn" onclick="goStage(3)">Done — Set Expectations <i class="fas fa-arrow-right"></i></button></div>`;
+    html += discNavHTML(step, steps.length, true);
+    return html;
+  }
+
+  return html;
+}
+
+function discNavHTML(step, total, canAdvance) {
+  return `<div class="disc-nav">
+    <button class="disc-back" onclick="backDisc()" ${step===0?'disabled':''}}><i class="fas fa-arrow-left"></i> Back</button>
+    <span style="font-size:.6875rem;color:var(--text-light);">${step+1} / ${total}</span>
+    ${canAdvance ? `<button class="disc-next-btn" onclick="advanceDisc()">Next <i class="fas fa-arrow-right"></i></button>` : `<button class="disc-next-btn" disabled>Next <i class="fas fa-arrow-right"></i></button>`}
+  </div>`;
+}
+
+function buildTeacherCountLine() {
+  if (!sStudio && !sBrand) return '';
+  const avInsts = getAvailableInsts();
+  const count = getMatchedTeachers().length;
+  return `<div class="triage ok" style="margin-top:.375rem;"><i class="fas fa-chalkboard-teacher"></i> <strong>${count} teacher${count!==1?'s':''}</strong> at this studio • ${avInsts.length} instrument${avInsts.length!==1?'s':''} offered</div>`;
+}
+
+function buildStudentCards() {
+  const avInsts = getAvailableInsts();
+  const ages = ['2','3','4','5','6','7','8','9','10','11','12','13','14','15+'];
+  let html = '<div class="student-cards">';
+  students.forEach((stu, idx) => {
+    html += `<div class="student-card">
+      <div class="sc-header">
+        <div class="sc-title"><div class="sc-num">${idx+1}</div> Student ${students.length > 1 ? idx+1 : ''}</div>
+        ${idx > 0 ? `<button class="sc-remove" onclick="removeStu(${idx})"><i class="fas fa-times"></i></button>` : ''}
+      </div>
+      <div class="sc-row"><div class="sc-lbl">Name <span style="font-weight:400;text-transform:none;color:var(--text-light);">(optional)</span></div>
+        <input type="text" class="sc-name-input" placeholder="First name" value="${stu.name||''}" oninput="students[${idx}].name=this.value;syncStuLead()">
+      </div>
+      <div class="sc-row"><div class="sc-lbl">Relationship</div>
+        <div class="sc-chips">
+          ${['Son','Daughter','Other'].map(r => `<button class="sc-chip${stu.rel===r?' on':''}" onclick="setStuRel(${idx},'${r}',this)">${r}</button>`).join('')}
+        </div>
+      </div>
+      <div class="sc-row"><div class="sc-lbl">Age</div>
+        <div class="sc-chips">
+          ${ages.map(a => `<button class="sc-chip${stu.age==a?' age-on':''}" onclick="setStuAge(${idx},'${a}',this)">${a}</button>`).join('')}
+        </div>
+      </div>
+      <div class="sc-row"><div class="sc-lbl">Instrument(s) <span style="font-weight:400;text-transform:none;color:var(--text-light);">— select all that apply</span></div>
+        <div class="sc-chips">
+          ${avInsts.length ? avInsts.map(inst => `<button class="sc-chip${stu.instruments.includes(inst)?' on':''}" onclick="togStuInst(${idx},'${inst}',this)">${inst}</button>`).join('') : '<span style="font-size:.75rem;color:var(--text-light);">Select a location first</span>'}
+          <button class="sc-chip${stu.instruments.includes('Not sure')?' on':''}" onclick="togStuInst(${idx},'Not sure',this)" style="border-style:dashed;">Not sure yet</button>
+        </div>
+      </div>
+      ${buildStuTeacherRecs(stu)}
+    </div>`;
+  });
+  html += '</div>';
+  html += `<button class="add-student-btn" onclick="addStudent()"><i class="fas fa-plus"></i> Add another student</button>`;
+  return html;
+}
+
+function buildStuTeacherRecs(stu) {
+  if (!sStudio && !sBrand) return '';
+  if (!stu.instruments.length || stu.instruments[0] === 'Not sure') {
+    if (!stu.age) return '';
+    return `<div class="teacher-recs"><div class="teacher-recs-lbl"><i class="fas fa-chalkboard-teacher"></i> Instrument not selected yet</div><div style="font-size:.75rem;color:var(--text-secondary);">Try asking: "What kind of music do they like? That usually points us in the right direction."</div></div>`;
+  }
+  const age = stu.age ? (stu.age === '15+' ? 15 : parseInt(stu.age)) : null;
+  let html = '';
+  stu.instruments.filter(i => i !== 'Not sure').forEach(inst => {
+    const bt = teachers.filter(t => t.brand === sBrand?.name);
+    let st = bt;
+    if (sStudio?.city) { const ids = tCities.filter(c => c.city===sStudio.city).map(c=>c.teacher_id); const cf=bt.filter(t=>ids.includes(t.id)); if(cf.length)st=cf; }
+    const tIds = st.map(t=>t.id);
+    const recs = tInst.filter(i2 => tIds.includes(i2.teacher_id) && i2.instrument === inst);
+    const matched = st.filter(t => tInst.some(i2 => i2.teacher_id===t.id && i2.instrument===inst));
+    if (!matched.length) {
+      html += `<div class="triage err" style="margin-top:.375rem;"><i class="fas fa-times-circle"></i> <strong>${inst}</strong> not offered at this location.</div>`;
+      return;
+    }
+    const mins = recs.map(r => parseInt(r.youngest_age_preference)).filter(a=>!isNaN(a));
+    const minA = mins.length ? Math.min(...mins) : null;
+    if (age && minA && age < minA) {
+      html += `<div class="triage warn" style="margin-top:.375rem;"><i class="fas fa-exclamation-triangle"></i> We don't have any teachers that start teaching ${inst} that young. The youngest age we start is <strong>${minA}</strong>.</div>`;
+      return;
+    }
+    // Show top 3 teacher chips
+    let ageFiltered = age ? matched.filter(t => {
+      const rec = recs.find(r => r.teacher_id === t.id);
+      if (!rec?.youngest_age_preference) return true;
+      return parseInt(rec.youngest_age_preference) <= age;
+    }) : matched;
+    const top3 = ageFiltered.slice(0,3);
+    if (top3.length) {
+      html += `<div class="teacher-recs" style="margin-top:.375rem;"><div class="teacher-recs-lbl"><i class="fas fa-chalkboard-teacher"></i> Matched for ${inst}${age?' (age '+stu.age+')':''}</div><div class="teacher-rec-chips">`;
+      top3.forEach(t => {
+        const rec = recs.find(r => r.teacher_id === t.id);
+        const lvl = rec?.teacher_level||'beginner';
+        html += `<div class="teacher-rec-chip"><div class="level-dot ${lvl}"></div>${t.first_name} ${t.last_name}</div>`;
+      });
+      if (ageFiltered.length > 3) html += `<div class="teacher-rec-chip" style="background:var(--gray-50);color:var(--text-secondary);">+${ageFiltered.length-3} more</div>`;
+      html += `</div></div>`;
+    }
+  });
+  return html;
+}
+
+// Student card actions
+function setStuCount(n, el) {
+  while (students.length < n) students.push({ name:'', rel:null, age:null, instruments:[] });
+  while (students.length > n) students.pop();
+  document.querySelectorAll('#discContent .disc-ans').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  // Re-render student cards only
+  const cardsEl = document.querySelector('.student-cards');
+  const addBtn = document.querySelector('.add-student-btn');
+  const newCards = document.createElement('div');
+  newCards.innerHTML = buildStudentCards();
+  if (cardsEl) cardsEl.replaceWith(newCards.firstElementChild);
+  if (addBtn) addBtn.replaceWith(newCards.lastElementChild);
+  syncStuLead();
+}
+function addStudent() { students.push({ name:'', rel:null, age:null, instruments:[] }); renderDiscStep(); }
+function removeStu(idx) { if (students.length > 1) { students.splice(idx,1); renderDiscStep(); } }
+function setStuRel(idx,val,el) { students[idx].rel=val; el.closest('.sc-chips').querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); syncStuLead(); }
+function setStuAge(idx,val,el) { students[idx].age=val; el.closest('.sc-chips').querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on','age-on')); el.classList.add('age-on'); rebuildStuTeacherRecs(idx); syncStuLead(); }
+function togStuInst(idx,inst,el) {
+  el.classList.toggle('on');
+  const i=students[idx].instruments.indexOf(inst);
+  if(i===-1) students[idx].instruments.push(inst); else students[idx].instruments.splice(i,1);
+  rebuildStuTeacherRecs(idx); syncStuLead();
+  // Update global sInsts from first student
+  sInsts = students[0].instruments.filter(i=>i!=='Not sure');
+  buildTeacherDrop(); updateGroupNote(); updateS1Script();
+}
+function rebuildStuTeacherRecs(idx) {
+  const card = document.querySelectorAll('.student-card')[idx];
+  if (!card) return;
+  const existing = card.querySelector('.teacher-recs,.triage');
+  const newRecs = document.createElement('div');
+  newRecs.innerHTML = buildStuTeacherRecs(students[idx]);
+  if (existing) { Array.from(card.querySelectorAll('.teacher-recs,.triage')).forEach(e=>e.remove()); }
+  if (newRecs.innerHTML) card.appendChild(newRecs.firstElementChild);
+}
+function syncStuLead() {
+  // Sync first student to lead card
+  const stu = students[0];
+  const nameEl = document.getElementById('lc-sN'); if(nameEl&&stu.name)nameEl.value=stu.name;
+  // Update lead card instrument display
+  const instEl = document.getElementById('lc-inst'); if(instEl) instEl.textContent = students.map(s=>s.instruments.filter(i=>i!=='Not sure').join(', ')).filter(Boolean).join(' | ')||'—';
+}
+
+// Discovery brand/city search within disc flow
+function filterDiscBrands() {
+  const q=(document.getElementById('discBrandSrch')?.value||''  ).toLowerCase();
+  const f=brands.filter(b=>(b.name||''  ).toLowerCase().includes(q));
+  const el=document.getElementById('discBrandRes');if(!el)return;
+  el.innerHTML=f.slice(0,8).map(b=>{const c=studios.filter(s=>s.brand_id===b.id).length;return`<div class="disc-sr-item" onclick="selDiscBrand('${b.id}')"><div><div class="disc-sr-nm">${b.name}</div><div class="disc-sr-mt">${c} location${c!==1?'s':''}</div></div><i class="fas fa-chevron-right disc-sr-arr"></i></div>`;}).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No brands found</div>';
+}
+function selDiscBrand(id) {
+  selBrand(id); // reuse existing function
+  renderDiscStep();
+}
+function clearDiscBrand() { clearBrand({stopPropagation:()=>{}}); renderDiscStep(); }
+
+function filterDiscCities() {
+  const q=(document.getElementById('discCitySrch')?.value||''  ).toLowerCase();
+  const st=studios.filter(s=>s.brand_id===sBrand?.id&&((s.city||''  ).toLowerCase().includes(q)||(s.state||''  ).toLowerCase().includes(q)));
+  const el=document.getElementById('discCityRes');if(!el)return;
+  el.innerHTML=st.map(s=>`<div class="disc-sr-item" onclick="selDiscCity('${s.id}')"><div><div class="disc-sr-nm">${s.city||'Unknown'}</div><div class="disc-sr-mt">${s.state||''}</div></div><i class="fas fa-chevron-right disc-sr-arr"></i></div>`).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No locations found</div>';
+}
+function selDiscCity(id) { selCity(id); renderDiscStep(); }
+function clearDiscCity() { clearCity({stopPropagation:()=>{}}); renderDiscStep(); }
+
+// Simple disc answer (single-select, auto-advance)
+function discSimple(key,val,el) {
+  disc[key]=val;
+  el.closest('.disc-answers').querySelectorAll('.disc-ans').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  syncLeadFromDisc(key);
+  setTimeout(()=>advanceDisc(), 260);
+}
+
+// Multi-select disc answer (no auto-advance)
+function discMulti(key,val,el) {
+  el.classList.toggle('on');
+  if(!disc[key])disc[key]=[];
+  const i=disc[key].indexOf(val);if(i===-1)disc[key].push(val);else disc[key].splice(i,1);
+  syncLeadFromDisc(key);
+}
+
+function advanceDisc() {
+  const steps = getVisibleSteps();
+  // Skip city step if single location brand
+  let next = discStep + 1;
+  if (steps[next]?.id === 'city' && sBrand) {
+    const sts = studios.filter(s=>s.brand_id===sBrand.id);
+    if (sts.length <= 1) { if(!sStudio&&sts.length===1){sStudio=sts[0];updateCityBtn();renderAll();} next++; }
+  }
+  if (next < steps.length) { discStep = next; renderDiscStep(); }
+  else { goStage(3); }
+}
+
+function backDisc() {
+  if (discStep > 0) { discStep--; renderDiscStep(); }
+}
+
+function jumpDisc(step) {
+  if (step < discStep) { discStep = step; renderDiscStep(); }
+}
+
+function syncLeadFromDisc(id) {
+  const map = { stuFor:'stuFor', experience:'exp', hasInst:'hasInst' };
+  if(map[id]) syncLeadChip(map[id], disc[id]);
+  if(id==='goals') { chips['goals']=disc.goals; document.querySelectorAll('.lc[data-goals]').forEach(c=>c.classList.toggle('on',disc.goals.includes(c.dataset.goals))); }
+}
+
+function updateInstOpts() {} // no-op, handled in buildStudentCards
+
+function runTriage() {} // handled per-student in buildStuTeacherRecs
+
+
+
+/* ── STAGE NAV ── */
+/* ── TIMER ── */
+function startTimer() { clearInterval(timerInt); timerSecs=0; timerInt=setInterval(()=>timerSecs++,1000); }
+function fmtTime(s) { return `${Math.floor(s/60)}m ${s%60}s`; }
+
+/* ── MODE ── */
+function setMode(m) {
+  mode=m;
+  document.getElementById('modeCall')?.classList.toggle('on',m==='call');
+  document.getElementById('modeTrain')?.classList.toggle('on',m==='train');
+  document.body.classList.toggle('training',m==='train');
+}
+
+/* ── CALL TYPE ── */
+function setCallType(t) {
+  callType=t;
+  // Update any inbound/outbound toggles currently in the DOM
+  document.querySelectorAll('[data-ct]').forEach(el => {
+    el.classList.toggle('on', el.dataset.ct === t);
+  });
+  // Also update disc step if it's showing setup
+  const discContent = document.getElementById('discContent');
+  if (discContent) {
+    const inbBtn = discContent.querySelector('[data-ct="inbound"]');
+    const outBtn = discContent.querySelector('[data-ct="outbound"]');
+    if (inbBtn) inbBtn.classList.toggle('on', t === 'inbound');
+    if (outBtn) outBtn.classList.toggle('on', t === 'outbound');
+  }
+}
+
+/* ── BRAND (topbar buttons still work) ── */
+function selBrand(id) {
+  sBrand = brands.find(b=>b.id===id);
+  sStudio=null; sInsts=[]; students=[{name:'',rel:null,age:null,instruments:[]}];
+  // Update topbar brand button
+  const btn=document.getElementById('brandBtn');
+  if(btn){btn.innerHTML=`<i class="fas fa-building" style="font-size:.625rem;"></i> <span>${sBrand.name}</span> <button class="chg" onclick="clearTopbarBrand(event)"><i class="fas fa-times"></i></button>`;btn.classList.add('selected');}
+  // Enable city button
+  const cityBtn=document.getElementById('cityBtn');
+  if(cityBtn){cityBtn.disabled=false;}
+  const sts=studios.filter(s=>s.brand_id===id);
+  if(sts.length===1){sStudio=sts[0];updateCityBtn();renderAll();}
+  else{filterCities();}
+}
+function clearBrand(e) {
+  if(e&&e.stopPropagation)e.stopPropagation();
+  sBrand=null;sStudio=null;sInsts=[];students=[{name:'',rel:null,age:null,instruments:[]}];
+  const btn=document.getElementById('brandBtn');
+  if(btn){btn.innerHTML=`<i class="fas fa-building" style="font-size:.625rem;"></i> <span>Select Brand</span> <i class="fas fa-chevron-down" style="font-size:.5rem;opacity:.6;"></i>`;btn.classList.remove('selected');}
+  const cityBtn=document.getElementById('cityBtn');
+  if(cityBtn){cityBtn.disabled=true;cityBtn.classList.remove('selected');cityBtn.innerHTML=`<i class="fas fa-map-marker-alt" style="font-size:.5625rem;"></i> <span>Select Location</span>`;}
+  renderInfoBar();
+}
+function clearTopbarBrand(e){e.stopPropagation();clearBrand(e);renderDiscStep();}
+
+/* ── CITY ── */
+function selCity(id) {
+  sStudio=studios.find(s=>s.id===id);
+  closeAllDDs();
+  updateCityBtn();
+  renderAll();
+}
+function clearCity(e) {
+  if(e&&e.stopPropagation)e.stopPropagation();
+  sStudio=null;sInsts=[];
+  const cityBtn=document.getElementById('cityBtn');
+  if(cityBtn){cityBtn.innerHTML=`<i class="fas fa-map-marker-alt" style="font-size:.5625rem;"></i> <span>Select Location</span> <i class="fas fa-chevron-down" style="font-size:.5rem;opacity:.6;"></i>`;cityBtn.classList.remove('selected');}
+  renderInfoBar();
+}
+function updateCityBtn() {
+  const cityBtn=document.getElementById('cityBtn');
+  if(!cityBtn||!sStudio)return;
+  cityBtn.innerHTML=`<i class="fas fa-map-marker-alt" style="font-size:.5625rem;"></i> <span>${sStudio.city||'Location'}</span> <button class="chg" onclick="clearCity(event)" style="color:var(--success);margin-left:.25rem;background:none;border:none;cursor:pointer;font-size:.5625rem;"><i class="fas fa-times"></i></button>`;
+  cityBtn.classList.add('selected');
+}
+
+/* ── TOPBAR DROPDOWNS ── */
+function togDD(type) {
+  const panel=document.getElementById(type+'DD');
+  const overlay=document.getElementById('ddOverlay');
+  if(!panel)return;
+  const isOpen=panel.style.display!=='none';
+  closeAllDDs();
+  if(!isOpen){panel.style.display='block';overlay.classList.add('open');setTimeout(()=>{const s=document.getElementById(type+'Srch');if(s){s.focus();if(type==='brand')filterBrands();else filterCities();}},50);}
+}
+function closeAllDDs() {
+  const bd=document.getElementById('brandDD');if(bd)bd.style.display='none';
+  const cd=document.getElementById('cityDD');if(cd)cd.style.display='none';
+  const ov=document.getElementById('ddOverlay');if(ov)ov.classList.remove('open');
+}
+function filterBrands() {
+  const q=(document.getElementById('brandSrch')?.value||'').toLowerCase();
+  const f=brands.filter(b=>(b.name||'').toLowerCase().includes(q));
+  const el=document.getElementById('brandRes');if(!el)return;
+  el.innerHTML=f.map(b=>{const c=studios.filter(s=>s.brand_id===b.id).length;return`<div class="dd-item" onclick="selBrand('${b.id}');closeAllDDs();"><div><div class="dd-nm">${b.name}</div><div class="dd-mt">${c} location${c!==1?'s':''}</div></div><i class="fas fa-chevron-right dd-arr"></i></div>`;}).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No brands found</div>';
+}
+function filterCities() {
+  const q=(document.getElementById('citySrch')?.value||'').toLowerCase();
+  const st=studios.filter(s=>s.brand_id===sBrand?.id&&((s.city||'').toLowerCase().includes(q)||(s.state||'').toLowerCase().includes(q)));
+  const el=document.getElementById('cityRes');if(!el)return;
+  el.innerHTML=st.map(s=>`<div class="dd-item" onclick="selCity('${s.id}');closeAllDDs();renderDiscStep();"><div><div class="dd-nm">${s.city||'Unknown'}</div><div class="dd-mt">${s.state||''}</div></div><i class="fas fa-chevron-right dd-arr"></i></div>`).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No locations found</div>';
+}
+
+/* ── DISC BRAND/CITY SEARCH ── */
+function filterDiscBrands() {
+  const q=(document.getElementById('discBrandSrch')?.value||'').toLowerCase();
+  const f=brands.filter(b=>(b.name||'').toLowerCase().includes(q));
+  const el=document.getElementById('discBrandRes');if(!el)return;
+  el.innerHTML=f.slice(0,8).map(b=>{const c=studios.filter(s=>s.brand_id===b.id).length;return`<div class="disc-sr-item" onclick="selDiscBrand('${b.id}')"><div><div class="disc-sr-nm">${b.name}</div><div class="disc-sr-mt">${c} location${c!==1?'s':''}</div></div><i class="fas fa-chevron-right disc-sr-arr"></i></div>`;}).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No brands found</div>';
+}
+function selDiscBrand(id) { selBrand(id); renderDiscStep(); }
+function clearDiscBrand() { clearBrand({}); renderDiscStep(); }
+function filterDiscCities() {
+  const q=(document.getElementById('discCitySrch')?.value||'').toLowerCase();
+  const st=studios.filter(s=>s.brand_id===sBrand?.id&&((s.city||'').toLowerCase().includes(q)||(s.state||'').toLowerCase().includes(q)));
+  const el=document.getElementById('discCityRes');if(!el)return;
+  el.innerHTML=st.map(s=>`<div class="disc-sr-item" onclick="selDiscCity('${s.id}')"><div><div class="disc-sr-nm">${s.city||'Unknown'}</div><div class="disc-sr-mt">${s.state||''}</div></div><i class="fas fa-chevron-right disc-sr-arr"></i></div>`).join('')||'<div style="padding:.5rem;font-size:.875rem;color:var(--text-light);">No locations found</div>';
+}
+function selDiscCity(id) { sStudio=studios.find(s=>s.id===id); updateCityBtn(); renderAll(); renderDiscStep(); }
+function clearDiscCity() { clearCity({}); renderDiscStep(); }
+
+/* ── PROXIMITY ── */
+function togProx() { document.getElementById('proxBody')?.classList.toggle('open'); }
+function togProxScope() { proxAllBrands=!proxAllBrands; document.getElementById('proxScopeTxt').textContent=proxAllBrands?'Search within this brand only':'Also search other brands'; runProx(); }
+function haversine(lat1,lon1,lat2,lon2){const R=3958.8,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+async function runProx(){
+  const q=document.getElementById('proxSrch')?.value.trim();
+  const res=document.getElementById('proxRes');if(!q||!res)return;
+  res.innerHTML='<div style="font-size:.75rem;color:var(--text-light);padding:.25rem;">Searching...</div>';
+  try{
+    const geo=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`);
+    const gd=await geo.json();
+    if(!gd.length){res.innerHTML='<div style="font-size:.75rem;color:var(--text-light);padding:.25rem;">Location not found.</div>';return;}
+    const uLat=parseFloat(gd[0].lat),uLon=parseFloat(gd[0].lon);
+    let pool=proxAllBrands?studios:studios.filter(s=>s.brand_id===sBrand?.id);
+    pool=pool.filter(s=>s.latitude&&s.longitude);
+    if(!pool.length)throw new Error('no coords');
+    const ranked=pool.map(s=>({...s,dist:haversine(uLat,uLon,parseFloat(s.latitude),parseFloat(s.longitude))})).sort((a,b)=>a.dist-b.dist).slice(0,5);
+    res.innerHTML=ranked.map(s=>{const b=brands.find(br=>br.id===s.brand_id);return`<div class="prox-item" onclick="selDiscCity('${s.id}');togProx();"><div><div class="prox-nm">${b?.name||'Studio'} — ${s.city||''}</div><div class="prox-addr">${s.address||s.state||''}</div></div><span class="prox-dist">${s.dist.toFixed(1)} mi</span></div>`;}).join('');
+  }catch(e){
+    let pool=proxAllBrands?studios:studios.filter(s=>s.brand_id===sBrand?.id);
+    const matched=pool.filter(s=>(s.city||'').toLowerCase().includes(q.toLowerCase())||(s.state||'').toLowerCase().includes(q.toLowerCase())).slice(0,5);
+    res.innerHTML=matched.length?matched.map(s=>{const b=brands.find(br=>br.id===s.brand_id);return`<div class="prox-item" onclick="selDiscCity('${s.id}');togProx();"><div class="prox-nm">${b?.name||'Studio'} — ${s.city||''}</div><div class="prox-addr">${s.address||s.state||''}</div></div>`;}).join(''):'<div style="font-size:.75rem;color:var(--text-light);padding:.25rem;">No studios found.</div>';
+  }
+}
+
+/* ── LEAD SYNC ── */
+function syncLeadChip(key,val) {
+  document.querySelectorAll(`.lc[data-key="${key}"]`).forEach(c=>c.classList.toggle('on',c.dataset.val===val));
+  chips[key]=val;
+}
+
+
+function goStage(n) {
+  document.querySelectorAll('.stage-pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.snbtn').forEach(b=>b.classList.remove('on'));
+  // Stage 1 removed — redirect to 2
+  if(n===1)n=2;
+  const paneId=`sp${n}`;
+  document.getElementById(paneId)?.classList.add('on');
+  const btn=document.getElementById(`sb${n}`);
+  if(btn)btn.classList.add('on','vis');
+  if(n===2){renderDiscStep();}
+  if(n===7)updateSendoff();
+}
+
+/* ── CALL TYPE ── */
+// setCallType defined above
+
+/* ── SCRIPTS ── */
+let sAge=null;
+function updateS1Script() {
+  // Stage 1 removed — no-op kept for compatibility
+}
+
+function updateGroupNote() {
+  const gi=['Piano','Voice','Guitar','Violin'];
+  const activeInsts=disc.instConf.length?disc.instConf:sInsts;
+  const has=activeInsts.some(i=>gi.includes(i));
+  const el=document.getElementById('groupNote'); const txt=document.getElementById('groupNoteTxt');
+  if(el&&has){el.style.display='flex';txt.textContent=`Group classes may also be available for ${activeInsts.filter(i=>gi.includes(i)).join(', ')} — confirm with the studio.`;}
+  else if(el)el.style.display='none';
+}
+
+function updateSendoff() {
+  const day=document.getElementById('closeDay')?.value||'';
+  const teacher=document.getElementById('closeTeacher')?.value||'';
+  const el=document.getElementById('sendoffTxt'); if(!el)return;
+  let txt='"You\'re all set';
+  if(day)txt+=` for <strong>${day}</strong>`;
+  if(teacher)txt+=` with <strong>${teacher}</strong>`;
+  txt+='! We can\'t wait to get started!"';
+  el.innerHTML=txt;
+}
+
+function copyScript(id,btn) {
+  const el=document.getElementById(id); if(!el)return;
+  const text=el.innerText||el.textContent;
+  navigator.clipboard.writeText(text).catch(()=>{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+  btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i> Copied!';
+  setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<i class="fas fa-copy"></i> Copy';},2000);
+}
+
+/* ── TRIAGE ── */
+function runTriage() { if(discStep===0||disc.instConf.length) renderDiscStep(); }
+
+/* ── TEACHERS ── */
+function getMatchedTeachers() {
+  const bt=teachers.filter(t=>t.brand===sBrand?.name);
+  let st=bt;
+  if(sStudio?.city){const ids=tCities.filter(c=>c.city===sStudio.city).map(c=>c.teacher_id);const cf=bt.filter(t=>ids.includes(t.id));if(cf.length)st=cf;}
+  const activeInsts=disc.instConf.length?disc.instConf:sInsts;
+  let matched=activeInsts.length?st.filter(t=>activeInsts.some(inst=>tInst.some(i=>i.teacher_id===t.id&&i.instrument===inst))):st;
+  const age=disc.age||sAge;
+  if(age) matched=matched.filter(t=>activeInsts.length?activeInsts.some(inst=>{const i=tInst.find(x=>x.teacher_id===t.id&&x.instrument===inst);if(!i?.youngest_age_preference)return true;return parseInt(i.youngest_age_preference)<=age;}):true);
+  return matched;
+}
+
+function buildTeacherDrop() {
+  const sel=document.getElementById('closeTeacher'); if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Select teacher...</option>'+getMatchedTeachers().map(t=>`<option value="${t.first_name} ${t.last_name}">${t.first_name} ${t.last_name}</option>`).join('');
+  if(cur)sel.value=cur;
+  updateSendoff();
+}
+
+/* ── RENDER ALL ── */
+function renderAll() {
+  renderPrice(); renderSchedLink(); renderStudio(); renderPolicies(); renderNearby();
+  buildTeacherDrop(); updateGroupNote(); updateS1Script(); renderInfoBar();
+  updateInstOpts(); renderDiscStep();
+}
+
+function renderPrice() {
+  const b=sBrand,s=sStudio;
+  const prices=[{l:'30 Min',v:s?.monthly_rate||b?.monthly_rate||b?.display_price,sub:'/ month'},{l:'45 Min',v:s?.price_45||b?.price_45,sub:'/ month'},{l:'60 Min',v:s?.price_60||b?.price_60,sub:'/ month'},{l:'Annual Fee',v:s?.annual_fee||b?.annual_fee||b?.display_annual_fee,sub:'one-time'}].filter(p=>p.v);
+  document.getElementById('priceRow').innerHTML=prices.length?prices.map(p=>`<div class="price-tile"><div class="pt-lbl">${p.l}</div><div class="pt-val">${p.v}</div><div class="pt-sub">${p.sub}</div></div>`).join(''):'<div style="font-size:.875rem;color:var(--ink3);">No pricing data.</div>';
+  const annual=s?.annual_fee||b?.annual_fee||b?.display_annual_fee||'';
+  const af=document.getElementById('closeAnnual'); if(af){af.value=annual;af.placeholder=annual||'Not set';}
+}
+
+function renderSchedLink() {
+  const link=sBrand?.scheduling_link||sStudio?.scheduling_link;
+  const btn=document.getElementById('schedLink');
+  if(link){btn.href=link;btn.classList.remove('dis');btn.innerHTML='<i class="fas fa-calendar-check"></i> Open Scheduling Platform';}
+  else{btn.removeAttribute('href');btn.classList.add('dis');btn.innerHTML='<i class="fas fa-calendar-times"></i> No Scheduling Link';}
+}
+
+function renderStudio() {
+  const b=sBrand,s=sStudio;
+  const rows=[['Phone',b?.phone_number||s?.phone_number],['Director',s?.director_name],['Email',s?.director_email],['Hours',s?.admin_office_hours],['Time Zone',s?.time_zone],['Address',s?.address],['Parking',s?.parking]].filter(r=>r[1]);
+  const html=rows.length?rows.map(r=>`<div class="ir"><div class="ir-l">${r[0]}</div><div class="ir-v">${r[1]}</div></div>`).join(''):'<div class="empty-msg" style="padding:.5rem;">No info available.</div>';
+  const el=document.getElementById('refStudio'); if(el)el.innerHTML=html;
+  const el2=document.getElementById('stInfoBody'); if(el2)el2.innerHTML=html;
+}
+
+function renderPolicies() {
+  let html=sEnroll==='returning'?`<div class="pol-item" style="border-left-color:var(--yellow)"><div class="pol-t" style="color:var(--yellow);">⚠️ Returning Student</div><div class="pol-d">Annual fee may be waived.</div></div>`:'';
+  html+=`<div class="pol-item"><div class="pol-t">Annual Studio Charge</div><div class="pol-d">Covers recitals, activities, incentive store, and materials.</div></div>`;
+  html+=`<div class="pol-item"><div class="pol-t">Makeup Lessons</div><div class="pol-d">24-hr notice. 30 days to use makeup lesson.</div></div>`;
+  html+=`<div class="pol-item"><div class="pol-t">Cancellation</div><div class="pol-d">Cancel before the 25th to avoid next month's charge.</div></div>`;
+  html+=`<div class="pol-item"><div class="pol-t">7-Day Guarantee</div><div class="pol-d">Full refund within 7 days of first lesson.</div></div>`;
+  const el=document.getElementById('refPolicies'); if(el)el.innerHTML=html;
+}
+
+function renderNearby() {
+  const state=sStudio?.state||sBrand?.state;
+  const nb=studios.filter(s=>s.id!==sStudio?.id&&s.state===state).slice(0,5);
+  const html=nb.length?nb.map(s=>{const b=brands.find(br=>br.id===s.brand_id);const link=b?.scheduling_link||s.scheduling_link;return`<div class="nb-item"${link?` onclick="window.open('${link}','_blank')"`:''}}><div class="nb-nm">${b?.name||'Studio'}</div><div class="nb-loc">${s.city||''}${s.city&&s.state?', ':''}${s.state||''}</div>${link?'<div class="nb-cta">Open scheduling →</div>':''}</div>`;}).join(''):'<div class="empty-msg" style="padding:.5rem;">No nearby studios found.</div>';
+  const el=document.getElementById('refNearby'); if(el)el.innerHTML=html;
+}
+
+function renderInfoBar() {
+  const b=sBrand,s=sStudio;
+  if(!b){document.getElementById('ibNm').textContent='No studio selected';document.getElementById('ibQuick').innerHTML='<span style="font-size:.6875rem;color:var(--ink3);">Select a brand to see studio info</span>';document.getElementById('ibFull').innerHTML='';return;}
+  document.getElementById('ibNm').textContent=`${b.name}${s?.city?' — '+s.city:''}`;
+  const phone=b?.phone_number||s?.phone_number||''; const link=b?.scheduling_link||s?.scheduling_link||''; const dir=s?.director_name||'';
+  let quick='';
+  if(phone)quick+=`<div class="ib-field"><i class="fas fa-phone"></i>${phone}</div>`;
+  if(dir)quick+=`<div class="ib-field"><i class="fas fa-user-tie"></i>${dir}</div>`;
+  if(link)quick+=`<div class="ib-field"><i class="fas fa-calendar"></i><a href="${link}" target="_blank">Open Scheduling</a></div>`;
+  document.getElementById('ibQuick').innerHTML=quick||'<span style="font-size:.6875rem;color:var(--ink3);">No quick info</span>';
+  const rows=[['Phone',phone],['Director',dir],['Email',s?.director_email],['Hours',s?.admin_office_hours],['Time Zone',s?.time_zone],['Address',s?.address],['Parking',s?.parking]].filter(r=>r[1]);
+  let full=rows.map(r=>`<div class="ib-row"><div class="ib-rl">${r[0]}</div><div class="ib-rv">${r[1]}</div></div>`).join('');
+  if(link)full+=`<div class="ib-row" style="grid-column:1/-1;"><a href="${link}" target="_blank" class="ib-sched"><i class="fas fa-calendar-check"></i> Open Scheduling</a></div>`;
+  document.getElementById('ibFull').innerHTML=full||'<div style="font-size:.75rem;color:var(--ink3);">No info available.</div>';
+}
+
+/* ── HELPERS ── */
+function togHelp(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
+function togRef(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
+function togRefPanel(id) { const el=document.getElementById(id+'Acc'); if(el){const tog=el.querySelector('.ref-tog');if(tog)togRef(tog);} }
+function togInfoBar() { ibOpen=!ibOpen; document.getElementById('infoBar').classList.toggle('open',ibOpen); document.getElementById('ibArr').style.transform=ibOpen?'rotate(0deg)':'rotate(180deg)'; document.getElementById('ibTxt').textContent=ibOpen?'Collapse':'Details'; }
+function togCC(el) { el.classList.toggle('on'); }
+function togLP() { lpOpen=!lpOpen; document.getElementById('leadPanel').classList.toggle('open',lpOpen); document.getElementById('leadTab').classList.toggle('open',lpOpen); document.getElementById('leadTabIco').className=lpOpen?'fas fa-chevron-right':'fas fa-chevron-left'; }
+
+/* ── PRICING REACTIONS ── */
+function showReaction(type) {
+  const btn=document.getElementById(`rb-${type}`);
+  const wasOn=btn.classList.contains('on');
+  document.querySelectorAll('.rpill').forEach(b=>b.classList.remove('on'));
+  document.getElementById('reactionArea').innerHTML='';
+  if(wasOn){activeReaction=null;return;}
+  btn.classList.add('on'); activeReaction=type; activeObjPath=null;
+  document.getElementById('reactionArea').innerHTML=buildReactionHTML(type);
+}
+
+function buildReactionHTML(type) {
+  if(type==='good') return `<div class="reaction-response"><div class="rr-header ok"><i class="fas fa-check-circle"></i> Great — move to close</div><div class="rr-body"><div class="tip-item hl"><span class="tip-icon"><i class="fas fa-arrow-right"></i></span>Head to Stage 6 and lock in their first lesson. Confirm their preferred days before opening the scheduler.</div></div></div>`;
+
+  if(type==='more') {
+    const b=sBrand,s=sStudio; const base=s?.monthly_rate||b?.monthly_rate||b?.display_price||null;
+    const p45=s?.price_45||b?.price_45||null; const p60=s?.price_60||b?.price_60||null;
+    let tiles=(!p45&&!p60)?'<div style="font-size:.875rem;color:var(--ink3);">No 45 or 60 min pricing set for this studio.</div>':'';
+    if(p45)tiles+=`<div class="ut"><div class="ut-lbl">45 Min</div><div class="ut-val">${p45}</div><div class="ut-diff">/ month${base?' vs '+base+' for 30 min':''}</div><div class="ut-sub">Best for students 10+ or goal-oriented</div></div>`;
+    if(p60)tiles+=`<div class="ut"><div class="ut-lbl">60 Min</div><div class="ut-val">${p60}</div><div class="ut-diff">/ month${base?' vs '+base+' for 30 min':''}</div><div class="ut-sub">Ideal for serious students & adults</div></div>`;
+    return `<div class="reaction-response"><div class="rr-header info"><i class="fas fa-clock"></i> Upsell — More Lesson Time</div><div class="rr-body"><div class="upsell-tiles">${tiles}</div><div class="tip-item" style="margin-top:.625rem;"><span class="tip-icon"><i class="fas fa-circle"></i></span>More time = faster progress. Especially true for older students or goal-oriented learners.</div></div></div>`;
+  }
+
+  if(type==='expensive') return `<div class="reaction-response"><div class="rr-header warn"><i class="fas fa-dollar-sign"></i> Price Objection — First Free Lesson</div><div class="rr-body"><div class="inline-script" id="s-expensive" style="position:relative;">"We don't currently offer a trial lesson, but we <strong>are</strong> offering a <strong>first free lesson with enrollment!</strong><br><br>To reserve your spot and teacher, we'll place a card on file — but <strong>no charge is processed until your second lesson.</strong><br><br>If you attend and feel it's not a good fit, just let us know before lesson two — <strong>no charge at all.</strong> This way you can secure your time, meet your teacher, and make sure it's the right match!"<button class="inline-copy" onclick="copyInline('s-expensive',this)"><i class="fas fa-copy"></i></button></div><div class="tip-item" style="margin-top:.5rem;"><span class="tip-icon"><i class="fas fa-circle"></i></span>Card on file, zero charge until lesson 2. They're not paying today — just securing their spot.</div></div></div>`;
+
+  if(type==='think'||type==='notready') {
+    const label=type==='think'?'Need to Think / Talk to Spouse':'Not Ready Yet';
+    return `<div class="reaction-response"><div class="rr-header warn"><i class="fas fa-pause-circle"></i> ${label}</div><div class="rr-body"><div class="sub-pills"><button class="spill" id="srb-${type}-warm" onclick="showSub('${type}','warm')"><i class="fas fa-fire"></i> Keep warm</button><button class="spill" id="srb-${type}-free" onclick="showSub('${type}','free')"><i class="fas fa-gift"></i> Pivot to free lesson</button></div><div id="subArea-${type}"></div></div></div>`;
+  }
+
+  if(type==='biweekly') {
+    const b=sBrand,s=sStudio; const policy=(s?.biweekly_policy)||(b?.biweekly_policy)||null;
+    if(policy) return `<div class="reaction-response"><div class="rr-header info"><i class="fas fa-redo"></i> Bi-Weekly Lessons</div><div class="rr-body"><div class="inline-script">${policy}</div></div></div>`;
+    return `<div class="reaction-response"><div class="rr-header info"><i class="fas fa-redo"></i> Bi-Weekly Lessons</div><div class="rr-body"><div class="inline-script" id="s-biweekly" style="position:relative;">"That's a great question — bi-weekly availability can vary by studio and teacher. I'd recommend getting your spot reserved now, and we can confirm the schedule cadence when we set up your first lesson."<button class="inline-copy" onclick="copyInline('s-biweekly',this)"><i class="fas fa-copy"></i></button></div><div class="tip-item" style="margin-top:.5rem;"><span class="tip-icon"><i class="fas fa-circle"></i></span>Bi-weekly varies by studio — confirm with the director. If unavailable, position weekly as the best path to real progress.</div></div></div>`;
+  }
+  return '';
+}
+
+function showSub(parent,type) {
+  const btnId=`srb-${parent}-${type}`;
+  const wasOn=document.getElementById(btnId)?.classList.contains('on');
+  document.querySelectorAll(`[id^="srb-${parent}-"]`).forEach(b=>b.classList.remove('on'));
+  const area=document.getElementById(`subArea-${parent}`);
+  if(wasOn){area.innerHTML='';activeObjPath=null;return;}
+  document.getElementById(btnId)?.classList.add('on');
+  activeObjPath=`${parent}-${type}`;
+  if(type==='free') {
+    area.innerHTML=`<div class="sub-response"><div class="inline-script" id="s-${parent}-free" style="position:relative;">"I completely understand — and here's something that might make the decision easier. We're currently offering a <strong>first free lesson with enrollment.</strong> Card on file to reserve your spot, but <strong>no charge until your second lesson.</strong> Try it out, meet the teacher, decide from there — zero risk!"<button class="inline-copy" onclick="copyInline('s-${parent}-free',this)"><i class="fas fa-copy"></i></button></div></div>`;
+  } else {
+    area.innerHTML=`<div class="sub-response"><div class="inline-script" id="s-${parent}-warm" style="position:relative;">${parent==='think'?'"Totally makes sense — take your time! Just so you know, teacher spots do fill up, so when you\'re ready it\'s worth moving on it. When would be a good time for me to follow up?"':'"No problem at all! When do you think you might be ready to get started? I can make a note and follow up then — spots fill up so it\'s good to get on our radar."'}<button class="inline-copy" onclick="copyInline('s-${parent}-warm',this)"><i class="fas fa-copy"></i></button></div><div class="fu-row"><div class="fu-lbl">Capture follow-up date</div><input type="date" class="fu-input" oninput="setFollowup(this.value)"><div class="fu-lbl" style="margin-top:.375rem;">Reach out after</div><input type="text" class="fu-input" placeholder="e.g. After summer, in January..." oninput="setReachout(this.value)"></div></div>`;
+  }
+}
+
+function copyInline(id,btn) {
+  const el=document.getElementById(id); if(!el)return;
+  // Get text, strip button HTML
+  const clone=el.cloneNode(true); clone.querySelectorAll('button').forEach(b=>b.remove());
+  const text=(clone.innerText||clone.textContent).trim();
+  navigator.clipboard.writeText(text).catch(()=>{});
+  btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i>';
+  setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<i class="fas fa-copy"></i>';},2000);
+}
+
+function setFollowup(val){const el=document.getElementById('lc-fu');if(el)el.value=val;chips['followup']=val;}
+function setReachout(val){const el=document.getElementById('lc-ro');if(el)el.value=val;}
+
+/* ── LEAD CARD ── */
+function buildLeadCard(){
+  document.getElementById('lpBody').innerHTML=`
+    <div class="ls">Instruments</div>
+    <div class="lf"><label>Selected</label><div style="font-size:.75rem;font-weight:600;color:var(--ink);" id="lc-inst">—</div></div>
+    <div class="ld"></div>
+    <div class="ls">Student</div>
+    <div class="lf"><label>Name</label><input type="text" class="li" id="lc-sN" placeholder="First name"></div>
+    <div class="lf"><label>Age</label><input type="number" class="li" id="lc-age" placeholder="—" min="2" max="99" oninput="disc.age=parseInt(this.value)||null;sAge=disc.age;runTriage();"></div>
+    <div class="lf"><label>Gender</label><div class="lc-row">
+      <button class="lc" data-key="sG" data-val="Male" onclick="setC('sG','Male',this)">Male</button>
+      <button class="lc" data-key="sG" data-val="Female" onclick="setC('sG','Female',this)">Female</button>
+      <button class="lc" data-key="sG" data-val="Other" onclick="setC('sG','Other',this)">Other</button>
+    </div></div>
+    <div class="lf"><label>Lessons for</label><div class="lc-row">
+      <button class="lc" data-key="stuFor" data-val="Myself" onclick="setC('stuFor','Myself',this)">Myself</button>
+      <button class="lc" data-key="stuFor" data-val="My child" onclick="setC('stuFor','My child',this)">My child</button>
+      <button class="lc" data-key="stuFor" data-val="Someone else" onclick="setC('stuFor','Someone else',this)">Other</button>
+    </div></div>
+    <div class="lf"><label>Experience</label><div class="lc-row">
+      <button class="lc" data-key="exp" data-val="Never played" onclick="setC('exp','Never played',this)">Never</button>
+      <button class="lc" data-key="exp" data-val="Some experience" onclick="setC('exp','Some experience',this)">Some</button>
+      <button class="lc" data-key="exp" data-val="Transferring from another studio" onclick="setC('exp','Transferring',this)">Transferring</button>
+    </div></div>
+    <div class="lf"><label>Instrument at home?</label><div class="lc-row">
+      <button class="lc" data-key="hasInst" data-val="Yes" onclick="setC('hasInst','Yes',this)">Yes</button>
+      <button class="lc" data-key="hasInst" data-val="No — needs rental" onclick="setC('hasInst','No — needs rental',this)">No</button>
+    </div></div>
+    <div class="lf"><label>Goals</label><div class="lc-row">
+      <button class="lc" data-goals="Fun" onclick="togM('goals','Fun',this)">Fun</button>
+      <button class="lc" data-goals="Performance" onclick="togM('goals','Performance',this)">Performance</button>
+      <button class="lc" data-goals="School" onclick="togM('goals','School',this)">School</button>
+      <button class="lc" data-goals="Gift" onclick="togM('goals','Gift',this)">Gift</button>
+      <button class="lc" data-goals="Hobby" onclick="togM('goals','Hobby',this)">Hobby</button>
+      <button class="lc" data-goals="College prep" onclick="togM('goals','College prep',this)">College</button>
+    </div></div>
+    <div class="ld"></div>
+    <div class="ls">Parent / Contact</div>
+    <div class="lf"><label>Parent Name</label><input type="text" class="li" id="lc-pN" placeholder="Full name"></div>
+    <div class="lf"><label>Gender</label><div class="lc-row">
+      <button class="lc" data-key="pG" data-val="Male" onclick="setC('pG','Male',this)">Male</button>
+      <button class="lc" data-key="pG" data-val="Female" onclick="setC('pG','Female',this)">Female</button>
+      <button class="lc" data-key="pG" data-val="Other" onclick="setC('pG','Other',this)">Other</button>
+    </div></div>
+    <div class="lf"><label>Phone</label><input type="tel" class="li" id="lc-ph" placeholder="(555) 000-0000"></div>
+    <div class="lf"><label>Email</label><input type="email" class="li" id="lc-em" placeholder="email@example.com"></div>
+    <div class="ld"></div>
+    <div class="ls">Context</div>
+    <div class="lf"><label>Intent</label><div class="lc-row">
+      <button class="lc" data-key="intent" data-val="Ready" onclick="setC('intent','Ready',this)">Ready</button>
+      <button class="lc" data-key="intent" data-val="Browsing" onclick="setC('intent','Browsing',this)">Browsing</button>
+      <button class="lc" data-key="intent" data-val="Comparing" onclick="setC('intent','Comparing',this)">Comparing</button>
+      <button class="lc" data-key="intent" data-val="Needs discussion" onclick="setC('intent','Needs discussion',this)">Needs to discuss</button>
+    </div></div>
+    <div class="lf"><label>Follow-up</label><input type="date" class="li" id="lc-fu"></div>
+    <div class="lf"><label>Reach out after</label><input type="text" class="li" id="lc-ro" placeholder="e.g. After summer"></div>
+    <div class="ld"></div>
+    <div class="ls">Outcome</div>
+    <div class="lf"><div class="lc-row">
+      <button class="lc" onclick="setC('out','Enrolled ✅',this)">Enrolled</button>
+      <button class="lc" onclick="setC('out','Scheduled 📅',this)">Scheduled</button>
+      <button class="lc" onclick="setC('out','No avail. 🚫',this)">No avail.</button>
+      <button class="lc" onclick="setC('out','Not interested ❌',this)">Not interested</button>
+      <button class="lc" onclick="setC('out','Call back 📞',this)">Call back</button>
+      <button class="lc" onclick="setC('out','Voicemail 📬',this)">Voicemail</button>
+    </div></div>
+    <div class="lf"><label>Notes</label><textarea class="li ta" id="lc-nt" placeholder="Anything else..."></textarea></div>
+  `;
+}
+
+function setC(key,val,el){el.closest('.lc-row').querySelectorAll('.lc').forEach(c=>c.classList.remove('on'));el.classList.add('on');chips[key]=val;}
+function togM(key,val,el){el.classList.toggle('on');if(!chips[key])chips[key]=[];const i=chips[key].indexOf(val);if(i===-1)chips[key].push(val);else chips[key].splice(i,1);}
+
+/* ── SUMMARY ── */
+function gV(f){return document.getElementById(`lc-${f}`)?.value||'';}
+function cv(k){const v=chips[k];if(!v)return null;if(Array.isArray(v))return v.length?v.join(', '):null;return v;}
+
+function openSum(){buildSum();document.getElementById('sumMov').classList.add('on');}
+function closeSum(){document.getElementById('sumMov').classList.remove('on');}
+
+function buildSum(){
+  const dur=fmtTime(timerSecs);
+  const day=document.getElementById('closeDay')?.value||'';
+  const teacher=document.getElementById('closeTeacher')?.value||'';
+  const activeInsts=disc.instConf.length?disc.instConf:sInsts;
+  const reactionLabels={good:'Positive',more:'Upsell to longer lesson',expensive:'Price objection → First free lesson',think:'Need to think/spouse',notready:'Not ready yet',biweekly:'Asked about bi-weekly'};
+  const subLabels={'think-warm':'Kept warm','think-free':'Free lesson pivot','notready-warm':'Kept warm','notready-free':'Free lesson pivot'};
+  const objLine=activeReaction?`Pricing: ${reactionLabels[activeReaction]||activeReaction}${activeObjPath?' → '+(subLabels[activeObjPath]||activeObjPath):''}`:null;
+  const lines=[
+    `📞 CALL SUMMARY — ${new Date().toLocaleDateString()}`,
+    `Duration: ${dur} | ${callType==='inbound'?'Inbound':'Outbound'}`,``,
+    `🏫 ${sBrand?.name||''}${sStudio?.city?' — '+sStudio.city:''}`,
+    activeInsts.length?`🎵 ${activeInsts.join(', ')}`:'',
+    disc.age?`Age: ${disc.age}`:'',
+    disc.stuFor?`For: ${disc.stuFor}`:'',
+    sEnroll?`Enrollment: ${sEnroll==='returning'?'Returning':'New'}`:'',``,
+    `👤 STUDENT`,
+    gV('sN')?`  Name: ${gV('sN')}`:'',
+    cv('sG')?`  Gender: ${cv('sG')}`:'',
+    disc.experience?`  Experience: ${disc.experience}`:cv('exp')?`  Experience: ${cv('exp')}`:'',
+    disc.hasInst?`  Instrument at home: ${disc.hasInst}`:cv('hasInst')?`  Instrument at home: ${cv('hasInst')}`:'',``,
+    `👨‍👩 PARENT / CONTACT`,
+    gV('pN')?`  Name: ${gV('pN')}`:'',
+    cv('pG')?`  Gender: ${cv('pG')}`:'',
+    gV('ph')?`  Phone: ${gV('ph')}`:'',
+    gV('em')?`  Email: ${gV('em')}`:'',``,
+    `🎯 CONTEXT`,
+    disc.goals.length?`  Goals: ${disc.goals.join(', ')}`:cv('goals')?`  Goals: ${cv('goals')}`:'',
+    disc.days.length?`  Available: ${disc.days.join(', ')}`:'',
+    cv('intent')?`  Intent: ${cv('intent')}`:'',
+    objLine?`  ${objLine}`:'',
+    gV('nt')?`  Notes: ${gV('nt')}`:'',``,
+    `📅 SCHEDULED`,
+    day?`  Day/Time: ${day}`:'  Not yet scheduled',
+    teacher?`  Teacher: ${teacher}`:'',``,
+    `📋 OUTCOME`,
+    cv('out')?`  Result: ${cv('out')}`:'  Not yet selected',
+    gV('fu')?`  Follow-up: ${gV('fu')}`:'',
+    gV('ro')?`  Reach out: ${gV('ro')}`:'',
+  ].filter(l=>l!==undefined&&l!==null&&l!=='');
+  document.getElementById('sumTxt').value=lines.join('\n');
+}
+
+async function copySum(){
+  const t=document.getElementById('sumTxt').value;
+  try{await navigator.clipboard.writeText(t);}catch(e){document.getElementById('sumTxt').select();document.execCommand('copy');}
+  const b=document.querySelector('.cp-btn');b.innerHTML='<i class="fas fa-check"></i> Copied!';
+  setTimeout(()=>b.innerHTML='<i class="fas fa-copy"></i> Copy to Clipboard',2000);
+}
+
+/* ── CONFIRM MODAL ── */
+function openConfirm(){document.getElementById('confMov').classList.add('on');}
+function closeConfirm(){document.getElementById('confMov').classList.remove('on');}
+function sumThenReset(){closeConfirm();openSum();}
+
+function resetAll(){
+  closeConfirm();closeSum();
+  sBrand=null;sStudio=null;sInsts=[];sEnroll=null;callType='inbound';sAge=null;
+  disc={instConf:[],stuFor:null,age:null,experience:null,hasInst:null,goals:[],days:[]};
+  chips={};timerSecs=0;lpOpen=true;ibOpen=false;activeReaction=null;activeObjPath=null;discStep=0;
+  // Reset topbar
+  document.getElementById('brandBtn').innerHTML=`<i class="fas fa-building" style="font-size:.625rem;"></i> <span>Select Brand</span> <i class="fas fa-chevron-down" style="font-size:.5rem;opacity:.6;"></i>`;
+  document.getElementById('brandBtn').classList.remove('selected');
+  document.getElementById('cityBtn').innerHTML=`<i class="fas fa-map-marker-alt" style="font-size:.5625rem;"></i> <span>Select Location</span>`;
+  document.getElementById('cityBtn').classList.remove('selected'); document.getElementById('cityBtn').disabled=true;
+  document.getElementById('ctIn').classList.add('on'); document.getElementById('ctOut').classList.remove('on');
+  // Reset lead
+  document.getElementById('leadPanel').classList.add('open'); document.getElementById('leadTab').classList.add('open'); document.getElementById('leadTabIco').className='fas fa-chevron-right';
+  document.getElementById('infoBar').classList.remove('open'); document.getElementById('ibArr').style.transform='rotate(180deg)'; document.getElementById('ibTxt').textContent='Details';
+  // Reset reactions
+  document.querySelectorAll('.rpill').forEach(b=>b.classList.remove('on'));
+  document.getElementById('reactionArea').innerHTML='';
+  buildLeadCard(); renderInfoBar(); goStage(2); filterBrands(); startTimer();
+}
+</script>
+</body>
+</html>
