@@ -108,10 +108,49 @@
         .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 0.75rem; }
         .form-group { margin-bottom: 1.25rem; }
         .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .form-label .optional { font-weight: 400; color: var(--text-light); font-size: 0.8125rem; }
         .form-input, .form-textarea, .form-select { width: 100%; padding: 0.75rem 1rem; background: var(--gray-50); border: 1.5px solid var(--gray-200); border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary); transition: all 0.2s ease; font-family: inherit; }
         .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1); }
         .form-textarea { resize: vertical; min-height: 100px; }
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .form-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 0.375rem; }
+
+        /* Instrument chip picker */
+        .instrument-picker { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .inst-chip { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.4375rem 0.875rem; border: 1.5px solid var(--gray-200); border-radius: 20px; background: var(--gray-50); font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .inst-chip:hover { border-color: var(--primary); color: var(--primary); background: rgba(96,165,250,0.06); }
+        .inst-chip.selected { background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(56,189,248,0.15)); border-color: var(--primary); color: var(--primary-dark); }
+        .inst-chip.all-chip.selected { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border-color: transparent; }
+        .inst-chip i { font-size: 0.625rem; }
+        .inst-chip-check { width: 14px; height: 14px; border: 1.5px solid var(--gray-300); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+        .inst-chip.selected .inst-chip-check { background: var(--primary); border-color: var(--primary); }
+        .inst-chip.selected .inst-chip-check i { color: white; font-size: 0.5rem; display: block; }
+        .inst-chip:not(.selected) .inst-chip-check i { display: none; }
+
+        /* Age range inputs */
+        .age-range-row { display: flex; align-items: center; gap: 0.75rem; }
+        .age-range-row .form-input { text-align: center; }
+        .age-range-sep { color: var(--text-light); font-size: 0.875rem; white-space: nowrap; flex-shrink: 0; }
+
+        /* Program type pills — multi select */
+        .prog-type-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .prog-type-pill { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.4375rem 0.875rem; border: 1.5px solid var(--gray-200); border-radius: 20px; background: var(--gray-50); font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; user-select: none; }
+        .prog-type-pill:hover { border-color: var(--primary); color: var(--primary); background: rgba(96,165,250,0.06); }
+        .prog-type-pill.selected { background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(56,189,248,0.15)); border-color: var(--primary); color: var(--primary-dark); }
+        .prog-type-pill .pt-check { width: 14px; height: 14px; border: 1.5px solid var(--gray-300); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+        .prog-type-pill.selected .pt-check { background: var(--primary); border-color: var(--primary); }
+        .prog-type-pill.selected .pt-check i { color: white; font-size: 0.5rem; display: block; }
+        .prog-type-pill:not(.selected) .pt-check i { display: none; }
+
+        /* Section divider */
+        .form-section { margin-bottom: 1.5rem; }
+        .form-section-title { font-size: 0.6875rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 0.375rem; }
+        .form-section-title i { color: var(--primary); }
+
+        /* New fields highlight */
+        .new-field-badge { display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(16,185,129,0.1); color: var(--success); font-size: 0.5625rem; font-weight: 700; padding: 0.125rem 0.4375rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; margin-left: 0.5rem; vertical-align: middle; }
+
         .rich-editor-wrapper { border: 1.5px solid var(--gray-200); border-radius: 10px; overflow: hidden; background: var(--gray-50); transition: all 0.2s ease; }
         .rich-editor-wrapper:focus-within { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1); }
         .rich-editor-toolbar { display: flex; gap: 0.25rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-100); }
@@ -125,7 +164,8 @@
         .rich-editor-content li { margin-bottom: 0.25rem; }
         .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem; }
         .toggle-label { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); }
-        .toggle-switch { position: relative; width: 50px; height: 26px; }
+        .toggle-desc { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.125rem; }
+        .toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--gray-300); transition: 0.3s; border-radius: 26px; }
         .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
@@ -137,7 +177,6 @@
         .file-drop-zone:hover i, .file-drop-zone.dragover i { color: var(--primary); }
         .file-drop-zone p { color: var(--text-secondary); margin-bottom: 0.5rem; }
         .file-drop-zone small { color: var(--text-light); font-size: 0.8125rem; }
-        .file-drop-zone input[type="file"] { display: none; }
         .import-preview { margin-top: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 10px; display: none; }
         .import-preview.show { display: block; }
         .import-preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
@@ -145,8 +184,6 @@
         .import-preview-item { display: flex; justify-content: space-between; padding: 0.75rem; background: var(--white); border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--gray-200); }
         .import-preview-item .name { font-weight: 600; color: var(--text-primary); }
         .import-preview-item .meta { font-size: 0.8125rem; color: var(--text-secondary); }
-        .studio-match-success { color: var(--success); }
-        .studio-match-warning { color: var(--warning); }
         .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 10px; color: white; font-weight: 500; z-index: 3000; animation: slideIn 0.3s ease; }
         .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
@@ -154,8 +191,14 @@
         .loading { text-align: center; padding: 3rem; color: var(--text-secondary); }
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999; }
         .sidebar-overlay.active { display: block; }
+
+        /* Age not applicable toggle */
+        .age-na-row { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.5rem; }
+        .age-na-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+        .age-na-row label { font-size: 0.8125rem; color: var(--text-secondary); cursor: pointer; }
+
         @media (max-width: 1100px) { .programs-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.collapsed { transform: translateX(0); width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 1.5rem; } .page-header { flex-direction: column; gap: 1rem; align-items: flex-start; } .filter-row { flex-direction: column; } .filter-group { width: 100%; } .form-row { grid-template-columns: 1fr; } .programs-grid { grid-template-columns: 1fr; } .modal-tabs { gap: 0; } .modal-tab { padding: 0.625rem 0.75rem; font-size: 0.75rem; } }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.collapsed { transform: translateX(0); width: var(--sidebar-width); } .main-content { margin-left: 0; padding: 1.5rem; } .page-header { flex-direction: column; gap: 1rem; align-items: flex-start; } .filter-row { flex-direction: column; } .filter-group { width: 100%; } .form-row, .form-row-3 { grid-template-columns: 1fr; } .programs-grid { grid-template-columns: 1fr; } .modal-tabs { gap: 0; } .modal-tab { padding: 0.625rem 0.75rem; font-size: 0.75rem; } }
     </style>
 </head>
 <body>
@@ -183,8 +226,14 @@
         <div class="sidebar-footer"><button id="logoutBtn" class="nav-item logout-btn"><span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span><span class="nav-text">Logout</span></button></div>
     </div>
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <main class="main-content">
-        <div class="page-header"><div class="page-header-left"><h1>Programs Management</h1><p>Manage programs for each studio location</p></div></div>
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1>Programs Management</h1>
+                <p>Manage programs for each studio location</p>
+            </div>
+        </div>
         <div class="filter-section">
             <div class="filter-row">
                 <div class="filter-group"><label>Zone</label><select class="form-select" id="zoneFilter"><option value="">All Zones</option></select></div>
@@ -194,7 +243,7 @@
             </div>
             <div class="filter-row" style="margin-top: 1rem;">
                 <div class="filter-group" style="flex: 2;"><label>Search Programs</label><input type="text" class="form-input" id="searchInput" placeholder="Search by program, brand, city, or state..."></div>
-                <button class="btn btn-secondary" id="importProgramBtn" onclick="openImportModal()"><i class="fas fa-upload"></i> Import JSON</button>
+                <button class="btn btn-secondary" onclick="openImportModal()"><i class="fas fa-upload"></i> Import JSON</button>
                 <button class="btn btn-primary" id="addProgramBtn" style="display: none;" onclick="openAddProgramModal()"><i class="fas fa-plus"></i> Add Program</button>
             </div>
         </div>
@@ -205,9 +254,16 @@
 
     <!-- Program Modal -->
     <div id="programModal" class="modal"><div class="modal-content">
-        <div class="modal-header"><h3 class="modal-title" id="programModalTitle">Add Program</h3><button class="modal-close" onclick="closeProgramModal()"><i class="fas fa-times"></i></button></div>
+        <div class="modal-header">
+            <h3 class="modal-title" id="programModalTitle">Add Program</h3>
+            <button class="modal-close" onclick="closeProgramModal()"><i class="fas fa-times"></i></button>
+        </div>
         <div class="modal-body"><form id="programForm">
-            <input type="hidden" id="programId"><input type="hidden" id="programStudioId">
+            <input type="hidden" id="programId">
+            <input type="hidden" id="programStudioId">
+            <input type="hidden" id="programInstrumentsVal">
+            <input type="hidden" id="programTypeVal">
+
             <div class="modal-tabs">
                 <button type="button" class="modal-tab active" data-tab="basic">Basic Info</button>
                 <button type="button" class="modal-tab" data-tab="pricing">Pricing</button>
@@ -216,75 +272,262 @@
                 <button type="button" class="modal-tab" data-tab="policies">Policies</button>
                 <button type="button" class="modal-tab" data-tab="links">Links</button>
             </div>
+
+            <!-- BASIC TAB -->
             <div id="basicTab" class="modal-tab-content active">
-                <div class="form-group"><label class="form-label">Program Name *</label><input type="text" class="form-input" id="programName" required placeholder="e.g., Private Piano Lessons"></div>
-                <div class="form-row"><div class="form-group"><label class="form-label">Class Size</label><input type="text" class="form-input" id="programClassSize" placeholder="e.g., 1-on-1, Max 6 students"></div><div class="form-group"><label class="form-label">Lesson Duration</label><input type="text" class="form-input" id="programDuration" placeholder="e.g., 30, 45, or 60 min"></div></div>
-                <div class="form-row"><div class="form-group"><label class="form-label">Lesson Frequency</label><input type="text" class="form-input" id="programFrequency" placeholder="e.g., Weekly, Twice a week, Monthly"></div><div class="form-group"><label class="form-label">Status</label><select class="form-select" id="programStatus"><option value="active">Active</option><option value="inactive">Inactive</option></select></div></div>
-            </div>
-            <div id="pricingTab" class="modal-tab-content">
-                <div class="form-row"><div class="form-group"><label class="form-label">Price</label><input type="text" class="form-input" id="programPrice" placeholder="e.g., $150"></div><div class="form-group"><label class="form-label">Billing Type</label><select class="form-select" id="programPriceType"><option value="">Select type</option><option value="Monthly">Monthly (Recurring)</option><option value="Semester">Per Semester (Upfront)</option><option value="Per Class">Per Class</option><option value="Package">Package Deal</option><option value="Annual">Annual</option></select></div></div>
-                <div class="form-row"><div class="form-group"><label class="form-label">Registration Fee</label><input type="text" class="form-input" id="programRegFee" placeholder="e.g., $50"></div><div class="form-group"><label class="form-label">What Does the Fee Cover?</label><input type="text" class="form-input" id="programRegFeeCovers" placeholder="e.g., Materials, books, admin"></div></div>
-            </div>
-            <div id="enrollmentTab" class="modal-tab-content">
-                <div class="form-group"><label class="form-label">Enrollment Type</label><select class="form-select" id="programEnrollmentType" onchange="toggleMidSemesterFields()"><option value="">Select type</option><option value="Open Enrollment">Open Enrollment (Start Anytime)</option><option value="Semester Based">Semester Based</option><option value="Session Based">Session Based</option></select></div>
-                <div class="form-group"><label class="form-label">How to Enroll</label><div class="rich-editor-wrapper">
-                                <div class="rich-editor-toolbar">
-                                    <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
-                                    <div class="toolbar-divider"></div>
-                                    <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-                                    <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
-                                </div>
-                                <div class="rich-editor-content" contenteditable="true" id="programEnrollmentProcess" data-placeholder="Steps to enroll - call, online form, in-person, etc."></div>
-                            </div></div>
-                <div id="midSemesterSection" style="display: none;">
-                    <div class="toggle-group"><span class="toggle-label">Can Students Start Mid-Semester?</span><label class="toggle-switch"><input type="checkbox" id="programMidSemester"><span class="toggle-slider"></span></label></div>
-                    <div class="form-group"><label class="form-label">Mid-Semester Policy</label><textarea class="form-textarea" id="programMidSemesterPolicy" placeholder="Rules for joining mid-semester..."></textarea></div>
-                    <div class="form-group"><label class="form-label">Price Adjustment for Mid-Semester?</label><input type="text" class="form-input" id="programMidSemesterPrice" placeholder="e.g., Prorated based on remaining weeks"></div>
+                <div class="form-group">
+                    <label class="form-label">Program Name *</label>
+                    <input type="text" class="form-input" id="programName" required placeholder="e.g., Little Musicians, Private Piano Lessons">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Class Size</label>
+                        <input type="text" class="form-input" id="programClassSize" placeholder="e.g., 1-on-1, Max 6 students">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="programStatus">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Lesson Duration</label>
+                        <input type="text" class="form-input" id="programDuration" placeholder="e.g., 30, 45, or 60 min">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Lesson Frequency</label>
+                        <input type="text" class="form-input" id="programFrequency" placeholder="e.g., Weekly, Twice a week">
+                    </div>
+                </div>
+
+                <!-- NEW: Program Type -->
+                <div class="form-section">
+                    <div class="form-section-title"><i class="fas fa-tag"></i> Program Type <span class="new-field-badge"><i class="fas fa-sparkles"></i> New</span></div>
+                    <div class="form-group">
+                        <label class="form-label">What kind of program is this?</label>
+                        <div class="prog-type-pills" id="progTypePills">
+                            <div class="prog-type-pill" data-val="private_lessons" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>🎵 Private Lessons</div>
+                            <div class="prog-type-pill" data-val="group_class" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>👥 Group Class</div>
+                            <div class="prog-type-pill" data-val="early_childhood" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>🧒 Early Childhood</div>
+                            <div class="prog-type-pill" data-val="theory" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>📖 Theory</div>
+                            <div class="prog-type-pill" data-val="performance" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>🎭 Performance</div>
+                            <div class="prog-type-pill" data-val="camp" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>⛺ Camp</div>
+                            <div class="prog-type-pill" data-val="semester_class" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>📅 Semester Class</div>
+                            <div class="prog-type-pill" data-val="other" onclick="toggleProgType(this)"><div class="pt-check"><i class="fas fa-check"></i></div>➕ Other</div>
+                        </div>
+                        <div class="form-hint">Used in the enrollment flow to match students to the right program type.</div>
+                    </div>
+                </div>
+
+                <!-- NEW: Instruments -->
+                <div class="form-section">
+                    <div class="form-section-title"><i class="fas fa-music"></i> Instruments <span class="new-field-badge"><i class="fas fa-sparkles"></i> New</span></div>
+                    <div class="form-group">
+                        <label class="form-label">Which instruments does this program cover?</label>
+                        <div class="instrument-picker" id="instrumentPicker">
+                            <!-- Populated from teacher_instruments -->
+                            <div class="inst-chip all-chip" data-val="All" onclick="toggleInst(this)">
+                                <div class="inst-chip-check"><i class="fas fa-check"></i></div>
+                                All Instruments
+                            </div>
+                        </div>
+                        <div class="form-hint">Select "All Instruments" for general programs like Early Childhood or Theory that aren't instrument-specific.</div>
+                    </div>
+                </div>
+
+                <!-- NEW: Age Range -->
+                <div class="form-section">
+                    <div class="form-section-title"><i class="fas fa-child"></i> Age Range <span class="new-field-badge"><i class="fas fa-sparkles"></i> New</span></div>
+                    <div class="form-group">
+                        <label class="form-label">Student age range for this program</label>
+                        <div class="age-range-row">
+                            <input type="number" class="form-input" id="programMinAge" placeholder="Min" min="0" max="99" style="max-width:100px;">
+                            <span class="age-range-sep">to</span>
+                            <input type="number" class="form-input" id="programMaxAge" placeholder="Max" min="0" max="99" style="max-width:100px;">
+                            <span class="age-range-sep">years old</span>
+                        </div>
+                        <div class="age-na-row">
+                            <input type="checkbox" id="ageNoLimit" onchange="toggleAgeLimit(this)">
+                            <label for="ageNoLimit">No age limit / all ages welcome</label>
+                        </div>
+                        <div class="form-hint">Used to surface this program when a student is too young for private lessons.</div>
+                    </div>
                 </div>
             </div>
+
+            <!-- PRICING TAB -->
+            <div id="pricingTab" class="modal-tab-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Price</label>
+                        <input type="text" class="form-input" id="programPrice" placeholder="e.g., $150">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Billing Type</label>
+                        <select class="form-select" id="programPriceType">
+                            <option value="">Select type</option>
+                            <option value="Monthly">Monthly (Recurring)</option>
+                            <option value="Semester">Per Semester (Upfront)</option>
+                            <option value="Per Class">Per Class</option>
+                            <option value="Package">Package Deal</option>
+                            <option value="Annual">Annual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Registration Fee</label>
+                        <input type="text" class="form-input" id="programRegFee" placeholder="e.g., $50">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">What Does the Fee Cover?</label>
+                        <input type="text" class="form-input" id="programRegFeeCovers" placeholder="e.g., Materials, books, admin">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENROLLMENT TAB -->
+            <div id="enrollmentTab" class="modal-tab-content">
+                <div class="form-group">
+                    <label class="form-label">Enrollment Type</label>
+                    <select class="form-select" id="programEnrollmentType" onchange="toggleMidSemesterFields()">
+                        <option value="">Select type</option>
+                        <option value="Open Enrollment">Open Enrollment (Start Anytime)</option>
+                        <option value="Semester Based">Semester Based</option>
+                        <option value="Session Based">Session Based</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">How to Enroll</label>
+                    <div class="rich-editor-wrapper">
+                        <div class="rich-editor-toolbar">
+                            <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                            <div class="toolbar-divider"></div>
+                            <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                        </div>
+                        <div class="rich-editor-content" contenteditable="true" id="programEnrollmentProcess" data-placeholder="Steps to enroll — call, online form, in-person, etc."></div>
+                    </div>
+                </div>
+                <div id="midSemesterSection" style="display: none;">
+                    <div class="toggle-group">
+                        <div><span class="toggle-label">Can Students Start Mid-Semester?</span></div>
+                        <label class="toggle-switch"><input type="checkbox" id="programMidSemester"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mid-Semester Policy</label>
+                        <textarea class="form-textarea" id="programMidSemesterPolicy" placeholder="Rules for joining mid-semester..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price Adjustment for Mid-Semester?</label>
+                        <input type="text" class="form-input" id="programMidSemesterPrice" placeholder="e.g., Prorated based on remaining weeks">
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETAILS TAB -->
             <div id="detailsTab" class="modal-tab-content">
-                <div class="form-group"><label class="form-label">Skill Level</label><select class="form-select" id="programSkillLevel"><option value="">Select level</option><option value="None/Beginner">No Experience Needed</option><option value="Some Experience">Some Experience Required</option><option value="Intermediate">Intermediate Level</option><option value="Advanced">Advanced Level</option><option value="All Levels">All Levels Welcome</option></select></div>
-                <div class="form-group"><label class="form-label">Other Requirements</label><textarea class="form-textarea" id="programQualifications" placeholder="Age requirements, audition needed, materials to bring, etc."></textarea></div>
-                <div class="form-group"><label class="form-label">What Will Students Learn?</label><textarea class="form-textarea" id="programCurriculum" style="min-height: 120px;" placeholder="Topics covered, skills developed, materials used, etc."></textarea></div>
+                <div class="form-group">
+                    <label class="form-label">Skill Level</label>
+                    <select class="form-select" id="programSkillLevel">
+                        <option value="">Select level</option>
+                        <option value="None/Beginner">No Experience Needed</option>
+                        <option value="Some Experience">Some Experience Required</option>
+                        <option value="Intermediate">Intermediate Level</option>
+                        <option value="Advanced">Advanced Level</option>
+                        <option value="All Levels">All Levels Welcome</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Other Requirements <span class="optional">(optional)</span></label>
+                    <textarea class="form-textarea" id="programQualifications" placeholder="Audition needed, materials to bring, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">What Will Students Learn? <span class="optional">(optional)</span></label>
+                    <textarea class="form-textarea" id="programCurriculum" style="min-height: 120px;" placeholder="Topics covered, skills developed, materials used, etc."></textarea>
+                </div>
             </div>
+
+            <!-- POLICIES TAB -->
             <div id="policiesTab" class="modal-tab-content">
-                <div class="toggle-group"><span class="toggle-label">Parent/Guardian Must Stay for Class?</span><label class="toggle-switch"><input type="checkbox" id="programParentRequired"><span class="toggle-slider"></span></label></div>
-                <div class="toggle-group"><span class="toggle-label">First Lesson Free?</span><label class="toggle-switch"><input type="checkbox" id="programFirstFree"><span class="toggle-slider"></span></label></div>
-                <div class="form-group"><label class="form-label">Makeup Policy</label><div class="rich-editor-wrapper">
-                                <div class="rich-editor-toolbar">
-                                    <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
-                                    <div class="toolbar-divider"></div>
-                                    <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-                                    <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
-                                </div>
-                                <div class="rich-editor-content" contenteditable="true" id="programMakeupPolicy" data-placeholder="How are missed lessons handled? How much notice is required?"></div>
-                            </div></div>
-                <div class="form-group"><label class="form-label">Withdrawal Policy</label><div class="rich-editor-wrapper">
-                                <div class="rich-editor-toolbar">
-                                    <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
-                                    <div class="toolbar-divider"></div>
-                                    <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-                                    <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
-                                </div>
-                                <div class="rich-editor-content" contenteditable="true" id="programWithdrawalPolicy" data-placeholder="How to cancel enrollment, notice required, refund policy, etc."></div>
-                            </div></div>
-                <div class="form-group"><label class="form-label">Other Policies</label><div class="rich-editor-wrapper">
-                                <div class="rich-editor-toolbar">
-                                    <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
-                                    <div class="toolbar-divider"></div>
-                                    <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
-                                    <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
-                                </div>
-                                <div class="rich-editor-content" contenteditable="true" id="programAdditionalPolicies" data-placeholder="Attendance expectations, dress code, late fees, etc."></div>
-                            </div></div>
+                <div class="toggle-group">
+                    <div>
+                        <span class="toggle-label">Parent/Guardian Must Stay for Class?</span>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="programParentRequired"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-group">
+                    <div>
+                        <span class="toggle-label">First Lesson Free?</span>
+                        <div class="toggle-desc">Overrides studio/brand setting for this specific program.</div>
+                    </div>
+                    <label class="toggle-switch"><input type="checkbox" id="programFirstFree"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Makeup Policy</label>
+                    <div class="rich-editor-wrapper">
+                        <div class="rich-editor-toolbar">
+                            <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                            <div class="toolbar-divider"></div>
+                            <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                        </div>
+                        <div class="rich-editor-content" contenteditable="true" id="programMakeupPolicy" data-placeholder="How are missed lessons handled?"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Withdrawal Policy</label>
+                    <div class="rich-editor-wrapper">
+                        <div class="rich-editor-toolbar">
+                            <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                            <div class="toolbar-divider"></div>
+                            <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                        </div>
+                        <div class="rich-editor-content" contenteditable="true" id="programWithdrawalPolicy" data-placeholder="How to cancel, notice required, refund policy, etc."></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Other Policies <span class="optional">(optional)</span></label>
+                    <div class="rich-editor-wrapper">
+                        <div class="rich-editor-toolbar">
+                            <button type="button" onclick="execRichCmd(this, 'bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                            <div class="toolbar-divider"></div>
+                            <button type="button" onclick="execRichCmd(this, 'insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" onclick="execRichCmd(this, 'insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                        </div>
+                        <div class="rich-editor-content" contenteditable="true" id="programAdditionalPolicies" data-placeholder="Attendance, dress code, late fees, etc."></div>
+                    </div>
+                </div>
             </div>
+
+            <!-- LINKS TAB -->
             <div id="linksTab" class="modal-tab-content">
-                <div class="form-group"><label class="form-label">Scheduling Link</label><input type="url" class="form-input" id="programLink" placeholder="https://calendly.com/..."><small style="color: var(--text-light); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Link for scheduling consultations or lessons</small></div>
-                <div class="form-group"><label class="form-label">Flyer Link</label><input type="url" class="form-input" id="programFlyerLink" placeholder="https://drive.google.com/..."><small style="color: var(--text-light); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Link to program flyer or brochure (PDF, image, etc.)</small></div>
-                <div class="form-group"><label class="form-label">Website Description Link</label><input type="url" class="form-input" id="programWebsiteLink" placeholder="https://studioweb.com/programs/..."><small style="color: var(--text-light); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Link to program description on the studio website</small></div>
+                <div class="form-group">
+                    <label class="form-label">Scheduling Link</label>
+                    <input type="url" class="form-input" id="programLink" placeholder="https://calendly.com/...">
+                    <div class="form-hint">Link for scheduling consultations or lessons.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Flyer Link</label>
+                    <input type="url" class="form-input" id="programFlyerLink" placeholder="https://drive.google.com/...">
+                    <div class="form-hint">Link to program flyer or brochure (PDF, image, etc.)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Website Description Link</label>
+                    <input type="url" class="form-input" id="programWebsiteLink" placeholder="https://studioweb.com/programs/...">
+                    <div class="form-hint">Link to program description on the studio website.</div>
+                </div>
             </div>
+
         </form></div>
-        <div class="modal-footer"><button class="btn btn-secondary" onclick="closeProgramModal()">Cancel</button><button class="btn btn-primary" onclick="saveProgram()"><i class="fas fa-save"></i> Save Program</button></div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeProgramModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveProgram()"><i class="fas fa-save"></i> Save Program</button>
+        </div>
     </div></div>
 
     <!-- Import Modal -->
@@ -318,7 +561,10 @@
                 <div class="form-group" id="duplicateBrandGroup" style="margin-bottom: 0.75rem;"><select class="form-select" id="duplicateBrandSelect"><option value="">Select Brand</option></select></div>
                 <div class="form-group" style="margin-bottom: 0;"><select class="form-select" id="duplicateStudioSelect"><option value="">Select Studio Location</option></select></div>
             </div>
-            <div class="form-group" style="margin-top: 1rem;"><label class="form-label">New Program Name</label><input type="text" class="form-input" id="duplicateProgramName" placeholder="Leave blank to keep same name"><small style="color: var(--text-light); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Optional: Enter a new name or leave blank to use the original name</small></div>
+            <div class="form-group" style="margin-top: 1rem;">
+                <label class="form-label">New Program Name <span class="optional">(optional)</span></label>
+                <input type="text" class="form-input" id="duplicateProgramName" placeholder="Leave blank to keep same name">
+            </div>
         </div>
         <div class="modal-footer"><button class="btn btn-secondary" onclick="closeDuplicateModal()">Cancel</button><button class="btn btn-primary" id="duplicateConfirmBtn" onclick="confirmDuplicate()"><i class="fas fa-copy"></i> Duplicate Program</button></div>
     </div></div>
@@ -326,16 +572,14 @@
     <script>
         const SUPABASE_URL = 'https://kvyvjwepfrqqkvyyutdw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
-        
+
         let supabaseClient;
-        let allStudios = [];
-        let allPrograms = [];
-        let allZones = [];
-        let allBrands = [];
+        let allStudios = [], allPrograms = [], allZones = [], allBrands = [];
+        let allInstruments = []; // from teacher_instruments
         let selectedStudioId = null;
+        let selectedInstruments = []; // for the chip picker in modal
 
         function getBrandName(brandId) {
-            if (!brandId) return 'Unknown';
             const brand = allBrands.find(b => b.id === brandId);
             return brand ? brand.name : 'Unknown';
         }
@@ -356,6 +600,7 @@
             loadBrands();
             loadStudios();
             loadAllPrograms();
+            loadInstruments();
             document.getElementById('zoneFilter').addEventListener('change', onZoneChange);
             document.getElementById('brandFilter').addEventListener('change', onBrandChange);
             document.getElementById('stateFilter').addEventListener('change', onStateChange);
@@ -367,98 +612,159 @@
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
             const overlay = document.getElementById('sidebarOverlay');
-            const logoutBtn = document.getElementById('logoutBtn');
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) { overlay.classList.add('active'); } else { overlay.classList.remove('active'); }
-            });
+            toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('collapsed'); if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) overlay.classList.add('active'); else overlay.classList.remove('active'); });
             overlay.addEventListener('click', () => { sidebar.classList.add('collapsed'); overlay.classList.remove('active'); });
-            logoutBtn.addEventListener('click', () => { if (confirm('Are you sure you want to logout?')) { window.location.href = 'index.html'; } });
+            document.getElementById('logoutBtn').addEventListener('click', () => { if (confirm('Logout?')) window.location.href = 'index.html'; });
         }
 
         function setupModalTabs() {
             document.querySelectorAll('.modal-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabName = tab.dataset.tab;
-                    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+                    tab.closest('.modal-body').querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
+                    tab.closest('.modal-body').querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
                     document.getElementById(tabName + 'Tab').classList.add('active');
                 });
             });
         }
 
         function toggleMidSemesterFields() {
-            const enrollmentType = document.getElementById('programEnrollmentType').value;
-            const midSemesterSection = document.getElementById('midSemesterSection');
-            if (enrollmentType === 'Semester Based') {
-                midSemesterSection.style.display = 'block';
-            } else {
-                midSemesterSection.style.display = 'none';
+            const val = document.getElementById('programEnrollmentType').value;
+            document.getElementById('midSemesterSection').style.display = val === 'Semester Based' ? 'block' : 'none';
+            if (val !== 'Semester Based') {
                 document.getElementById('programMidSemester').checked = false;
                 document.getElementById('programMidSemesterPolicy').value = '';
                 document.getElementById('programMidSemesterPrice').value = '';
             }
         }
 
-        // Rich Text Editor helpers
+        // ── Program Type Pills (multi-select) ──
+        function toggleProgType(el) {
+            el.classList.toggle('selected');
+            syncProgTypeVal();
+        }
+
+        function syncProgTypeVal() {
+            const selected = [...document.querySelectorAll('#progTypePills .prog-type-pill.selected')].map(p => p.dataset.val);
+            document.getElementById('programTypeVal').value = selected.join(',');
+        }
+
+        function setProgType(val) {
+            const vals = val ? val.split(',').map(v => v.trim()).filter(Boolean) : [];
+            document.querySelectorAll('#progTypePills .prog-type-pill').forEach(p => {
+                p.classList.toggle('selected', vals.includes(p.dataset.val));
+            });
+            document.getElementById('programTypeVal').value = val || '';
+        }
+
+        // ── Instrument Chips ──
+        async function loadInstruments() {
+            try {
+                const { data, error } = await supabaseClient.from('teacher_instruments').select('instrument').order('instrument');
+                if (error) throw error;
+                allInstruments = [...new Set((data || []).map(i => i.instrument).filter(Boolean))].sort();
+                renderInstrumentPicker();
+            } catch (e) {
+                console.warn('Could not load instruments:', e);
+                allInstruments = ['Guitar', 'Piano', 'Violin', 'Voice', 'Drums', 'Bass', 'Ukulele'];
+                renderInstrumentPicker();
+            }
+        }
+
+        function renderInstrumentPicker(selectedVals = []) {
+            const container = document.getElementById('instrumentPicker');
+            const allSelected = selectedVals.length === 1 && selectedVals[0] === 'All';
+            let html = `<div class="inst-chip all-chip${allSelected ? ' selected' : ''}" data-val="All" onclick="toggleInst(this)">
+                <div class="inst-chip-check"><i class="fas fa-check"></i></div> All Instruments
+            </div>`;
+            allInstruments.forEach(inst => {
+                const isOn = !allSelected && selectedVals.includes(inst);
+                html += `<div class="inst-chip${isOn ? ' selected' : ''}" data-val="${inst}" onclick="toggleInst(this)">
+                    <div class="inst-chip-check"><i class="fas fa-check"></i></div> ${inst}
+                </div>`;
+            });
+            container.innerHTML = html;
+            syncInstrumentsVal();
+        }
+
+        function toggleInst(el) {
+            const val = el.dataset.val;
+            if (val === 'All') {
+                // Select all → deselect everything else
+                document.querySelectorAll('#instrumentPicker .inst-chip').forEach(c => c.classList.remove('selected'));
+                el.classList.add('selected');
+            } else {
+                // Deselect "All" if individual picked
+                document.querySelector('#instrumentPicker .all-chip')?.classList.remove('selected');
+                el.classList.toggle('selected');
+            }
+            syncInstrumentsVal();
+        }
+
+        function syncInstrumentsVal() {
+            const selected = [...document.querySelectorAll('#instrumentPicker .inst-chip.selected')].map(c => c.dataset.val);
+            document.getElementById('programInstrumentsVal').value = selected.join(',');
+        }
+
+        function getSelectedInstruments() {
+            return document.getElementById('programInstrumentsVal').value;
+        }
+
+        // ── Age no limit toggle ──
+        function toggleAgeLimit(cb) {
+            const minEl = document.getElementById('programMinAge');
+            const maxEl = document.getElementById('programMaxAge');
+            if (cb.checked) {
+                minEl.value = ''; maxEl.value = '';
+                minEl.disabled = true; maxEl.disabled = true;
+            } else {
+                minEl.disabled = false; maxEl.disabled = false;
+            }
+        }
+
+        // ── Rich Text ──
         function execRichCmd(btn, command) {
             document.execCommand(command, false, null);
-            if (command === 'bold') {
-                btn.classList.toggle('active', document.queryCommandState('bold'));
-            }
-            const editor = btn.closest('.rich-editor-wrapper').querySelector('.rich-editor-content');
-            editor.focus();
+            if (command === 'bold') btn.classList.toggle('active', document.queryCommandState('bold'));
+            btn.closest('.rich-editor-wrapper').querySelector('.rich-editor-content').focus();
         }
-
         function getRichContent(id) {
-            const el = document.getElementById(id);
-            if (!el) return null;
-            const content = el.innerHTML.trim();
-            if (!content || content === '<br>' || content === '<div><br></div>') return null;
-            return content;
+            const el = document.getElementById(id); if (!el) return null;
+            const c = el.innerHTML.trim();
+            return (!c || c === '<br>' || c === '<div><br></div>') ? null : c;
         }
+        function setRichContent(id, value) { const el = document.getElementById(id); if (el) el.innerHTML = value || ''; }
+        function clearRichEditors() { document.querySelectorAll('.rich-editor-content').forEach(el => el.innerHTML = ''); }
 
-        function setRichContent(id, value) {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = value || '';
-        }
-
-        function clearRichEditors() {
-            document.querySelectorAll('.rich-editor-content').forEach(el => el.innerHTML = '');
-        }
-
+        // ── Data Loading ──
         async function loadZones() {
             try {
                 const { data, error } = await supabaseClient.from('zones').select('*');
-                if (error) { console.warn('Zones table not available:', error.message); allZones = []; const zf = document.getElementById('zoneFilter'); if (zf && zf.parentElement) zf.parentElement.style.display = 'none'; return; }
+                if (error) { allZones = []; document.getElementById('zoneFilter').parentElement.style.display = 'none'; return; }
                 allZones = data || [];
-                if (allZones.length === 0) { const zf = document.getElementById('zoneFilter'); if (zf && zf.parentElement) zf.parentElement.style.display = 'none'; } else { populateZoneDropdown(); }
-            } catch (error) { console.warn('Error loading zones:', error); allZones = []; const zf = document.getElementById('zoneFilter'); if (zf && zf.parentElement) zf.parentElement.style.display = 'none'; }
-        }
-
-        function populateZoneDropdown() {
-            const select = document.getElementById('zoneFilter');
-            select.innerHTML = '<option value="">All Zones</option>';
-            allZones.forEach(zone => { const o = document.createElement('option'); o.value = zone.id; o.textContent = zone.name || zone.zone_name || zone.title || 'Unknown Zone'; select.appendChild(o); });
+                const s = document.getElementById('zoneFilter');
+                s.innerHTML = '<option value="">All Zones</option>';
+                allZones.forEach(z => { const o = document.createElement('option'); o.value = z.id; o.textContent = z.name || z.zone_name || 'Unknown'; s.appendChild(o); });
+            } catch(e) { allZones = []; }
         }
 
         async function loadBrands() {
             try {
                 const { data, error } = await supabaseClient.from('brands').select('*').order('name');
-                if (error) { console.warn('Brands table not available:', error.message); allBrands = []; const bf = document.getElementById('brandFilter'); if (bf && bf.parentElement) bf.parentElement.style.display = 'none'; return; }
+                if (error) { allBrands = []; return; }
                 allBrands = data || [];
-                if (allBrands.length === 0) { const bf = document.getElementById('brandFilter'); if (bf && bf.parentElement) bf.parentElement.style.display = 'none'; } else { populateBrandDropdown(); }
-            } catch (error) { console.warn('Error loading brands:', error); allBrands = []; const bf = document.getElementById('brandFilter'); if (bf && bf.parentElement) bf.parentElement.style.display = 'none'; }
+                populateBrandDropdown();
+            } catch(e) { allBrands = []; }
         }
 
-        function populateBrandDropdown(filteredBrands = null) {
-            const select = document.getElementById('brandFilter');
-            const currentValue = select.value;
-            const brands = filteredBrands || allBrands;
-            select.innerHTML = '<option value="">All Brands</option>';
-            brands.forEach(brand => { const o = document.createElement('option'); o.value = brand.id; o.textContent = brand.name; select.appendChild(o); });
-            if (currentValue && brands.some(b => b.id === currentValue)) select.value = currentValue;
+        function populateBrandDropdown(fb = null) {
+            const s = document.getElementById('brandFilter');
+            const cur = s.value;
+            const brands = fb || allBrands;
+            s.innerHTML = '<option value="">All Brands</option>';
+            brands.forEach(b => { const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; s.appendChild(o); });
+            if (brands.some(b => b.id === cur)) s.value = cur;
         }
 
         async function loadStudios() {
@@ -468,26 +774,25 @@
                 allStudios = data || [];
                 populateStateDropdown();
                 populateStudioDropdown();
-            } catch (error) { console.error('Error loading studios:', error); showToast('Error loading studios', 'error'); }
+            } catch(e) { console.error(e); showToast('Error loading studios', 'error'); }
         }
 
-        function populateStateDropdown(filteredStudios = null) {
-            const select = document.getElementById('stateFilter');
-            const currentValue = select.value;
-            const studios = filteredStudios || allStudios;
-            select.innerHTML = '<option value="">All States</option>';
-            const states = [...new Set(studios.map(s => s.state).filter(Boolean))].sort();
-            states.forEach(state => { const o = document.createElement('option'); o.value = state; o.textContent = state; select.appendChild(o); });
-            if (currentValue && states.includes(currentValue)) select.value = currentValue;
+        function populateStateDropdown(fs = null) {
+            const s = document.getElementById('stateFilter');
+            const cur = s.value;
+            const studios = fs || allStudios;
+            s.innerHTML = '<option value="">All States</option>';
+            [...new Set(studios.map(st => st.state).filter(Boolean))].sort().forEach(state => { const o = document.createElement('option'); o.value = state; o.textContent = state; s.appendChild(o); });
+            if (cur) s.value = cur;
         }
 
-        function populateStudioDropdown(filteredStudios = null) {
-            const select = document.getElementById('studioFilter');
-            const currentValue = select.value;
-            const studios = filteredStudios || allStudios;
-            select.innerHTML = '<option value="">All Studios</option>';
-            studios.forEach(studio => { const o = document.createElement('option'); o.value = studio.id; o.textContent = getStudioLabel(studio); select.appendChild(o); });
-            if (currentValue && studios.some(s => s.id === currentValue)) select.value = currentValue;
+        function populateStudioDropdown(fs = null) {
+            const s = document.getElementById('studioFilter');
+            const cur = s.value;
+            const studios = fs || allStudios;
+            s.innerHTML = '<option value="">All Studios</option>';
+            studios.forEach(st => { const o = document.createElement('option'); o.value = st.id; o.textContent = getStudioLabel(st); s.appendChild(o); });
+            if (studios.some(st => st.id === cur)) s.value = cur;
         }
 
         async function loadAllPrograms() {
@@ -497,7 +802,7 @@
                 if (error) throw error;
                 allPrograms = data || [];
                 applyFilters();
-            } catch (error) { console.error('Error loading programs:', error); showToast('Error loading programs', 'error'); }
+            } catch(e) { console.error(e); showToast('Error loading programs', 'error'); }
             finally { document.getElementById('loading').style.display = 'none'; }
         }
 
@@ -505,29 +810,20 @@
             const zoneId = document.getElementById('zoneFilter').value;
             const brandId = document.getElementById('brandFilter').value;
             const state = document.getElementById('stateFilter').value;
-            let filtered = [...allStudios];
-            if (zoneId && allBrands.length > 0) { const zoneBrandIds = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id); filtered = filtered.filter(s => zoneBrandIds.includes(s.brand_id)); }
-            if (brandId) filtered = filtered.filter(s => s.brand_id === brandId);
-            if (state) filtered = filtered.filter(s => s.state === state);
-            return filtered;
+            let f = [...allStudios];
+            if (zoneId && allBrands.length) { const ids = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id); f = f.filter(s => ids.includes(s.brand_id)); }
+            if (brandId) f = f.filter(s => s.brand_id === brandId);
+            if (state) f = f.filter(s => s.state === state);
+            return f;
         }
 
         function onZoneChange() {
             const zoneId = document.getElementById('zoneFilter').value;
-            if (allBrands.length > 0) { if (zoneId) { populateBrandDropdown(allBrands.filter(b => b.zone_id === zoneId)); } else { populateBrandDropdown(); } document.getElementById('brandFilter').value = ''; }
-            updateStateAndStudioDropdowns();
-            applyFilters();
+            if (allBrands.length) { populateBrandDropdown(zoneId ? allBrands.filter(b => b.zone_id === zoneId) : null); document.getElementById('brandFilter').value = ''; }
+            updateStateAndStudioDropdowns(); applyFilters();
         }
-
         function onBrandChange() { updateStateAndStudioDropdowns(); applyFilters(); }
-
-        function onStateChange() {
-            const filteredStudios = getFilteredStudios();
-            populateStudioDropdown(filteredStudios);
-            document.getElementById('studioFilter').value = '';
-            applyFilters();
-        }
-
+        function onStateChange() { populateStudioDropdown(getFilteredStudios()); document.getElementById('studioFilter').value = ''; applyFilters(); }
         function onStudioChange() {
             selectedStudioId = document.getElementById('studioFilter').value;
             document.getElementById('addProgramBtn').style.display = selectedStudioId ? 'inline-flex' : 'none';
@@ -535,15 +831,13 @@
         }
 
         function updateStateAndStudioDropdowns() {
+            let f = [...allStudios];
             const zoneId = document.getElementById('zoneFilter').value;
             const brandId = document.getElementById('brandFilter').value;
-            let filteredStudios = [...allStudios];
-            if (zoneId && allBrands.length > 0) { const zoneBrandIds = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id); filteredStudios = filteredStudios.filter(s => zoneBrandIds.includes(s.brand_id)); }
-            if (brandId) filteredStudios = filteredStudios.filter(s => s.brand_id === brandId);
-            populateStateDropdown(filteredStudios);
-            document.getElementById('stateFilter').value = '';
-            populateStudioDropdown(filteredStudios);
-            document.getElementById('studioFilter').value = '';
+            if (zoneId && allBrands.length) { const ids = allBrands.filter(b => b.zone_id === zoneId).map(b => b.id); f = f.filter(s => ids.includes(s.brand_id)); }
+            if (brandId) f = f.filter(s => s.brand_id === brandId);
+            populateStateDropdown(f); document.getElementById('stateFilter').value = '';
+            populateStudioDropdown(f); document.getElementById('studioFilter').value = '';
             selectedStudioId = null;
             document.getElementById('addProgramBtn').style.display = 'none';
         }
@@ -551,64 +845,62 @@
         function applyFilters() {
             const studioId = document.getElementById('studioFilter').value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            const filteredStudios = getFilteredStudios();
-            const filteredStudioIds = filteredStudios.map(s => s.id);
-            let filteredPrograms = allPrograms.filter(program => {
-                if (!filteredStudioIds.includes(program.studio_id)) return false;
-                if (studioId && program.studio_id !== studioId) return false;
+            const filteredStudioIds = getFilteredStudios().map(s => s.id);
+            let filtered = allPrograms.filter(p => {
+                if (!filteredStudioIds.includes(p.studio_id)) return false;
+                if (studioId && p.studio_id !== studioId) return false;
                 if (searchTerm) {
-                    const studio = allStudios.find(s => s.id === program.studio_id);
+                    const studio = allStudios.find(s => s.id === p.studio_id);
                     const brand = studio ? allBrands.find(b => b.id === studio.brand_id) : null;
-                    const brandName = brand ? brand.name : '';
-                    const studioCity = studio ? (studio.city || '') : '';
-                    const studioState = studio ? (studio.state || '') : '';
-                    const matchesSearch = (program.name && program.name.toLowerCase().includes(searchTerm)) || (program.price && program.price.toLowerCase().includes(searchTerm)) || (program.enrollment_type && program.enrollment_type.toLowerCase().includes(searchTerm)) || (program.skill_level && program.skill_level.toLowerCase().includes(searchTerm)) || (brandName && brandName.toLowerCase().includes(searchTerm)) || (studioCity && studioCity.toLowerCase().includes(searchTerm)) || (studioState && studioState.toLowerCase().includes(searchTerm));
-                    if (!matchesSearch) return false;
+                    const hay = [p.name, p.price, p.enrollment_type, p.skill_level, p.program_type, p.instruments, brand?.name, studio?.city, studio?.state].filter(Boolean).join(' ').toLowerCase();
+                    if (!hay.includes(searchTerm)) return false;
                 }
                 return true;
             });
             document.getElementById('selectStudioMessage').style.display = 'none';
-            renderPrograms(filteredPrograms);
+            renderPrograms(filtered);
         }
 
         function renderPrograms(programs) {
             const container = document.getElementById('programsGrid');
             document.getElementById('programsContainer').style.display = 'block';
-            if (programs.length === 0) {
-                const searchTerm = document.getElementById('searchInput').value.trim();
-                const hasFilters = document.getElementById('zoneFilter').value || document.getElementById('brandFilter').value || document.getElementById('stateFilter').value || document.getElementById('studioFilter').value;
-                container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-graduation-cap"></i><p>${searchTerm ? 'No programs match your search' : hasFilters ? 'No programs found for this filter' : 'No programs yet'}</p></div>`;
+            if (!programs.length) {
+                container.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-graduation-cap"></i><p>No programs found</p></div>`;
                 return;
             }
-            container.innerHTML = programs.map(program => {
-                const studio = allStudios.find(s => s.id === program.studio_id);
-                let studioLabel = studio ? getStudioLabel(studio) : '';
+            container.innerHTML = programs.map(p => {
+                const studio = allStudios.find(s => s.id === p.studio_id);
+                const studioLabel = studio ? getStudioLabel(studio) : '';
+                const typeLabel = p.program_type ? p.program_type.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()) : null;
+                const ageRange = (p.min_age || p.max_age) ? `${p.min_age||''}${p.min_age&&p.max_age?'–':''}${p.max_age||''} yrs` : null;
                 return `
-                <div class="program-card ${program.status === 'inactive' ? 'inactive' : ''}">
+                <div class="program-card ${p.status === 'inactive' ? 'inactive' : ''}">
                     <div class="program-card-header">
-                        <div class="program-name">${program.name}</div>
-                        ${program.enrollment_type ? `<span class="program-type-badge">${program.enrollment_type.replace(' Enrollment', '').replace(' Based', '')}</span>` : ''}
+                        <div class="program-name">${p.name}</div>
+                        ${typeLabel ? `<span class="program-type-badge">${typeLabel}</span>` : p.enrollment_type ? `<span class="program-type-badge">${p.enrollment_type.replace(' Enrollment','').replace(' Based','')}</span>` : ''}
                     </div>
-                    ${studioLabel ? `<div style="padding: 0.5rem 1rem; background: var(--gray-50); font-size: 0.8125rem; color: var(--text-secondary); border-bottom: 1px solid var(--gray-200);"><i class="fas fa-building" style="margin-right: 0.375rem;"></i>${studioLabel}</div>` : ''}
+                    ${studioLabel ? `<div style="padding:0.5rem 1rem;background:var(--gray-50);font-size:0.8125rem;color:var(--text-secondary);border-bottom:1px solid var(--gray-200);"><i class="fas fa-building" style="margin-right:0.375rem;color:var(--primary);"></i>${studioLabel}</div>` : ''}
                     <div class="program-info">
-                        ${program.price ? `<div class="program-info-item"><i class="fas fa-dollar-sign"></i><span>${program.price}${program.price_type ? ` (${program.price_type})` : ''}</span></div>` : ''}
-                        ${program.class_size ? `<div class="program-info-item"><i class="fas fa-users"></i><span>${program.class_size}</span></div>` : ''}
-                        ${program.duration ? `<div class="program-info-item"><i class="fas fa-clock"></i><span>${program.duration}</span></div>` : ''}
-                        ${program.lesson_frequency ? `<div class="program-info-item"><i class="fas fa-calendar-week"></i><span>${program.lesson_frequency}</span></div>` : ''}
-                        ${program.skill_level ? `<div class="program-info-item"><i class="fas fa-signal"></i><span>${program.skill_level}</span></div>` : ''}
-                        ${program.first_free_lesson ? `<div class="program-info-item"><i class="fas fa-gift"></i><span style="color: var(--success);">Free Trial</span></div>` : ''}
-                        ${program.parent_guardian_required ? `<div class="program-info-item"><i class="fas fa-user-friends"></i><span style="color: var(--warning);">Parent Must Stay</span></div>` : ''}
-                        <div class="program-info-item"><span class="status-badge ${program.status === 'active' ? 'status-active' : 'status-inactive'}">${program.status || 'active'}</span></div>
+                        ${p.price ? `<div class="program-info-item"><i class="fas fa-dollar-sign"></i><span>${p.price}${p.price_type?` (${p.price_type})`:''}</span></div>` : ''}
+                        ${p.instruments ? `<div class="program-info-item"><i class="fas fa-music"></i><span>${p.instruments}</span></div>` : ''}
+                        ${ageRange ? `<div class="program-info-item"><i class="fas fa-child"></i><span>Ages ${ageRange}</span></div>` : ''}
+                        ${p.duration ? `<div class="program-info-item"><i class="fas fa-clock"></i><span>${p.duration}</span></div>` : ''}
+                        ${p.lesson_frequency ? `<div class="program-info-item"><i class="fas fa-calendar-week"></i><span>${p.lesson_frequency}</span></div>` : ''}
+                        ${p.skill_level ? `<div class="program-info-item"><i class="fas fa-signal"></i><span>${p.skill_level}</span></div>` : ''}
+                        ${p.first_free_lesson ? `<div class="program-info-item"><i class="fas fa-gift"></i><span style="color:var(--success);">Free Trial Lesson</span></div>` : ''}
+                        ${p.parent_guardian_required ? `<div class="program-info-item"><i class="fas fa-user-friends"></i><span style="color:var(--warning);">Parent Must Stay</span></div>` : ''}
+                        <div class="program-info-item"><span class="status-badge ${p.status==='active'?'status-active':'status-inactive'}">${p.status||'active'}</span></div>
                     </div>
                     <div class="program-card-actions">
-                        <button class="btn btn-secondary btn-small" onclick='editProgram(${JSON.stringify(program).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i> Edit</button>
-                        <button class="btn btn-secondary btn-small" onclick='openDuplicateModal(${JSON.stringify(program).replace(/'/g, "&#39;")})' title="Duplicate to another studio"><i class="fas fa-copy"></i></button>
-                        <button class="btn btn-danger btn-small" onclick="deleteProgram('${program.id}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-secondary btn-small" onclick='editProgram(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-secondary btn-small" onclick='openDuplicateModal(${JSON.stringify(p).replace(/'/g,"&#39;")})' title="Duplicate"><i class="fas fa-copy"></i></button>
+                        <button class="btn btn-danger btn-small" onclick="deleteProgram('${p.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
             }).join('');
         }
 
+        // ── Modal Open/Close ──
         function openAddProgramModal() {
             if (!selectedStudioId) { showToast('Please select a specific studio first', 'error'); return; }
             document.getElementById('programModalTitle').textContent = 'Add Program';
@@ -620,48 +912,64 @@
             document.getElementById('programFirstFree').checked = false;
             document.getElementById('programParentRequired').checked = false;
             document.getElementById('midSemesterSection').style.display = 'none';
+            document.getElementById('ageNoLimit').checked = false;
+            document.getElementById('programMinAge').disabled = false;
+            document.getElementById('programMaxAge').disabled = false;
             clearRichEditors();
-            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelector('.modal-tab[data-tab="basic"]').classList.add('active');
-            document.getElementById('basicTab').classList.add('active');
+            setProgType('');
+            renderInstrumentPicker([]);
+            // Reset to first tab
+            document.querySelectorAll('#programModal .modal-tab').forEach((t,i) => t.classList.toggle('active', i===0));
+            document.querySelectorAll('#programModal .modal-tab-content').forEach((c,i) => c.classList.toggle('active', i===0));
             document.getElementById('programModal').classList.add('active');
         }
 
-        function editProgram(program) {
+        function editProgram(p) {
             document.getElementById('programModalTitle').textContent = 'Edit Program';
-            document.getElementById('programId').value = program.id;
-            document.getElementById('programStudioId').value = program.studio_id;
-            document.getElementById('programName').value = program.name || '';
-            document.getElementById('programClassSize').value = program.class_size || '';
-            document.getElementById('programDuration').value = program.duration || '';
-            document.getElementById('programFrequency').value = program.lesson_frequency || '';
-            document.getElementById('programStatus').value = program.status || 'active';
-            document.getElementById('programPrice').value = program.price || '';
-            document.getElementById('programPriceType').value = program.price_type || '';
-            document.getElementById('programRegFee').value = program.registration_fee || '';
-            document.getElementById('programRegFeeCovers').value = program.registration_fee_covers || '';
-            document.getElementById('programEnrollmentType').value = program.enrollment_type || '';
-            setRichContent('programEnrollmentProcess', program.enrollment_process);
-            document.getElementById('programMidSemester').checked = program.mid_semester_enrollment || false;
-            document.getElementById('programMidSemesterPolicy').value = program.mid_semester_policy || '';
-            document.getElementById('programMidSemesterPrice').value = program.mid_semester_price_change || '';
-            document.getElementById('programSkillLevel').value = program.skill_level || '';
-            document.getElementById('programQualifications').value = program.qualifications || '';
-            document.getElementById('programCurriculum').value = program.curriculum_details || '';
-            document.getElementById('programParentRequired').checked = program.parent_guardian_required || false;
-            setRichContent('programMakeupPolicy', program.makeup_policy);
-            setRichContent('programWithdrawalPolicy', program.withdrawal_policy);
-            document.getElementById('programFirstFree').checked = program.first_free_lesson || false;
-            setRichContent('programAdditionalPolicies', program.additional_policies);
-            document.getElementById('programLink').value = program.scheduling_link || '';
-            document.getElementById('programFlyerLink').value = program.flyer_link || '';
-            document.getElementById('programWebsiteLink').value = program.website_description_link || '';
+            document.getElementById('programId').value = p.id;
+            document.getElementById('programStudioId').value = p.studio_id;
+            document.getElementById('programName').value = p.name || '';
+            document.getElementById('programClassSize').value = p.class_size || '';
+            document.getElementById('programDuration').value = p.duration || '';
+            document.getElementById('programFrequency').value = p.lesson_frequency || '';
+            document.getElementById('programStatus').value = p.status || 'active';
+            document.getElementById('programPrice').value = p.price || '';
+            document.getElementById('programPriceType').value = p.price_type || '';
+            document.getElementById('programRegFee').value = p.registration_fee || '';
+            document.getElementById('programRegFeeCovers').value = p.registration_fee_covers || '';
+            document.getElementById('programEnrollmentType').value = p.enrollment_type || '';
+            setRichContent('programEnrollmentProcess', p.enrollment_process);
+            document.getElementById('programMidSemester').checked = p.mid_semester_enrollment || false;
+            document.getElementById('programMidSemesterPolicy').value = p.mid_semester_policy || '';
+            document.getElementById('programMidSemesterPrice').value = p.mid_semester_price_change || '';
+            document.getElementById('programSkillLevel').value = p.skill_level || '';
+            document.getElementById('programQualifications').value = p.qualifications || '';
+            document.getElementById('programCurriculum').value = p.curriculum_details || '';
+            document.getElementById('programParentRequired').checked = p.parent_guardian_required || false;
+            document.getElementById('programFirstFree').checked = p.first_free_lesson || false;
+            setRichContent('programMakeupPolicy', p.makeup_policy);
+            setRichContent('programWithdrawalPolicy', p.withdrawal_policy);
+            setRichContent('programAdditionalPolicies', p.additional_policies);
+            document.getElementById('programLink').value = p.scheduling_link || '';
+            document.getElementById('programFlyerLink').value = p.flyer_link || '';
+            document.getElementById('programWebsiteLink').value = p.website_description_link || '';
+
+            // New fields
+            setProgType(p.program_type || '');
+            const instVals = p.instruments ? p.instruments.split(',').map(i => i.trim()).filter(Boolean) : [];
+            renderInstrumentPicker(instVals);
+
+            // Age range
+            const noLimit = !p.min_age && !p.max_age;
+            document.getElementById('ageNoLimit').checked = noLimit;
+            document.getElementById('programMinAge').value = p.min_age || '';
+            document.getElementById('programMaxAge').value = p.max_age || '';
+            document.getElementById('programMinAge').disabled = noLimit;
+            document.getElementById('programMaxAge').disabled = noLimit;
+
             toggleMidSemesterFields();
-            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelector('.modal-tab[data-tab="basic"]').classList.add('active');
-            document.getElementById('basicTab').classList.add('active');
+            document.querySelectorAll('#programModal .modal-tab').forEach((t,i) => t.classList.toggle('active', i===0));
+            document.querySelectorAll('#programModal .modal-tab-content').forEach((c,i) => c.classList.toggle('active', i===0));
             document.getElementById('programModal').classList.add('active');
         }
 
@@ -673,8 +981,14 @@
             const studioId = document.getElementById('programStudioId').value;
             if (!name) { showToast('Program name is required', 'error'); return; }
             if (!studioId) { showToast('No studio selected', 'error'); return; }
+
+            const minAge = document.getElementById('programMinAge').value;
+            const maxAge = document.getElementById('programMaxAge').value;
+            const noLimit = document.getElementById('ageNoLimit').checked;
+
             const data = {
-                studio_id: studioId, name: name,
+                studio_id: studioId,
+                name,
                 class_size: document.getElementById('programClassSize').value || null,
                 duration: document.getElementById('programDuration').value || null,
                 lesson_frequency: document.getElementById('programFrequency').value || null,
@@ -698,38 +1012,46 @@
                 additional_policies: getRichContent('programAdditionalPolicies'),
                 scheduling_link: document.getElementById('programLink').value || null,
                 flyer_link: document.getElementById('programFlyerLink').value || null,
-                website_description_link: document.getElementById('programWebsiteLink').value || null
+                website_description_link: document.getElementById('programWebsiteLink').value || null,
+                // NEW FIELDS
+                program_type: document.getElementById('programTypeVal').value || null,
+                instruments: document.getElementById('programInstrumentsVal').value || null,
+                min_age: (!noLimit && minAge !== '') ? parseInt(minAge) : null,
+                max_age: (!noLimit && maxAge !== '') ? parseInt(maxAge) : null,
             };
+
             try {
-                let result;
-                if (id) { result = await supabaseClient.from('programs').update(data).eq('id', id); } else { result = await supabaseClient.from('programs').insert([data]); }
+                const result = id
+                    ? await supabaseClient.from('programs').update(data).eq('id', id)
+                    : await supabaseClient.from('programs').insert([data]);
                 if (result.error) throw result.error;
                 showToast(id ? 'Program updated!' : 'Program added!', 'success');
                 closeProgramModal();
                 loadAllPrograms();
-            } catch (error) { console.error('Error saving program:', error); showToast('Error saving program', 'error'); }
+            } catch(e) { console.error(e); showToast('Error saving program', 'error'); }
         }
 
         async function deleteProgram(id) {
-            if (!confirm('Are you sure you want to delete this program?')) return;
-            try { const { error } = await supabaseClient.from('programs').delete().eq('id', id); if (error) throw error; showToast('Program deleted!', 'success'); loadAllPrograms(); }
-            catch (error) { console.error('Error deleting program:', error); showToast('Error deleting program', 'error'); }
+            if (!confirm('Delete this program?')) return;
+            try {
+                const { error } = await supabaseClient.from('programs').delete().eq('id', id);
+                if (error) throw error;
+                showToast('Program deleted!', 'success');
+                loadAllPrograms();
+            } catch(e) { showToast('Error deleting program', 'error'); }
         }
 
         function showToast(message, type = 'success') {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            document.querySelector('.toast')?.remove();
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.textContent = message;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
 
-        // ==================== IMPORT FUNCTIONS ====================
-        let importData = null;
-        let importStudioId = null;
-        let dragDropSetup = false;
+        // ── Import ──
+        let importData = null, importStudioId = null, dragDropSetup = false;
 
         function openImportModal() {
             importData = null; importStudioId = null;
@@ -746,14 +1068,14 @@
         }
 
         function populateImportStudioDropdownAll() { const s = document.getElementById('importStudioSelect'); s.innerHTML = '<option value="">Select Studio</option>'; allStudios.forEach(st => { const o = document.createElement('option'); o.value = st.id; o.textContent = getStudioLabel(st); s.appendChild(o); }); }
-        function populateImportZoneDropdown() { const s = document.getElementById('importZoneSelect'); s.innerHTML = '<option value="">All Zones</option>'; allZones.forEach(z => { const o = document.createElement('option'); o.value = z.id; o.textContent = z.name || z.zone_name || z.title || 'Unknown Zone'; s.appendChild(o); }); }
+        function populateImportZoneDropdown() { const s = document.getElementById('importZoneSelect'); s.innerHTML = '<option value="">All Zones</option>'; allZones.forEach(z => { const o = document.createElement('option'); o.value = z.id; o.textContent = z.name || z.zone_name || 'Zone'; s.appendChild(o); }); }
         function populateImportBrandDropdown(fb = null) { const s = document.getElementById('importBrandSelect'); const brands = fb || allBrands; s.innerHTML = '<option value="">Select Brand</option>'; brands.forEach(b => { const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; s.appendChild(o); }); }
-        function populateImportStudioDropdown(fs = null) { const s = document.getElementById('importStudioSelect'); const studios = fs || []; s.innerHTML = '<option value="">Select Studio Location</option>'; studios.forEach(st => { const o = document.createElement('option'); o.value = st.id; let l = st.city || 'Main Location'; if (st.state) l += `, ${st.state}`; o.textContent = l; s.appendChild(o); }); }
+        function populateImportStudioDropdown(fs = null) { const s = document.getElementById('importStudioSelect'); const studios = fs || []; s.innerHTML = '<option value="">Select Studio Location</option>'; studios.forEach(st => { const o = document.createElement('option'); o.value = st.id; let l = st.city || 'Main'; if (st.state) l += `, ${st.state}`; o.textContent = l; s.appendChild(o); }); }
 
         function setupImportDropdownListeners() {
-            document.getElementById('importZoneSelect').addEventListener('change', (e) => { const zoneId = e.target.value; if (zoneId && allBrands.length > 0) { populateImportBrandDropdown(allBrands.filter(b => b.zone_id === zoneId)); } else { populateImportBrandDropdown(); } document.getElementById('importBrandSelect').value = ''; document.getElementById('importStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; importStudioId = null; updateImportButton(); });
-            document.getElementById('importBrandSelect').addEventListener('change', (e) => { const brandId = e.target.value; if (brandId) { populateImportStudioDropdown(allStudios.filter(s => s.brand_id === brandId)); } else { populateImportStudioDropdown([]); } importStudioId = null; updateImportButton(); });
-            document.getElementById('importStudioSelect').addEventListener('change', (e) => { importStudioId = e.target.value; updateImportButton(); });
+            document.getElementById('importZoneSelect').addEventListener('change', e => { const zoneId = e.target.value; populateImportBrandDropdown(zoneId ? allBrands.filter(b => b.zone_id === zoneId) : null); document.getElementById('importBrandSelect').value = ''; document.getElementById('importStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; importStudioId = null; updateImportButton(); });
+            document.getElementById('importBrandSelect').addEventListener('change', e => { populateImportStudioDropdown(e.target.value ? allStudios.filter(s => s.brand_id === e.target.value) : []); importStudioId = null; updateImportButton(); });
+            document.getElementById('importStudioSelect').addEventListener('change', e => { importStudioId = e.target.value; updateImportButton(); });
         }
 
         function closeImportModal() { document.getElementById('importModal').classList.remove('active'); importData = null; importStudioId = null; }
@@ -761,110 +1083,77 @@
         function setupDragDrop() {
             const dropZone = document.getElementById('fileDropZone');
             const fileInput = document.getElementById('fileInput');
-            fileInput.addEventListener('change', (e) => { const file = e.target.files[0]; if (file) processFile(file); });
-            dropZone.addEventListener('click', (e) => { if (e.target !== fileInput) fileInput.click(); });
-            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('dragover'); });
-            dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover'); });
-            dropZone.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]); });
+            fileInput.addEventListener('change', e => { if (e.target.files[0]) processFile(e.target.files[0]); });
+            dropZone.addEventListener('click', e => { if (e.target !== fileInput) fileInput.click(); });
+            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+            dropZone.addEventListener('dragleave', e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+            dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
         }
 
         function processFile(file) {
             if (!file.name.endsWith('.json')) { showToast('Please select a JSON file', 'error'); return; }
             const reader = new FileReader();
-            reader.onload = (e) => { try { const data = JSON.parse(e.target.result); if (!data.program || !data.program.name) { showToast('Invalid program file format', 'error'); return; } importData = data; showImportPreview(data); } catch (error) { showToast('Error parsing JSON file', 'error'); } };
-            reader.onerror = () => { showToast('Error reading file', 'error'); };
+            reader.onload = e => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data.program?.name) { showToast('Invalid program file format', 'error'); return; }
+                    importData = data;
+                    const p = data.program;
+                    const si = data.studioInfo || {};
+                    document.getElementById('importPreviewContent').innerHTML = `<div class="import-preview-item"><div><div class="name">${p.name}</div><div class="meta">${p.price||'No price'} ${p.price_type?`(${p.price_type})`:''} · ${p.enrollment_type||'No enrollment type'}</div>${si.name?`<div class="meta"><i class="fas fa-building" style="margin-right:.25rem;"></i>Source: ${si.name}${si.location?' - '+si.location:''}</div>`:''}</div></div>`;
+                    document.getElementById('importPreview').classList.add('show');
+                    autoMatchStudio(si);
+                } catch(e) { showToast('Error parsing JSON file', 'error'); }
+            };
             reader.readAsText(file);
         }
 
-        function showImportPreview(data) {
-            const preview = document.getElementById('importPreview');
-            const content = document.getElementById('importPreviewContent');
-            const program = data.program;
-            const studioInfo = data.studioInfo || {};
-            content.innerHTML = `<div class="import-preview-item"><div><div class="name">${program.name}</div><div class="meta">${program.price ? program.price : 'No price'} ${program.price_type ? `(${program.price_type})` : ''} &bull; ${program.enrollment_type || 'No enrollment type'}</div>${studioInfo.name ? `<div class="meta" style="margin-top: 0.25rem;"><i class="fas fa-building" style="margin-right: 0.25rem;"></i> Source: ${studioInfo.name}${studioInfo.location ? ' - ' + studioInfo.location : ''}</div>` : ''}</div></div>`;
-            preview.classList.add('show');
-            autoMatchStudio(studioInfo);
-        }
-
-        function autoMatchStudio(studioInfo) {
-            const zoneSelect = document.getElementById('importZoneSelect');
-            const brandSelect = document.getElementById('importBrandSelect');
-            const studioSelect = document.getElementById('importStudioSelect');
+        function autoMatchStudio(si) {
             const matchInfo = document.getElementById('studioMatchInfo');
-            if (!studioInfo.name && !studioInfo.location) { matchInfo.innerHTML = '<span style="color: var(--warning);"><i class="fas fa-exclamation-triangle"></i> No studio info in file. Please select brand and location.</span>'; importStudioId = null; updateImportButton(); return; }
-            const searchName = (studioInfo.name || '').toLowerCase().trim();
-            const searchLocation = (studioInfo.location || '').toLowerCase().trim();
-            let matchedBrand = null;
-            if (allBrands.length > 0) {
-                matchedBrand = allBrands.find(b => { const bn = (b.name || '').toLowerCase(); return bn === searchName || searchName.includes(bn) || bn.includes(searchName); });
-                if (matchedBrand) {
-                    if (matchedBrand.zone_id && allZones.length > 0) { zoneSelect.value = matchedBrand.zone_id; populateImportBrandDropdown(allBrands.filter(b => b.zone_id === matchedBrand.zone_id)); }
-                    brandSelect.value = matchedBrand.id;
-                    const brandStudios = allStudios.filter(s => s.brand_id === matchedBrand.id);
-                    populateImportStudioDropdown(brandStudios);
-                    let matchedStudio = null;
-                    if (searchLocation) { matchedStudio = brandStudios.find(s => { const city = (s.city || '').toLowerCase(); return searchLocation.includes(city) || city.includes(searchLocation.split(',')[0].trim()); }); }
-                    if (matchedStudio) { studioSelect.value = matchedStudio.id; importStudioId = matchedStudio.id; let ll = matchedStudio.city || 'Main Location'; if (matchedStudio.state) ll += `, ${matchedStudio.state}`; matchInfo.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Auto-matched: <strong>${matchedBrand.name} - ${ll}</strong></span>`; }
-                    else if (brandStudios.length === 1) { studioSelect.value = brandStudios[0].id; importStudioId = brandStudios[0].id; let ll = brandStudios[0].city || 'Main Location'; if (brandStudios[0].state) ll += `, ${brandStudios[0].state}`; matchInfo.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Auto-matched: <strong>${matchedBrand.name} - ${ll}</strong></span>`; }
-                    else { matchInfo.innerHTML = `<span style="color: var(--primary);"><i class="fas fa-info-circle"></i> Brand matched: <strong>${matchedBrand.name}</strong>. Please select the location.</span>`; }
-                } else { matchInfo.innerHTML = `<span style="color: var(--warning);"><i class="fas fa-exclamation-triangle"></i> Could not match "${studioInfo.name}". Please select brand and location.</span>`; }
-            } else {
-                let matchedStudio = null;
-                for (const studio of allStudios) { const bn = getBrandName(studio.brand_id).toLowerCase(); if (bn === searchName || searchName.includes(bn) || bn.includes(searchName)) { matchedStudio = studio; break; } }
-                if (matchedStudio && searchLocation) { const bs = allStudios.filter(s => s.brand_id === matchedStudio.brand_id); const lm = bs.find(s => { const city = (s.city || '').toLowerCase(); return searchLocation.includes(city) || city.includes(searchLocation.split(',')[0].trim()); }); if (lm) matchedStudio = lm; }
-                if (matchedStudio) { studioSelect.value = matchedStudio.id; importStudioId = matchedStudio.id; matchInfo.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> Auto-matched: <strong>${getStudioLabel(matchedStudio)}</strong></span>`; }
-                else { matchInfo.innerHTML = `<span style="color: var(--warning);"><i class="fas fa-exclamation-triangle"></i> Could not match. Please select a studio.</span>`; }
-            }
+            if (!si.name) { matchInfo.innerHTML = '<span style="color:var(--warning);">No studio info in file. Please select manually.</span>'; return; }
+            const searchName = (si.name||'').toLowerCase();
+            const matchedBrand = allBrands.find(b => { const bn=(b.name||'').toLowerCase(); return bn===searchName||searchName.includes(bn)||bn.includes(searchName); });
+            if (matchedBrand) {
+                document.getElementById('importBrandSelect').value = matchedBrand.id;
+                const bs = allStudios.filter(s => s.brand_id === matchedBrand.id);
+                populateImportStudioDropdown(bs);
+                const searchLoc = (si.location||'').toLowerCase();
+                const matchedStudio = searchLoc ? bs.find(s => { const city=(s.city||'').toLowerCase(); return searchLoc.includes(city)||city.includes(searchLoc.split(',')[0].trim()); }) : bs.length===1?bs[0]:null;
+                if (matchedStudio) { document.getElementById('importStudioSelect').value = matchedStudio.id; importStudioId = matchedStudio.id; matchInfo.innerHTML = `<span style="color:var(--success);"><i class="fas fa-check-circle"></i> Auto-matched: <strong>${matchedBrand.name} — ${matchedStudio.city||'Main'}</strong></span>`; }
+                else matchInfo.innerHTML = `<span style="color:var(--primary);">Brand matched: <strong>${matchedBrand.name}</strong>. Please select location.</span>`;
+            } else matchInfo.innerHTML = `<span style="color:var(--warning);">Could not match "${si.name}". Please select manually.</span>`;
             updateImportButton();
         }
 
         function updateImportButton() { document.getElementById('importConfirmBtn').disabled = !importData || !importStudioId; }
-
-        function clearImport() {
-            importData = null; importStudioId = null;
-            document.getElementById('fileInput').value = '';
-            document.getElementById('importPreview').classList.remove('show');
-            const zs = document.getElementById('importZoneSelect'); if (zs) zs.value = '';
-            const bs = document.getElementById('importBrandSelect'); if (bs) bs.value = '';
-            if (allBrands.length > 0) { document.getElementById('importStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; populateImportBrandDropdown(); } else { populateImportStudioDropdownAll(); }
-            document.getElementById('studioMatchInfo').innerHTML = '';
-            document.getElementById('importConfirmBtn').disabled = true;
-        }
+        function clearImport() { importData = null; importStudioId = null; document.getElementById('fileInput').value = ''; document.getElementById('importPreview').classList.remove('show'); document.getElementById('studioMatchInfo').innerHTML = ''; document.getElementById('importConfirmBtn').disabled = true; }
 
         async function confirmImport() {
-            if (!importData || !importStudioId) { showToast('Please select a studio for the import', 'error'); return; }
-            const program = importData.program;
-            const data = { studio_id: importStudioId, name: program.name || 'Imported Program', class_size: program.class_size || null, duration: program.duration || null, lesson_frequency: program.lesson_frequency || null, status: program.status || 'active', price: program.price || null, price_type: program.price_type || null, registration_fee: program.registration_fee || null, registration_fee_covers: program.registration_fee_covers || null, enrollment_type: program.enrollment_type || null, enrollment_process: program.enrollment_process || null, mid_semester_enrollment: program.mid_semester_enrollment || false, mid_semester_policy: program.mid_semester_policy || null, mid_semester_price_change: program.mid_semester_price_change || null, skill_level: program.skill_level || null, qualifications: program.qualifications || null, curriculum_details: program.curriculum_details || null, makeup_policy: program.makeup_policy || null, withdrawal_policy: program.withdrawal_policy || null, first_free_lesson: program.first_free_lesson || false, parent_guardian_required: program.parent_guardian_required || false, additional_policies: program.additional_policies || null, scheduling_link: program.scheduling_link || null, flyer_link: program.flyer_link || null, website_description_link: program.website_description_link || null };
-            try { const { error } = await supabaseClient.from('programs').insert([data]); if (error) throw error; const studio = allStudios.find(s => s.id === importStudioId); showToast(`Program "${program.name}" imported to ${studio ? getStudioLabel(studio) : 'studio'}!`, 'success'); closeImportModal(); loadAllPrograms(); }
-            catch (error) { console.error('Error importing program:', error); showToast('Error importing program', 'error'); }
+            if (!importData || !importStudioId) { showToast('Please select a studio', 'error'); return; }
+            const p = importData.program;
+            const data = { studio_id: importStudioId, name: p.name||'Imported Program', class_size: p.class_size||null, duration: p.duration||null, lesson_frequency: p.lesson_frequency||null, status: p.status||'active', price: p.price||null, price_type: p.price_type||null, registration_fee: p.registration_fee||null, registration_fee_covers: p.registration_fee_covers||null, enrollment_type: p.enrollment_type||null, enrollment_process: p.enrollment_process||null, mid_semester_enrollment: p.mid_semester_enrollment||false, mid_semester_policy: p.mid_semester_policy||null, mid_semester_price_change: p.mid_semester_price_change||null, skill_level: p.skill_level||null, qualifications: p.qualifications||null, curriculum_details: p.curriculum_details||null, makeup_policy: p.makeup_policy||null, withdrawal_policy: p.withdrawal_policy||null, first_free_lesson: p.first_free_lesson||false, parent_guardian_required: p.parent_guardian_required||false, additional_policies: p.additional_policies||null, scheduling_link: p.scheduling_link||null, flyer_link: p.flyer_link||null, website_description_link: p.website_description_link||null, program_type: p.program_type||null, instruments: p.instruments||null, min_age: p.min_age||null, max_age: p.max_age||null };
+            try { const { error } = await supabaseClient.from('programs').insert([data]); if (error) throw error; showToast(`"${p.name}" imported!`, 'success'); closeImportModal(); loadAllPrograms(); }
+            catch(e) { showToast('Error importing program', 'error'); }
         }
 
-        // ==================== DUPLICATE FUNCTIONS ====================
-        let programToDuplicate = null;
-        let duplicateStudioId = null;
-        let duplicateListenersSetup = false;
+        // ── Duplicate ──
+        let programToDuplicate = null, duplicateStudioId = null, duplicateListenersSetup = false;
 
-        function openDuplicateModal(program) {
-            programToDuplicate = program; duplicateStudioId = null;
-            document.getElementById('duplicatePreviewContent').innerHTML = `<div class="import-preview-item"><div><div class="name">${program.name}</div><div class="meta">${program.price ? program.price : 'No price'} ${program.price_type ? `(${program.price_type})` : ''} &bull; ${program.enrollment_type || 'No enrollment type'}</div></div></div>`;
-            const dzg = document.getElementById('duplicateZoneGroup'); if (dzg) dzg.style.display = allZones.length > 0 ? 'block' : 'none';
-            const dbg = document.getElementById('duplicateBrandGroup'); if (dbg) dbg.style.display = allBrands.length > 0 ? 'block' : 'none';
-            if (allZones.length > 0) populateDuplicateZoneDropdown();
-            if (allBrands.length > 0) { populateDuplicateBrandDropdown(); document.getElementById('duplicateStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; } else { populateDuplicateStudioDropdownAll(); }
-            if (!duplicateListenersSetup) { setupDuplicateDropdownListeners(); duplicateListenersSetup = true; }
+        function openDuplicateModal(p) {
+            programToDuplicate = p; duplicateStudioId = null;
+            document.getElementById('duplicatePreviewContent').innerHTML = `<div class="import-preview-item"><div><div class="name">${p.name}</div><div class="meta">${p.price||'No price'} ${p.price_type?`(${p.price_type})`:''} · ${p.enrollment_type||'No enrollment type'}</div></div></div>`;
+            document.getElementById('duplicateZoneGroup').style.display = allZones.length > 0 ? 'block' : 'none';
+            document.getElementById('duplicateBrandGroup').style.display = allBrands.length > 0 ? 'block' : 'none';
+            if (allZones.length > 0) { const s = document.getElementById('duplicateZoneSelect'); s.innerHTML = '<option value="">All Zones</option>'; allZones.forEach(z => { const o = document.createElement('option'); o.value = z.id; o.textContent = z.name||z.zone_name||'Zone'; s.appendChild(o); }); }
+            if (allBrands.length > 0) { const s = document.getElementById('duplicateBrandSelect'); s.innerHTML = '<option value="">Select Brand</option>'; allBrands.forEach(b => { const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; s.appendChild(o); }); document.getElementById('duplicateStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; }
+            if (!duplicateListenersSetup) {
+                document.getElementById('duplicateZoneSelect').addEventListener('change', e => { const zoneId = e.target.value; const s = document.getElementById('duplicateBrandSelect'); s.innerHTML = '<option value="">Select Brand</option>'; (zoneId?allBrands.filter(b=>b.zone_id===zoneId):allBrands).forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.name;s.appendChild(o);}); document.getElementById('duplicateStudioSelect').innerHTML='<option value="">Select Studio Location</option>'; duplicateStudioId=null; });
+                document.getElementById('duplicateBrandSelect').addEventListener('change', e => { const s = document.getElementById('duplicateStudioSelect'); s.innerHTML = '<option value="">Select Studio Location</option>'; (e.target.value?allStudios.filter(st=>st.brand_id===e.target.value):[]).forEach(st=>{const o=document.createElement('option');o.value=st.id;let l=st.city||'Main';if(st.state)l+=`, ${st.state}`;o.textContent=l;s.appendChild(o);}); duplicateStudioId=null; });
+                document.getElementById('duplicateStudioSelect').addEventListener('change', e => { duplicateStudioId = e.target.value; });
+                duplicateListenersSetup = true;
+            }
             document.getElementById('duplicateProgramName').value = '';
             document.getElementById('duplicateModal').classList.add('active');
-        }
-
-        function populateDuplicateStudioDropdownAll() { const s = document.getElementById('duplicateStudioSelect'); s.innerHTML = '<option value="">Select Studio</option>'; allStudios.forEach(st => { const o = document.createElement('option'); o.value = st.id; o.textContent = getStudioLabel(st); s.appendChild(o); }); }
-        function populateDuplicateZoneDropdown() { const s = document.getElementById('duplicateZoneSelect'); s.innerHTML = '<option value="">All Zones</option>'; allZones.forEach(z => { const o = document.createElement('option'); o.value = z.id; o.textContent = z.name || z.zone_name || z.title || 'Unknown Zone'; s.appendChild(o); }); }
-        function populateDuplicateBrandDropdown(fb = null) { const s = document.getElementById('duplicateBrandSelect'); const brands = fb || allBrands; s.innerHTML = '<option value="">Select Brand</option>'; brands.forEach(b => { const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; s.appendChild(o); }); }
-        function populateDuplicateStudioDropdown(fs = null) { const s = document.getElementById('duplicateStudioSelect'); const studios = fs || []; s.innerHTML = '<option value="">Select Studio Location</option>'; studios.forEach(st => { const o = document.createElement('option'); o.value = st.id; let l = st.city || 'Main Location'; if (st.state) l += `, ${st.state}`; o.textContent = l; s.appendChild(o); }); }
-
-        function setupDuplicateDropdownListeners() {
-            document.getElementById('duplicateZoneSelect').addEventListener('change', (e) => { const zoneId = e.target.value; if (zoneId && allBrands.length > 0) { populateDuplicateBrandDropdown(allBrands.filter(b => b.zone_id === zoneId)); } else { populateDuplicateBrandDropdown(); } document.getElementById('duplicateBrandSelect').value = ''; document.getElementById('duplicateStudioSelect').innerHTML = '<option value="">Select Studio Location</option>'; duplicateStudioId = null; });
-            document.getElementById('duplicateBrandSelect').addEventListener('change', (e) => { const brandId = e.target.value; if (brandId) { populateDuplicateStudioDropdown(allStudios.filter(s => s.brand_id === brandId)); } else { populateDuplicateStudioDropdown([]); } duplicateStudioId = null; });
-            document.getElementById('duplicateStudioSelect').addEventListener('change', (e) => { duplicateStudioId = e.target.value; });
         }
 
         function closeDuplicateModal() { document.getElementById('duplicateModal').classList.remove('active'); programToDuplicate = null; duplicateStudioId = null; }
@@ -872,13 +1161,13 @@
         async function confirmDuplicate() {
             const targetStudioId = duplicateStudioId || document.getElementById('duplicateStudioSelect').value;
             if (!targetStudioId) { showToast('Please select a studio location', 'error'); return; }
-            if (!programToDuplicate) { showToast('No program to duplicate', 'error'); return; }
+            if (!programToDuplicate) return;
             const newName = document.getElementById('duplicateProgramName').value.trim() || programToDuplicate.name;
-            const data = { studio_id: targetStudioId, name: newName, class_size: programToDuplicate.class_size || null, duration: programToDuplicate.duration || null, lesson_frequency: programToDuplicate.lesson_frequency || null, status: programToDuplicate.status || 'active', price: programToDuplicate.price || null, price_type: programToDuplicate.price_type || null, registration_fee: programToDuplicate.registration_fee || null, registration_fee_covers: programToDuplicate.registration_fee_covers || null, enrollment_type: programToDuplicate.enrollment_type || null, enrollment_process: programToDuplicate.enrollment_process || null, mid_semester_enrollment: programToDuplicate.mid_semester_enrollment || false, mid_semester_policy: programToDuplicate.mid_semester_policy || null, mid_semester_price_change: programToDuplicate.mid_semester_price_change || null, skill_level: programToDuplicate.skill_level || null, qualifications: programToDuplicate.qualifications || null, curriculum_details: programToDuplicate.curriculum_details || null, makeup_policy: programToDuplicate.makeup_policy || null, withdrawal_policy: programToDuplicate.withdrawal_policy || null, first_free_lesson: programToDuplicate.first_free_lesson || false, parent_guardian_required: programToDuplicate.parent_guardian_required || false, additional_policies: programToDuplicate.additional_policies || null, scheduling_link: programToDuplicate.scheduling_link || null, flyer_link: programToDuplicate.flyer_link || null, website_description_link: programToDuplicate.website_description_link || null };
-            try { const { error } = await supabaseClient.from('programs').insert([data]); if (error) throw error; const studio = allStudios.find(s => s.id === targetStudioId); showToast(`Program "${newName}" duplicated to ${studio ? getStudioLabel(studio) : 'studio'}!`, 'success'); closeDuplicateModal(); loadAllPrograms(); }
-            catch (error) { console.error('Error duplicating program:', error); showToast('Error duplicating program', 'error'); }
+            const p = programToDuplicate;
+            const data = { studio_id: targetStudioId, name: newName, class_size: p.class_size||null, duration: p.duration||null, lesson_frequency: p.lesson_frequency||null, status: p.status||'active', price: p.price||null, price_type: p.price_type||null, registration_fee: p.registration_fee||null, registration_fee_covers: p.registration_fee_covers||null, enrollment_type: p.enrollment_type||null, enrollment_process: p.enrollment_process||null, mid_semester_enrollment: p.mid_semester_enrollment||false, mid_semester_policy: p.mid_semester_policy||null, mid_semester_price_change: p.mid_semester_price_change||null, skill_level: p.skill_level||null, qualifications: p.qualifications||null, curriculum_details: p.curriculum_details||null, makeup_policy: p.makeup_policy||null, withdrawal_policy: p.withdrawal_policy||null, first_free_lesson: p.first_free_lesson||false, parent_guardian_required: p.parent_guardian_required||false, additional_policies: p.additional_policies||null, scheduling_link: p.scheduling_link||null, flyer_link: p.flyer_link||null, website_description_link: p.website_description_link||null, program_type: p.program_type||null, instruments: p.instruments||null, min_age: p.min_age||null, max_age: p.max_age||null };
+            try { const { error } = await supabaseClient.from('programs').insert([data]); if (error) throw error; const studio = allStudios.find(s => s.id === targetStudioId); showToast(`"${newName}" duplicated to ${studio?getStudioLabel(studio):'studio'}!`, 'success'); closeDuplicateModal(); loadAllPrograms(); }
+            catch(e) { showToast('Error duplicating program', 'error'); }
         }
-
     </script>
 </body>
 </html>
