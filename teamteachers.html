@@ -707,28 +707,28 @@
                     <div id="searchDropdown" class="search-dropdown"></div>
                 </div>
 
-                <button class="filter-pill" id="pillLocation" onclick="togglePopover('Location', this)">
+                <button class="filter-pill" id="pillLocation" onclick="openFilterPopover('Location', this)">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Location</span>
                     <span class="pill-count" id="countLocation" style="display:none">0</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
 
-                <button class="filter-pill" id="pillInstruments" onclick="togglePopover('Instruments', this)">
+                <button class="filter-pill" id="pillInstruments" onclick="openFilterPopover('Instruments', this)">
                     <i class="fas fa-music"></i>
                     <span>Instruments</span>
                     <span class="pill-count" id="countInstruments" style="display:none">0</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
 
-                <button class="filter-pill" id="pillLevel" onclick="togglePopover('Level', this)">
+                <button class="filter-pill" id="pillLevel" onclick="openFilterPopover('Level', this)">
                     <i class="fas fa-layer-group"></i>
                     <span>Level &amp; genre</span>
                     <span class="pill-count" id="countLevel" style="display:none">0</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
 
-                <button class="filter-pill" id="pillMore" onclick="togglePopover('More', this)">
+                <button class="filter-pill" id="pillMore" onclick="openFilterPopover('More', this)">
                     <i class="fas fa-sliders-h"></i>
                     <span>More</span>
                     <span class="pill-count" id="countMore" style="display:none">0</span>
@@ -980,7 +980,7 @@
         }
 
         // ============ POPOVERS ============
-        function togglePopover(name, btn) {
+        function openFilterPopover(name, btn) {
             const id = 'popover' + name;
             const pop = document.getElementById(id);
             if (activePopover === id) { closeAllPopovers(); return; }
