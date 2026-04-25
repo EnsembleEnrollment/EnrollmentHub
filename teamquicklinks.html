@@ -11,7 +11,7 @@
             --primary: #FA8072;
             --primary-light: #FFB4A2;
             --primary-dark: #E96E5D;
-            --secondary: #FF6B9D;a
+            --secondary: #FF6B9D;
             --secondary-light: #FFB6C1;
             --accent: #FFA07A;
             --accent-light: #FFCBA4;
@@ -129,6 +129,68 @@
         .section-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.625rem; }
         .section-title i { color: var(--primary); }
 
+        /* ── SMART SEARCH ── */
+        .smart-search-wrap {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .smart-search-wrap > i.fa-search {
+            position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 0.875rem; pointer-events: none;
+        }
+        .smart-search-input {
+            width: 100%; padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+        .smart-search-input:focus {
+            outline: none; border-color: var(--primary); background: var(--white);
+            box-shadow: 0 0 0 3px rgba(250,128,114,0.1);
+        }
+        .smart-search-clear {
+            position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
+            width: 22px; height: 22px; border: none; background: var(--gray-200);
+            color: var(--text-secondary); border-radius: 50%; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            font-size: 0.625rem; transition: all 0.15s;
+        }
+        .smart-search-clear:hover { background: var(--gray-300); color: var(--text-primary); }
+        .smart-search-clear.visible { display: flex; }
+
+        .search-dropdown {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: white; border: 1px solid var(--gray-200); border-radius: 10px;
+            box-shadow: var(--shadow-lg); z-index: 500;
+            max-height: 360px; overflow-y: auto; display: none;
+        }
+        .search-dropdown.active { display: block; }
+        .search-dropdown-section { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); }
+        .search-dropdown-section:last-child { border-bottom: none; }
+        .search-dropdown-label {
+            font-size: 0.6875rem; font-weight: 700; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.05em;
+            padding: 0.25rem 0.875rem 0.5rem;
+        }
+        .search-dropdown-item {
+            display: flex; align-items: center; gap: 0.625rem;
+            padding: 0.5rem 0.875rem; cursor: pointer; transition: background 0.15s;
+            font-size: 0.875rem; color: var(--text-primary);
+        }
+        .search-dropdown-item:hover, .search-dropdown-item.active-suggestion {
+            background: rgba(250, 128, 114, 0.08); color: var(--primary-dark);
+        }
+        .search-dropdown-item i {
+            color: var(--primary); width: 14px; font-size: 0.75rem; flex-shrink: 0;
+        }
+        .search-dropdown-item .item-meta {
+            margin-left: auto; font-size: 0.75rem; color: var(--text-light);
+        }
+        .search-dropdown-item .match { font-weight: 700; color: var(--primary-dark); }
+        .search-dropdown-empty {
+            padding: 1rem; text-align: center; color: var(--text-light); font-size: 0.875rem;
+        }
+
         .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
         .zone-tab {
             padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
@@ -140,15 +202,6 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white; border-color: transparent; box-shadow: 0 2px 8px rgba(250,128,114,0.3);
         }
-
-        .search-container { margin-bottom: 1rem; position: relative; }
-        .search-bar {
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
-            background: var(--gray-50); border: 1.5px solid var(--gray-200);
-            border-radius: 10px; font-size: 0.875rem; color: var(--text-primary); transition: all 0.2s ease;
-        }
-        .search-bar:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(250,128,114,0.1); }
-        .search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--primary); }
 
         /* ── BRAND CARDS ── */
         .studios-grid {
@@ -170,12 +223,24 @@
         }
         .brand-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
-        .brand-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+        .brand-card-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 0.5rem; margin-bottom: 0.75rem;
+        }
         .brand-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+        .brand-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; flex-shrink: 0; justify-content: flex-end; }
         .brand-state-badge {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white; font-size: 0.625rem; font-weight: 700;
             padding: 0.25rem 0.625rem; border-radius: 10px; text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .brand-zone-badge {
+            background: rgba(250, 128, 114, 0.1);
+            color: var(--primary-dark); font-size: 0.625rem; font-weight: 700;
+            padding: 0.25rem 0.625rem; border-radius: 10px; text-transform: uppercase;
+            border: 1px solid rgba(250, 128, 114, 0.2);
+            white-space: nowrap;
         }
 
         .brand-info-row {
@@ -187,10 +252,10 @@
         .brand-info-item i { color: var(--primary); font-size: 0.75rem; width: 14px; }
         .brand-info-item span { color: var(--text-secondary); font-weight: 500; }
 
-        /* ── 4-BUTTON FOOTER ── */
+        /* ── REBALANCED BUTTON FOOTER ── */
         .brand-card-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
             margin-top: 1rem;
             padding-top: 0.875rem;
@@ -201,7 +266,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.375rem;
+            gap: 0.4rem;
             padding: 0.5rem 0.625rem;
             border-radius: 8px;
             font-size: 0.8125rem;
@@ -212,40 +277,42 @@
             text-decoration: none;
         }
 
-        .action-btn.schedule {
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            color: var(--text-primary);
-        }
-        .action-btn.schedule:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
-        .action-btn.schedule.disabled {
-            background: var(--gray-50); color: var(--text-light);
-            border: 1.5px solid var(--gray-200);
-            cursor: not-allowed; pointer-events: none;
-        }
-
+        /* Primary action — Info opens the full studio modal */
         .action-btn.info {
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            box-shadow: 0 2px 6px rgba(250,128,114,0.25);
         }
-        .action-btn.info:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+        .action-btn.info:hover {
+            box-shadow: 0 4px 12px rgba(250,128,114,0.4);
+            transform: translateY(-1px);
+        }
 
-        .action-btn.teachers {
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            color: var(--text-primary);
-            text-decoration: none;
+        /* Secondary actions — sit beside each other under primary */
+        .action-row-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.4rem;
         }
-        .action-btn.teachers:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
 
-        .action-btn.programs {
+        .action-btn.secondary {
             background: var(--gray-50);
             border: 1.5px solid var(--gray-200);
             color: var(--text-primary);
-            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.5rem;
         }
-        .action-btn.programs:hover { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.05); }
+        .action-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(250,128,114,0.05);
+        }
+        .action-btn.secondary.disabled {
+            color: var(--text-light);
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.6;
+        }
 
         /* ── TABS / LINKS ── */
         .tabs-section { background: var(--white); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow-md); margin-bottom: 1.5rem; }
@@ -273,7 +340,6 @@
         .link-arrow { color: var(--primary); font-size: 1rem; opacity: 0.6; transition: all 0.2s ease; flex-shrink: 0; }
         .link-card:hover .link-arrow { opacity: 1; transform: translateX(4px); }
 
-        /* ── STUDIO PICKER MODAL ── */
         /* ── STUDIO PICKER MODAL ── */
         .picker-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -306,7 +372,6 @@
         }
         .picker-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
 
-        /* Search inside picker */
         .picker-search-wrap {
             padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--gray-200);
             flex-shrink: 0; position: relative;
@@ -323,7 +388,6 @@
             color: var(--primary); font-size: 0.875rem; pointer-events: none;
         }
 
-        /* Scrollable grid body */
         .picker-body {
             padding: 1rem 1.25rem 1.25rem;
             overflow-y: auto; flex: 1;
@@ -337,7 +401,6 @@
             margin-bottom: 0.75rem;
         }
 
-        /* 2-col grid of location cards */
         .picker-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -420,7 +483,6 @@
         }
         .modal-location { font-size: 0.9375rem; opacity: 0.9; display: flex; align-items: center; gap: 0.375rem; }
 
-        /* Big obvious close button */
         .modal-close {
             position: absolute; top: 50%; right: 1.25rem; transform: translateY(-50%);
             display: flex; align-items: center; gap: 0.5rem;
@@ -505,7 +567,6 @@
         .modal-action-btn.primary:hover { box-shadow: 0 4px 12px rgba(250,128,114,0.4); transform: translateY(-1px); }
         .modal-action-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
 
-        /* Empty / Loading */
         .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
         .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; display: block; }
         .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
@@ -599,11 +660,16 @@
             <div class="section-header">
                 <h2 class="section-title"><i class="fas fa-building"></i> Brands</h2>
             </div>
-            <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="brandSearch" class="search-bar" placeholder="Search by name, price, or state...">
+
+            <!-- Smart search -->
+            <div class="smart-search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="brandSearch" class="smart-search-input" placeholder="Search brands, cities, states, prices, zones...">
+                <button id="brandSearchClear" class="smart-search-clear" onclick="clearBrandSearch()"><i class="fas fa-times"></i></button>
+                <div id="searchDropdown" class="search-dropdown"></div>
             </div>
+
+            <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
             <div id="brandsGrid" class="studios-grid"></div>
         </div>
 
@@ -675,9 +741,13 @@ let sb;
 let allBrands = [], allZones = [], allStudios = [], categories = [], links = [];
 let activeZone = 'all', activeCategory = null;
 
-// Enriched studio data (from studio directory tables)
+// Enriched studio data
 let studioInstruments = [], studioLinks = [], studioAdmins = [];
 let studioScholarships = [], studioNotes = [], studioPolicies = [], studioDiscounts = [];
+
+// Smart search state
+let activeSuggestionIndex = -1;
+let currentSuggestions = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -773,12 +843,21 @@ async function loadData() {
         renderTabs();
         renderTabContents();
 
-        document.getElementById('brandSearch').addEventListener('input', renderBrands);
+        // Smart search wiring
+        const brandSearch = document.getElementById('brandSearch');
+        brandSearch.addEventListener('input', onSearchInput);
+        brandSearch.addEventListener('keydown', onSearchKeydown);
+        brandSearch.addEventListener('focus', () => {
+            if (brandSearch.value.trim()) renderSearchDropdown(brandSearch.value);
+        });
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.smart-search-wrap')) closeSearchDropdown();
+        });
 
         // Close modals on overlay click
         document.getElementById('studioModal').addEventListener('click', e => { if (e.target.id === 'studioModal') closeModal(); });
         document.getElementById('pickerOverlay').addEventListener('click', e => { if (e.target.id === 'pickerOverlay') closePicker(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closePicker(); } });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closePicker(); closeSearchDropdown(); } });
 
     } catch(err) {
         console.error(err);
@@ -804,35 +883,215 @@ function filterByZone(zoneId) {
     renderBrands();
 }
 
+/* ── SMART SEARCH ── */
+function onSearchInput(e) {
+    const q = e.target.value;
+    document.getElementById('brandSearchClear').classList.toggle('visible', q.length > 0);
+    if (q.trim().length > 0) renderSearchDropdown(q);
+    else closeSearchDropdown();
+    renderBrands();
+}
+
+function onSearchKeydown(e) {
+    const dropdown = document.getElementById('searchDropdown');
+    if (!dropdown.classList.contains('active')) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, currentSuggestions.length - 1);
+        updateActiveSuggestion();
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, -1);
+        updateActiveSuggestion();
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeSuggestionIndex >= 0 && currentSuggestions[activeSuggestionIndex]) {
+            const s = currentSuggestions[activeSuggestionIndex];
+            applySuggestion(s.type, s.value);
+        }
+    } else if (e.key === 'Escape') {
+        closeSearchDropdown();
+    }
+}
+
+function updateActiveSuggestion() {
+    document.querySelectorAll('.search-dropdown-item').forEach((el, i) => {
+        el.classList.toggle('active-suggestion', i === activeSuggestionIndex);
+    });
+}
+
+function clearBrandSearch() {
+    document.getElementById('brandSearch').value = '';
+    document.getElementById('brandSearchClear').classList.remove('visible');
+    closeSearchDropdown();
+    renderBrands();
+}
+
+function closeSearchDropdown() {
+    document.getElementById('searchDropdown').classList.remove('active');
+    activeSuggestionIndex = -1;
+    currentSuggestions = [];
+}
+
+function highlightMatch(text, query) {
+    if (!query) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return text.substring(0, idx) +
+           `<span class="match">${text.substring(idx, idx + query.length)}</span>` +
+           text.substring(idx + query.length);
+}
+
+function renderSearchDropdown(query) {
+    const q = query.trim().toLowerCase();
+    const dropdown = document.getElementById('searchDropdown');
+    if (!q) { closeSearchDropdown(); return; }
+
+    const sections = [];
+    const MAX_PER_SECTION = 5;
+
+    // Brands by name, price, annual fee
+    const matchedBrands = allBrands
+        .filter(b =>
+            (b.name||'').toLowerCase().includes(q) ||
+            (b.display_price||'').toLowerCase().includes(q) ||
+            (b.display_annual_fee||'').toLowerCase().includes(q) ||
+            (b.phone_number||'').toLowerCase().includes(q)
+        )
+        .slice(0, MAX_PER_SECTION)
+        .map(b => ({
+            type: 'brand',
+            value: b.id,
+            label: b.name || 'Unnamed brand',
+            meta: [b.state, b.zone?.zone_name].filter(Boolean).join(' · ')
+        }));
+    if (matchedBrands.length) sections.push({ label: 'Brands', icon: 'fa-building', items: matchedBrands });
+
+    // States
+    const allStates = [...new Set(allBrands.map(b => b.state).filter(Boolean))];
+    const matchedStates = allStates
+        .filter(s => s.toLowerCase().includes(q)).sort()
+        .slice(0, MAX_PER_SECTION)
+        .map(s => ({ type: 'state', value: s, label: s, meta: '' }));
+    if (matchedStates.length) sections.push({ label: 'States', icon: 'fa-flag-usa', items: matchedStates });
+
+    // Cities (from studios)
+    const cityMap = new Map(); // city -> brand_id of first match
+    allStudios.forEach(st => {
+        if (st.city && !cityMap.has(st.city) && st.city.toLowerCase().includes(q)) {
+            cityMap.set(st.city, st.brand_id);
+        }
+    });
+    const matchedCities = [...cityMap.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .slice(0, MAX_PER_SECTION)
+        .map(([city, brandId]) => {
+            const brand = allBrands.find(b => b.id === brandId);
+            return { type: 'city', value: city, label: city, meta: brand ? brand.name : '' };
+        });
+    if (matchedCities.length) sections.push({ label: 'Cities', icon: 'fa-city', items: matchedCities });
+
+    // Zones
+    const matchedZones = allZones
+        .filter(z => (z.zone_name||'').toLowerCase().includes(q))
+        .slice(0, MAX_PER_SECTION)
+        .map(z => ({ type: 'zone', value: z.id, label: z.zone_name, meta: '' }));
+    if (matchedZones.length) sections.push({ label: 'Zones', icon: 'fa-layer-group', items: matchedZones });
+
+    currentSuggestions = sections.flatMap(s => s.items);
+    activeSuggestionIndex = -1;
+
+    if (sections.length === 0) {
+        dropdown.innerHTML = `<div class="search-dropdown-empty">No matches for "${query}"</div>`;
+    } else {
+        dropdown.innerHTML = sections.map(s => `
+            <div class="search-dropdown-section">
+                <div class="search-dropdown-label">${s.label}</div>
+                ${s.items.map(item => `
+                    <div class="search-dropdown-item" onclick="applySuggestion('${item.type}', ${JSON.stringify(item.value).replace(/"/g, '&quot;')})">
+                        <i class="fas ${s.icon}"></i>
+                        <span>${highlightMatch(item.label, query)}</span>
+                        ${item.meta ? `<span class="item-meta">${item.meta}</span>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+    }
+    dropdown.classList.add('active');
+}
+
+function applySuggestion(type, value) {
+    closeSearchDropdown();
+    document.getElementById('brandSearch').value = '';
+    document.getElementById('brandSearchClear').classList.remove('visible');
+
+    switch (type) {
+        case 'brand':
+            // Open the studio modal directly for that brand
+            handleInfoClick(value);
+            break;
+        case 'state':
+            // Use the state in the search to filter brands
+            document.getElementById('brandSearch').value = value;
+            document.getElementById('brandSearchClear').classList.add('visible');
+            break;
+        case 'city':
+            document.getElementById('brandSearch').value = value;
+            document.getElementById('brandSearchClear').classList.add('visible');
+            break;
+        case 'zone':
+            filterByZone(value);
+            break;
+    }
+    renderBrands();
+}
+
 /* ── BRAND CARDS ── */
 function renderBrands() {
     const container = document.getElementById('brandsGrid');
-    const q = (document.getElementById('brandSearch')?.value || '').toLowerCase();
+    const q = (document.getElementById('brandSearch')?.value || '').toLowerCase().trim();
 
     let filtered = allBrands;
     if (activeZone !== 'all') filtered = filtered.filter(b => b.zone_id === activeZone);
-    if (q) filtered = filtered.filter(b =>
-        (b.name||'').toLowerCase().includes(q) ||
-        (b.display_price||'').toLowerCase().includes(q) ||
-        (b.state||'').toLowerCase().includes(q)
-    );
+
+    // Multi-field smart filter: name, state, price, annual fee, phone, zone, plus studio cities
+    if (q) {
+        filtered = filtered.filter(b => {
+            const studiosOfBrand = allStudios.filter(s => s.brand_id === b.id);
+            const haystack = [
+                b.name || '',
+                b.state || '',
+                b.display_price || '',
+                b.display_annual_fee || '',
+                b.phone_number || '',
+                b.zone?.zone_name || '',
+                ...studiosOfBrand.map(s => s.city || ''),
+                ...studiosOfBrand.map(s => s.address || ''),
+            ].join(' ').toLowerCase();
+            return haystack.includes(q);
+        });
+    }
 
     if (!filtered.length) {
-        container.innerHTML = '<div class="empty-state"><i class="fas fa-building"></i><p>No brands found</p></div>';
+        container.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><i class="fas fa-building"></i><p>No brands found</p></div>';
         return;
     }
 
     container.innerHTML = filtered.map(brand => {
         const hasSchedule = brand.scheduling_link && brand.scheduling_link.trim();
         const scheduleBtn = hasSchedule
-            ? `<a href="${brand.scheduling_link}" target="_blank" class="action-btn schedule"><i class="fas fa-calendar"></i> Schedule</a>`
-            : `<span class="action-btn schedule disabled"><i class="fas fa-calendar"></i> Schedule</span>`;
+            ? `<a href="${brand.scheduling_link}" target="_blank" class="action-btn secondary" title="Schedule"><i class="fas fa-calendar"></i> Schedule</a>`
+            : `<span class="action-btn secondary disabled" title="No schedule link"><i class="fas fa-calendar"></i> Schedule</span>`;
+
+        const badges = [];
+        if (brand.zone?.zone_name) badges.push(`<span class="brand-zone-badge">${brand.zone.zone_name}</span>`);
+        if (brand.state) badges.push(`<span class="brand-state-badge">${brand.state}</span>`);
 
         return `
             <div class="brand-card">
                 <div class="brand-card-header">
                     <div class="brand-name">${brand.name || 'Unnamed Brand'}</div>
-                    ${brand.state ? `<span class="brand-state-badge">${brand.state}</span>` : ''}
+                    <div class="brand-badges">${badges.join('')}</div>
                 </div>
                 <div class="brand-info-row">
                     <div class="brand-info-items">
@@ -842,10 +1101,12 @@ function renderBrands() {
                     </div>
                 </div>
                 <div class="brand-card-actions">
-                    ${scheduleBtn}
-                    <button class="action-btn info" onclick="handleInfoClick('${brand.id}')"><i class="fas fa-info-circle"></i> Info</button>
-                    <a href="teamteachers.html?brand=${encodeURIComponent(brand.name || '')}" class="action-btn teachers"><i class="fas fa-star"></i> Teachers</a>
-                    <a href="teamprograms.html?brand_id=${encodeURIComponent(brand.id || '')}" class="action-btn programs"><i class="fas fa-graduation-cap"></i> Programs</a>
+                    <button class="action-btn info" onclick="handleInfoClick('${brand.id}')"><i class="fas fa-info-circle"></i> View Info</button>
+                    <div class="action-row-secondary">
+                        ${scheduleBtn}
+                        <a href="teamteachers.html?brand=${encodeURIComponent(brand.name || '')}" class="action-btn secondary"><i class="fas fa-star"></i> Teachers</a>
+                        <a href="teamprograms.html?brand_id=${encodeURIComponent(brand.id || '')}" class="action-btn secondary"><i class="fas fa-graduation-cap"></i> Programs</a>
+                    </div>
                 </div>
             </div>
         `;
@@ -867,7 +1128,7 @@ function handleInfoClick(brandId) {
 }
 
 /* ── PICKER MODAL ── */
-let pickerStudios = []; // store for search filtering
+let pickerStudios = [];
 
 function openPicker(brandId, studios) {
     const brand = allBrands.find(b => b.id === brandId);
@@ -879,7 +1140,6 @@ function openPicker(brandId, studios) {
 
     renderPickerGrid(studios);
 
-    // Live search inside picker
     document.getElementById('pickerSearch').oninput = function() {
         const q = this.value.toLowerCase().trim();
         const filtered = q
@@ -894,7 +1154,6 @@ function openPicker(brandId, studios) {
 
     document.getElementById('pickerOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Focus search after animation
     setTimeout(() => document.getElementById('pickerSearch').focus(), 300);
 }
 
@@ -979,7 +1238,6 @@ function buildModalContent(s) {
     const fullAddress = [s.address, s.city, s.state].filter(Boolean).join(', ');
     const mapsUrl = fullAddress ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(fullAddress) : '';
 
-    // Basic Info
     const basicContent = `
         <div class="info-grid-2col">
             ${renderInfoRow('fa-building','Brand', s.brand?.name)}
@@ -1003,7 +1261,6 @@ function buildModalContent(s) {
         ${s.security_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-shield-alt"></i> Safety & Supervision</div><div class="info-rich-content">${s.security_notes}</div></div>` : ''}
     `;
 
-    // Contact
     const adminsHtml = s.admins?.length ? `
         <div class="info-section">
             <div class="info-section-title"><i class="fas fa-users"></i> Studio Admins</div>
@@ -1026,7 +1283,6 @@ function buildModalContent(s) {
         ${adminsHtml}
     `;
 
-    // Pricing
     const pricingContent = `
         <div class="info-grid-2col">
             ${renderInfoRow('fa-dollar-sign','30-Min Rate', s.monthly_rate)}
@@ -1037,7 +1293,6 @@ function buildModalContent(s) {
         </div>
     `;
 
-    // Details
     const detailsContent = `
         <div class="info-grid-2col">
             ${renderInfoRow('fa-graduation-cap','Programs', s.programs_enabled ? 'Available' : 'Not Available')}
@@ -1047,7 +1302,6 @@ function buildModalContent(s) {
         ${s.rental_link ? `<div class="info-row full-width" style="margin-top:1rem;"><i class="fas fa-link"></i><div class="info-row-content"><div class="info-row-label">Rental Link</div><div class="info-row-value"><a href="${s.rental_link}" target="_blank">${s.rental_link}</a></div></div></div>` : ''}
     `;
 
-    // Customer Care
     const customerCareContent = `
         <div class="info-list">
             ${renderInfoRow('fa-heading','Title', s.customer_care_title)}
@@ -1056,7 +1310,6 @@ function buildModalContent(s) {
         ${s.customer_care_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-info-circle"></i> Notes</div><div class="info-rich-content">${s.customer_care_notes}</div></div>` : ''}
     `;
 
-    // Discounts
     const discountsContent = s.discounts?.length ? `
         <div class="info-list-cards">
             ${s.discounts.map(d => `
@@ -1067,7 +1320,6 @@ function buildModalContent(s) {
                 </div>`).join('')}
         </div>` : '<div class="info-row-value empty">No discounts available</div>';
 
-    // Scholarships
     const scholarshipsContent = s.scholarships?.length ? `
         <div class="info-list-cards">
             ${s.scholarships.map(sc => `
@@ -1078,7 +1330,6 @@ function buildModalContent(s) {
                 </div>`).join('')}
         </div>` : '<div class="info-row-value empty">No scholarships available</div>';
 
-    // Policies
     const defPolicies = (s.policies||[]).filter(p => p.policy_type === 'default');
     const custPolicies = (s.policies||[]).filter(p => p.policy_type === 'custom' || (!p.policy_type && !p.policy_key));
     const policiesContent = `
@@ -1087,7 +1338,6 @@ function buildModalContent(s) {
         ${!defPolicies.length && !custPolicies.length ? '<div class="info-row-value empty">No policies available</div>' : ''}
     `;
 
-    // Notes
     const notesContent = s.studio_notes?.length ? `
         <div class="info-list-cards">
             ${s.studio_notes.map(n => `
@@ -1099,7 +1349,6 @@ function buildModalContent(s) {
                 </div>`).join('')}
         </div>` : '<div class="info-row-value empty">No notes available</div>';
 
-    // Instruments
     const instrumentsContent = s.instruments?.length ? `
         <div class="info-list-cards">
             ${s.instruments.map(inst => `
@@ -1110,7 +1359,6 @@ function buildModalContent(s) {
                 </div>`).join('')}
         </div>` : '<div class="info-row-value empty">No instruments listed</div>';
 
-    // Links
     const linksContent = s.custom_links?.length ? `
         <div class="info-list-cards">
             ${s.custom_links.map(l => `
