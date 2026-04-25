@@ -446,7 +446,7 @@
             .picker-empty { grid-column: span 1; }
         }
 
-        /* ── STUDIO DETAIL MODAL (full screen) ── */
+        /* ── STUDIO DETAIL MODAL (full screen, sidebar + scrollable content) ── */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-secondary);
@@ -459,7 +459,6 @@
 
         .modal {
             background: var(--white); width: 100%; height: 100%;
-            max-width: 100%; max-height: 100%;
             transform: translateY(30px); transition: transform 0.3s ease;
             display: flex; flex-direction: column; border-radius: 0;
         }
@@ -475,11 +474,12 @@
             background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); pointer-events: none;
         }
         .modal-header-content { position: relative; z-index: 1; }
-        .modal-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.375rem; }
+        .modal-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.375rem; gap: 1rem; }
         .modal-title { font-size: 1.5rem; font-weight: 700; line-height: 1.3; }
         .modal-zone-badge {
             background: rgba(255,255,255,0.25); padding: 0.375rem 0.875rem; border-radius: 20px;
             font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+            white-space: nowrap; flex-shrink: 0;
         }
         .modal-location { font-size: 0.9375rem; opacity: 0.9; display: flex; align-items: center; gap: 0.375rem; }
 
@@ -495,29 +495,183 @@
         .modal-close:hover { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.7); }
         .modal-close i { font-size: 0.875rem; }
 
-        .modal-tabs {
-            display: flex; border-bottom: 2px solid var(--gray-200);
-            background: var(--gray-50); overflow-x: auto; flex-shrink: 0;
-            -webkit-overflow-scrolling: touch;
+        /* Sticky search bar */
+        .modal-search-bar {
+            padding: 0.875rem 1.5rem;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            flex-shrink: 0;
+            position: relative;
         }
-        .modal-tabs::-webkit-scrollbar { height: 4px; }
-        .modal-tabs::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+        .modal-search-wrap {
+            position: relative;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .modal-search-wrap > i.fa-search {
+            position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 0.875rem; pointer-events: none;
+        }
+        .modal-search-input {
+            width: 100%; padding: 0.625rem 2.5rem 0.625rem 2.625rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+        .modal-search-input:focus {
+            outline: none; border-color: var(--primary); background: var(--white);
+            box-shadow: 0 0 0 3px rgba(250,128,114,0.1);
+        }
+        .modal-search-clear {
+            position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
+            width: 22px; height: 22px; border: none; background: var(--gray-200);
+            color: var(--text-secondary); border-radius: 50%; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            font-size: 0.625rem; transition: all 0.15s;
+        }
+        .modal-search-clear:hover { background: var(--gray-300); color: var(--text-primary); }
+        .modal-search-clear.visible { display: flex; }
+        .modal-search-results-info {
+            max-width: 720px; margin: 0.5rem auto 0;
+            font-size: 0.8125rem; color: var(--text-secondary);
+            display: none;
+        }
+        .modal-search-results-info.visible { display: block; }
+        .modal-search-results-info strong { color: var(--primary-dark); }
 
-        .modal-tab {
-            padding: 0.875rem 1.25rem; font-size: 0.9375rem; font-weight: 600;
-            color: var(--text-secondary); background: transparent; border: none;
-            border-bottom: 3px solid transparent; margin-bottom: -2px;
-            cursor: pointer; white-space: nowrap; transition: all 0.2s ease; flex-shrink: 0;
+        /* Body wrapper — sidebar + content side-by-side */
+        .modal-body-wrap {
+            flex: 1; display: flex; overflow: hidden; min-height: 0;
         }
-        .modal-tab:hover { color: var(--text-primary); background: var(--gray-100); }
-        .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--white); }
 
-        .modal-body {
-            padding: 2rem max(2rem, calc(50% - 480px));
-            overflow-y: auto; flex: 1;
+        /* Sidebar inside modal */
+        .modal-sidebar {
+            width: 240px; flex-shrink: 0;
+            background: var(--gray-50);
+            border-right: 1px solid var(--gray-200);
+            overflow-y: auto;
+            padding: 1rem 0.75rem;
         }
-        .modal-tab-content { display: none; }
-        .modal-tab-content.active { display: block; }
+        .modal-sidebar::-webkit-scrollbar { width: 4px; }
+        .modal-sidebar::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+
+        .modal-nav-item {
+            display: flex; align-items: center; gap: 0.625rem;
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            margin-bottom: 0.25rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem; font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s ease;
+        }
+        .modal-nav-item:hover {
+            background: var(--white);
+            color: var(--text-primary);
+        }
+        .modal-nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 2px 6px rgba(250,128,114,0.25);
+        }
+        .modal-nav-item.empty {
+            color: var(--text-light);
+            cursor: default;
+        }
+        .modal-nav-item.empty:hover {
+            background: transparent;
+            color: var(--text-light);
+        }
+        .modal-nav-item i {
+            width: 16px; text-align: center; font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        .modal-nav-item .nav-label { flex: 1; min-width: 0; }
+        .modal-nav-item .nav-count {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 20px; height: 18px; padding: 0 6px;
+            background: rgba(250,128,114,0.15); color: var(--primary-dark);
+            border-radius: 9px;
+            font-size: 0.6875rem; font-weight: 700;
+        }
+        .modal-nav-item.active .nav-count {
+            background: rgba(255,255,255,0.3); color: white;
+        }
+        .modal-nav-item.empty .nav-count {
+            background: transparent; color: var(--text-light);
+            font-weight: 500; font-style: italic; font-size: 0.6875rem;
+        }
+        .modal-nav-item.match-hit .nav-count {
+            background: #FCD34D; color: #92400E;
+        }
+        .modal-nav-item.active.match-hit .nav-count {
+            background: #FCD34D; color: #92400E;
+        }
+
+        /* Content pane */
+        .modal-content-pane {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem max(2rem, calc(50% - 600px));
+            scroll-behavior: smooth;
+        }
+        .modal-content-pane::-webkit-scrollbar { width: 6px; }
+        .modal-content-pane::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+        /* A section in the content pane */
+        .modal-section {
+            margin-bottom: 2rem;
+            scroll-margin-top: 1rem;
+        }
+        .modal-section.search-hidden { display: none; }
+
+        .modal-section-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+        .modal-section-header i {
+            color: var(--primary);
+            font-size: 1.125rem;
+            width: 24px; text-align: center;
+        }
+        .modal-section-header h3 {
+            font-size: 1.125rem; font-weight: 700; color: var(--text-primary);
+            flex: 1;
+        }
+        .modal-section-empty {
+            padding: 1rem 1.125rem;
+            background: var(--gray-50); border-radius: 10px;
+            color: var(--text-light); font-style: italic; font-size: 0.875rem;
+            text-align: center;
+        }
+
+        /* Subsection inside a section (for grouping) */
+        .modal-subsection {
+            margin-top: 1.25rem;
+        }
+        .modal-subsection-title {
+            font-size: 0.8125rem; font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-bottom: 0.625rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .modal-subsection-title i { color: var(--primary); font-size: 0.75rem; }
+
+        /* Search highlight on matched terms */
+        mark.search-match {
+            background: #FEF3C7;
+            color: #78350F;
+            padding: 0 2px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
 
         /* Info Rows */
         .info-list { display: flex; flex-direction: column; gap: 0.625rem; }
@@ -572,6 +726,24 @@
         .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
 
         @media (max-width: 1100px) { .studios-grid { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 900px) {
+            .modal-body-wrap { flex-direction: column; }
+            .modal-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-200);
+                padding: 0.75rem;
+                display: flex; gap: 0.4rem; overflow-x: auto; overflow-y: hidden;
+                flex-shrink: 0;
+            }
+            .modal-nav-item {
+                flex-shrink: 0; margin-bottom: 0;
+                white-space: nowrap;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8125rem;
+            }
+            .modal-nav-item.empty { display: none; }
+        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar:not(.collapsed) { transform: translateX(0); }
@@ -580,9 +752,7 @@
             .studios-grid { grid-template-columns: 1fr; }
             .info-grid-2col { grid-template-columns: 1fr; }
             .info-grid-2col .info-row.full-width { grid-column: span 1; }
-            .modal-tab { padding: 0.75rem 1rem; font-size: 0.8125rem; }
-            .modal { max-height: 95vh; }
-            .modal-body { max-height: 400px; padding: 1rem; }
+            .modal-content-pane { padding: 1.25rem; }
         }
         @media (max-width: 700px) { .studios-grid { grid-template-columns: 1fr; } }
     </style>
@@ -715,20 +885,21 @@
                 <div class="modal-location" id="modalLocation"></div>
             </div>
         </div>
-        <div class="modal-tabs">
-            <button class="modal-tab active" onclick="switchModalTab('basic',this)">Basic Info</button>
-            <button class="modal-tab" onclick="switchModalTab('contact',this)">Contact</button>
-            <button class="modal-tab" onclick="switchModalTab('pricing',this)">Pricing</button>
-            <button class="modal-tab" onclick="switchModalTab('details',this)">Details</button>
-            <button class="modal-tab" onclick="switchModalTab('customercare',this)">Customer Care</button>
-            <button class="modal-tab" onclick="switchModalTab('discounts',this)">Discounts</button>
-            <button class="modal-tab" onclick="switchModalTab('scholarships',this)">Scholarships</button>
-            <button class="modal-tab" onclick="switchModalTab('policies',this)">Policies</button>
-            <button class="modal-tab" onclick="switchModalTab('notes',this)">Notes</button>
-            <button class="modal-tab" onclick="switchModalTab('instruments',this)">Instruments</button>
-            <button class="modal-tab" onclick="switchModalTab('links',this)">Links</button>
+
+        <div class="modal-search-bar">
+            <div class="modal-search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="modalSearch" class="modal-search-input" placeholder="Search this studio — phone, director, instrument, policy, anything...">
+                <button id="modalSearchClear" class="modal-search-clear" onclick="clearModalSearch()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalSearchInfo" class="modal-search-results-info"></div>
         </div>
-        <div class="modal-body" id="modalBody"></div>
+
+        <div class="modal-body-wrap">
+            <nav class="modal-sidebar" id="modalSidebar"></nav>
+            <div class="modal-content-pane" id="modalContent"></div>
+        </div>
+
         <div class="modal-footer" id="modalFooter"></div>
     </div>
 </div>
@@ -852,6 +1023,16 @@ async function loadData() {
         });
         document.addEventListener('click', e => {
             if (!e.target.closest('.smart-search-wrap')) closeSearchDropdown();
+        });
+
+        // Modal search wiring (debounced — re-rendering the modal on each keystroke is expensive)
+        const modalSearch = document.getElementById('modalSearch');
+        let modalSearchTimer = null;
+        modalSearch.addEventListener('input', e => {
+            clearTimeout(modalSearchTimer);
+            modalSearchTimer = setTimeout(() => onModalSearchInput(e), 150);
+            // Update the clear button immediately for responsiveness
+            document.getElementById('modalSearchClear').classList.toggle('visible', e.target.value.length > 0);
         });
 
         // Close modals on overlay click
@@ -1198,7 +1379,22 @@ function closePicker() {
 }
 
 /* ── STUDIO DETAIL MODAL ── */
+// Section definitions — six sections, each with a renderer that returns HTML
+// or null/empty to indicate no data.
+const MODAL_SECTIONS = [
+    { id: 'overview',   label: 'Overview',           icon: 'fa-info-circle' },
+    { id: 'contact',    label: 'Contact & People',   icon: 'fa-address-book' },
+    { id: 'money',      label: 'Pricing & Money',    icon: 'fa-dollar-sign' },
+    { id: 'programs',   label: 'Programs & Instruments', icon: 'fa-music' },
+    { id: 'policies',   label: 'Policies & Notes',   icon: 'fa-file-alt' },
+    { id: 'resources',  label: 'Resources',          icon: 'fa-link' },
+];
+
+let currentStudio = null;
+let scrollSpyObserver = null;
+
 function openStudioModal(studio) {
+    currentStudio = studio;
     const loc = [studio.city, studio.state].filter(Boolean).join(', ');
     const brandName = studio.brand?.name || 'Unnamed Studio';
 
@@ -1209,36 +1405,112 @@ function openStudioModal(studio) {
     document.getElementById('modalLocation').innerHTML = loc
         ? `<i class="fas fa-map-marker-alt"></i><span>${loc}</span>` : '';
 
+    // Reset search
+    document.getElementById('modalSearch').value = '';
+    document.getElementById('modalSearchClear').classList.remove('visible');
+    document.getElementById('modalSearchInfo').classList.remove('visible');
+
     buildModalContent(studio);
+    setupScrollSpy();
 
     const hasSchedule = studio.scheduling_link && studio.scheduling_link.trim();
     document.getElementById('modalFooter').innerHTML = hasSchedule
         ? `<a href="${studio.scheduling_link}" target="_blank" class="modal-action-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>`
         : `<span class="modal-action-btn primary disabled"><i class="fas fa-calendar"></i> No Schedule Link</span>`;
 
-    document.querySelectorAll('.modal-tab').forEach((tab, i) => tab.classList.toggle('active', i === 0));
-
     document.getElementById('studioModal').classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Reset scroll position
+    document.getElementById('modalContent').scrollTop = 0;
 }
 
 function closeModal() {
     document.getElementById('studioModal').classList.remove('active');
     document.body.style.overflow = '';
+    if (scrollSpyObserver) { scrollSpyObserver.disconnect(); scrollSpyObserver = null; }
+    currentStudio = null;
 }
 
-function switchModalTab(tabName, btn) {
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.modal-tab-content[data-tab="${tabName}"]`).classList.add('active');
+function jumpToSection(sectionId) {
+    const target = document.getElementById('section-' + sectionId);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setupScrollSpy() {
+    if (scrollSpyObserver) scrollSpyObserver.disconnect();
+    const root = document.getElementById('modalContent');
+    if (!root) return;
+
+    scrollSpyObserver = new IntersectionObserver((entries) => {
+        // Pick the entry closest to the top of the viewport
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length === 0) return;
+        // Sort by boundingClientRect.top — smallest (closest to top) wins
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const id = visible[0].target.dataset.sectionId;
+        document.querySelectorAll('.modal-nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.sectionId === id);
+        });
+    }, { root, rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+
+    document.querySelectorAll('.modal-section').forEach(el => scrollSpyObserver.observe(el));
 }
 
 function buildModalContent(s) {
+    const sectionRenderers = {
+        overview:  () => renderOverviewSection(s),
+        contact:   () => renderContactSection(s),
+        money:     () => renderMoneySection(s),
+        programs:  () => renderProgramsSection(s),
+        policies:  () => renderPoliciesSection(s),
+        resources: () => renderResourcesSection(s),
+    };
+
+    const sectionData = MODAL_SECTIONS.map(sec => {
+        const r = sectionRenderers[sec.id]();
+        return { ...sec, html: r.html, count: r.count, isEmpty: r.count === 0 };
+    });
+
+    // Sidebar
+    const sidebarHtml = sectionData.map((sec, i) => `
+        <button class="modal-nav-item ${i === 0 ? 'active' : ''} ${sec.isEmpty ? 'empty' : ''}"
+                data-section-id="${sec.id}"
+                onclick="jumpToSection('${sec.id}')">
+            <i class="fas ${sec.icon}"></i>
+            <span class="nav-label">${sec.label}</span>
+            <span class="nav-count">${sec.isEmpty ? 'empty' : sec.count}</span>
+        </button>
+    `).join('');
+    document.getElementById('modalSidebar').innerHTML = sidebarHtml;
+
+    // Content pane — all six sections, always visible (per user spec)
+    const contentHtml = sectionData.map(sec => `
+        <section class="modal-section" id="section-${sec.id}" data-section-id="${sec.id}">
+            <div class="modal-section-header">
+                <i class="fas ${sec.icon}"></i>
+                <h3>${sec.label}</h3>
+            </div>
+            ${sec.isEmpty
+                ? `<div class="modal-section-empty">No ${sec.label.toLowerCase()} information available for this studio</div>`
+                : sec.html}
+        </section>
+    `).join('');
+    document.getElementById('modalContent').innerHTML = contentHtml;
+}
+
+/* ── SECTION RENDERERS ──
+   Each returns { html, count } where count is "informational items present"
+   (used for sidebar badges and empty-state detection). */
+
+function renderOverviewSection(s) {
     const fullAddress = [s.address, s.city, s.state].filter(Boolean).join(', ');
     const mapsUrl = fullAddress ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(fullAddress) : '';
 
-    const basicContent = `
+    const coreFields = [s.address, s.parking, s.landmarks, s.time_zone, s.general_notes, s.summary_vibe, s.security_notes].filter(Boolean);
+    if (coreFields.length === 0 && !s.brand?.name && !s.zone && !s.city && !s.state) return { html: '', count: 0 };
+
+    let html = `
         <div class="info-grid-2col">
             ${renderInfoRow('fa-building','Brand', s.brand?.name)}
             ${renderInfoRow('fa-layer-group','Zone', s.zone)}
@@ -1255,111 +1527,172 @@ function buildModalContent(s) {
                 </div>` : ''}
             ${renderInfoRow('fa-car','Parking', s.parking, true)}
             ${renderInfoRow('fa-landmark','Landmarks', s.landmarks, true)}
-        </div>
-        ${s.general_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-file-alt"></i> General Notes</div><div class="info-rich-content">${s.general_notes}</div></div>` : ''}
-        ${s.summary_vibe ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-heart"></i> Studio Vibe</div><div class="info-rich-content">${s.summary_vibe}</div></div>` : ''}
-        ${s.security_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-shield-alt"></i> Safety & Supervision</div><div class="info-rich-content">${s.security_notes}</div></div>` : ''}
-    `;
+        </div>`;
+    if (s.general_notes)  html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-file-alt"></i> General Notes</div><div class="info-rich-content">${s.general_notes}</div></div>`;
+    if (s.summary_vibe)   html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-heart"></i> Studio Vibe</div><div class="info-rich-content">${s.summary_vibe}</div></div>`;
+    if (s.security_notes) html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-shield-alt"></i> Safety & Supervision</div><div class="info-rich-content">${s.security_notes}</div></div>`;
 
-    const adminsHtml = s.admins?.length ? `
-        <div class="info-section">
-            <div class="info-section-title"><i class="fas fa-users"></i> Studio Admins</div>
-            <div class="info-list-cards">
-                ${s.admins.map(a => `
-                    <div class="info-list-card">
-                        <div class="info-list-card-title">${a.name || 'Unnamed Admin'}</div>
-                        ${a.email ? `<div class="info-list-card-detail"><i class="fas fa-envelope"></i><a href="mailto:${a.email}">${a.email}</a></div>` : ''}
-                    </div>`).join('')}
-            </div>
-        </div>` : '';
-    const contactContent = `
+    // Count: each populated info field, plus each rich subsection
+    const count = [s.brand?.name, s.zone, s.city, s.state, s.time_zone, s.address, s.parking, s.landmarks, s.general_notes, s.summary_vibe, s.security_notes].filter(Boolean).length;
+    return { html, count };
+}
+
+function renderContactSection(s) {
+    const baseFields = [s.phone_number, s.director_name, s.director_email, s.scheduling_link, s.admin_office_hours].filter(Boolean);
+    const adminCount = (s.admins || []).length;
+    if (baseFields.length === 0 && adminCount === 0) return { html: '', count: 0 };
+
+    let html = `
         <div class="info-list">
             ${renderInfoRow('fa-phone','Phone Number', s.phone_number)}
             ${renderInfoRow('fa-user-tie','Director Name', s.director_name)}
             ${renderInfoRow('fa-envelope','Director Email', s.director_email, false, 'email')}
             ${renderInfoRow('fa-calendar','Scheduling Link', s.scheduling_link, false, 'link')}
             ${renderInfoRow('fa-clock','Admin Office Hours', s.admin_office_hours)}
-        </div>
-        ${adminsHtml}
-    `;
+        </div>`;
 
-    const pricingContent = `
-        <div class="info-grid-2col">
-            ${renderInfoRow('fa-dollar-sign','30-Min Rate', s.monthly_rate)}
-            ${renderInfoRow('fa-dollar-sign','45-Min Rate', s.price_45)}
-            ${renderInfoRow('fa-dollar-sign','60-Min Rate', s.price_60)}
-            ${renderInfoRow('fa-calendar-check','Annual Fee', s.annual_fee)}
-            ${renderInfoRow('fa-tag','Display Annual Fee', s.display_annual_fee)}
-        </div>
-    `;
+    if (adminCount > 0) {
+        html += `
+            <div class="modal-subsection">
+                <div class="modal-subsection-title"><i class="fas fa-users"></i> Studio Admins (${adminCount})</div>
+                <div class="info-list-cards">
+                    ${s.admins.map(a => `
+                        <div class="info-list-card">
+                            <div class="info-list-card-title">${a.name || 'Unnamed Admin'}</div>
+                            ${a.email ? `<div class="info-list-card-detail"><i class="fas fa-envelope"></i><a href="mailto:${a.email}">${a.email}</a></div>` : ''}
+                        </div>`).join('')}
+                </div>
+            </div>`;
+    }
 
-    const detailsContent = `
+    return { html, count: baseFields.length + adminCount };
+}
+
+function renderMoneySection(s) {
+    const rateFields = [s.monthly_rate, s.price_45, s.price_60, s.annual_fee, s.display_annual_fee].filter(Boolean);
+    const discountCount = (s.discounts || []).length;
+    const scholarshipCount = (s.scholarships || []).length;
+    if (rateFields.length === 0 && discountCount === 0 && scholarshipCount === 0) return { html: '', count: 0 };
+
+    let html = '';
+    if (rateFields.length > 0) {
+        html += `
+            <div class="modal-subsection">
+                <div class="modal-subsection-title"><i class="fas fa-dollar-sign"></i> Rates & Fees</div>
+                <div class="info-grid-2col">
+                    ${renderInfoRow('fa-dollar-sign','30-Min Rate', s.monthly_rate)}
+                    ${renderInfoRow('fa-dollar-sign','45-Min Rate', s.price_45)}
+                    ${renderInfoRow('fa-dollar-sign','60-Min Rate', s.price_60)}
+                    ${renderInfoRow('fa-calendar-check','Annual Fee', s.annual_fee)}
+                    ${renderInfoRow('fa-tag','Display Annual Fee', s.display_annual_fee)}
+                </div>
+            </div>`;
+    }
+    if (discountCount > 0) {
+        html += `
+            <div class="modal-subsection">
+                <div class="modal-subsection-title"><i class="fas fa-percent"></i> Discounts (${discountCount})</div>
+                <div class="info-list-cards">
+                    ${s.discounts.map(d => `
+                        <div class="info-list-card">
+                            <div class="info-list-card-title">${d.title || 'Untitled Discount'}</div>
+                            ${d.description ? `<div class="info-list-card-desc">${d.description}</div>` : ''}
+                            ${d.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${d.link}" target="_blank">View Link</a></div>` : ''}
+                        </div>`).join('')}
+                </div>
+            </div>`;
+    }
+    if (scholarshipCount > 0) {
+        html += `
+            <div class="modal-subsection">
+                <div class="modal-subsection-title"><i class="fas fa-graduation-cap"></i> Scholarships (${scholarshipCount})</div>
+                <div class="info-list-cards">
+                    ${s.scholarships.map(sc => `
+                        <div class="info-list-card">
+                            <div class="info-list-card-title">${sc.title || 'Untitled Scholarship'}</div>
+                            ${sc.notes ? `<div class="info-list-card-desc">${sc.notes}</div>` : ''}
+                            ${sc.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${sc.link}" target="_blank">Apply / Learn More</a></div>` : ''}
+                        </div>`).join('')}
+                </div>
+            </div>`;
+    }
+    return { html, count: rateFields.length + discountCount + scholarshipCount };
+}
+
+function renderProgramsSection(s) {
+    const hasPrograms = s.programs_enabled;
+    const hasRentals = s.rentals_enabled;
+    const instCount = (s.instruments || []).length;
+    if (!hasPrograms && !hasRentals && instCount === 0 && !s.rental_info && !s.rental_link) return { html: '', count: 0 };
+
+    let html = `
         <div class="info-grid-2col">
             ${renderInfoRow('fa-graduation-cap','Programs', s.programs_enabled ? 'Available' : 'Not Available')}
             ${renderInfoRow('fa-guitar','Rentals', s.rentals_enabled ? 'Available' : 'Not Available')}
-        </div>
-        ${s.rentals_enabled && s.rental_info ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-guitar"></i> Rental Information</div><div class="info-rich-content">${s.rental_info}</div></div>` : ''}
-        ${s.rental_link ? `<div class="info-row full-width" style="margin-top:1rem;"><i class="fas fa-link"></i><div class="info-row-content"><div class="info-row-label">Rental Link</div><div class="info-row-value"><a href="${s.rental_link}" target="_blank">${s.rental_link}</a></div></div></div>` : ''}
-    `;
+        </div>`;
 
-    const customerCareContent = `
-        <div class="info-list">
-            ${renderInfoRow('fa-heading','Title', s.customer_care_title)}
-            ${renderInfoRow('fa-text-height','Subtitle', s.customer_care_subtitle)}
-        </div>
-        ${s.customer_care_notes ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-info-circle"></i> Notes</div><div class="info-rich-content">${s.customer_care_notes}</div></div>` : ''}
-    `;
+    if (s.rentals_enabled && s.rental_info) {
+        html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-guitar"></i> Rental Information</div><div class="info-rich-content">${s.rental_info}</div></div>`;
+    }
+    if (s.rental_link) {
+        html += `<div class="modal-subsection"><div class="info-row full-width"><i class="fas fa-link"></i><div class="info-row-content"><div class="info-row-label">Rental Link</div><div class="info-row-value"><a href="${s.rental_link}" target="_blank">${s.rental_link}</a></div></div></div></div>`;
+    }
+    if (instCount > 0) {
+        html += `
+            <div class="modal-subsection">
+                <div class="modal-subsection-title"><i class="fas fa-music"></i> Instruments (${instCount})</div>
+                <div class="info-list-cards">
+                    ${s.instruments.map(inst => `
+                        <div class="info-list-card instrument-card">
+                            <div class="info-list-card-title"><i class="fas fa-music"></i> ${inst.name||inst.instrument||'Unknown'}</div>
+                            ${inst.notes?`<div class="info-list-card-field"><span class="field-label">Notes:</span><span class="field-value">${inst.notes}</span></div>`:''}
+                            ${inst.materials?`<div class="info-list-card-field"><span class="field-label">Materials:</span><span class="field-value">${inst.materials}</span></div>`:''}
+                        </div>`).join('')}
+                </div>
+            </div>`;
+    }
 
-    const discountsContent = s.discounts?.length ? `
-        <div class="info-list-cards">
-            ${s.discounts.map(d => `
-                <div class="info-list-card">
-                    <div class="info-list-card-title">${d.title || 'Untitled Discount'}</div>
-                    ${d.description ? `<div class="info-list-card-desc">${d.description}</div>` : ''}
-                    ${d.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${d.link}" target="_blank">View Link</a></div>` : ''}
-                </div>`).join('')}
-        </div>` : '<div class="info-row-value empty">No discounts available</div>';
+    let count = 0;
+    if (hasPrograms) count++;
+    if (hasRentals) count++;
+    if (s.rental_info) count++;
+    if (s.rental_link) count++;
+    count += instCount;
+    return { html, count };
+}
 
-    const scholarshipsContent = s.scholarships?.length ? `
-        <div class="info-list-cards">
-            ${s.scholarships.map(sc => `
-                <div class="info-list-card">
-                    <div class="info-list-card-title">${sc.title || 'Untitled Scholarship'}</div>
-                    ${sc.notes ? `<div class="info-list-card-desc">${sc.notes}</div>` : ''}
-                    ${sc.link ? `<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${sc.link}" target="_blank">Apply / Learn More</a></div>` : ''}
-                </div>`).join('')}
-        </div>` : '<div class="info-row-value empty">No scholarships available</div>';
-
+function renderPoliciesSection(s) {
     const defPolicies = (s.policies||[]).filter(p => p.policy_type === 'default');
     const custPolicies = (s.policies||[]).filter(p => p.policy_type === 'custom' || (!p.policy_type && !p.policy_key));
-    const policiesContent = `
-        ${defPolicies.length ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-file-alt"></i> Standard Policies</div><div class="info-list-cards">${defPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>` : ''}
-        ${custPolicies.length ? `<div class="info-section"><div class="info-section-title"><i class="fas fa-plus-circle"></i> Additional Policies</div><div class="info-list-cards">${custPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>` : ''}
-        ${!defPolicies.length && !custPolicies.length ? '<div class="info-row-value empty">No policies available</div>' : ''}
-    `;
+    const noteCount = (s.studio_notes || []).length;
+    const hasCustomerCare = !!(s.customer_care_title || s.customer_care_subtitle || s.customer_care_notes);
+    if (defPolicies.length === 0 && custPolicies.length === 0 && noteCount === 0 && !hasCustomerCare) return { html: '', count: 0 };
 
-    const notesContent = s.studio_notes?.length ? `
-        <div class="info-list-cards">
-            ${s.studio_notes.map(n => `
-                <div class="info-list-card">
-                    <div class="info-list-card-title">${n.title||'Untitled Note'}</div>
-                    ${n.subtitle?`<div class="info-list-card-subtitle">${n.subtitle}</div>`:''}
-                    ${n.notes?`<div class="info-list-card-desc">${n.notes}</div>`:''}
-                    ${n.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${n.link}" target="_blank">View Link</a></div>`:''}
-                </div>`).join('')}
-        </div>` : '<div class="info-row-value empty">No notes available</div>';
+    let html = '';
+    if (defPolicies.length) {
+        html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-file-alt"></i> Standard Policies (${defPolicies.length})</div><div class="info-list-cards">${defPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>`;
+    }
+    if (custPolicies.length) {
+        html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-plus-circle"></i> Additional Policies (${custPolicies.length})</div><div class="info-list-cards">${custPolicies.map(p=>`<div class="info-list-card"><div class="info-list-card-title">${p.title||'Untitled'}</div>${p.subtitle?`<div class="info-list-card-subtitle">${p.subtitle}</div>`:''} ${p.notes?`<div class="info-list-card-desc">${p.notes}</div>`:''} ${p.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${p.link}" target="_blank">View Policy</a></div>`:''}</div>`).join('')}</div></div>`;
+    }
+    if (noteCount > 0) {
+        html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-sticky-note"></i> Studio Notes (${noteCount})</div><div class="info-list-cards">${s.studio_notes.map(n=>`<div class="info-list-card"><div class="info-list-card-title">${n.title||'Untitled Note'}</div>${n.subtitle?`<div class="info-list-card-subtitle">${n.subtitle}</div>`:''} ${n.notes?`<div class="info-list-card-desc">${n.notes}</div>`:''} ${n.link?`<div class="info-list-card-detail"><i class="fas fa-link"></i><a href="${n.link}" target="_blank">View Link</a></div>`:''}</div>`).join('')}</div></div>`;
+    }
+    if (hasCustomerCare) {
+        html += `<div class="modal-subsection"><div class="modal-subsection-title"><i class="fas fa-headset"></i> Customer Care</div>`;
+        html += `<div class="info-list">${renderInfoRow('fa-heading','Title', s.customer_care_title)}${renderInfoRow('fa-text-height','Subtitle', s.customer_care_subtitle)}</div>`;
+        if (s.customer_care_notes) html += `<div style="margin-top:0.625rem;"><div class="info-rich-content">${s.customer_care_notes}</div></div>`;
+        html += `</div>`;
+    }
 
-    const instrumentsContent = s.instruments?.length ? `
-        <div class="info-list-cards">
-            ${s.instruments.map(inst => `
-                <div class="info-list-card instrument-card">
-                    <div class="info-list-card-title"><i class="fas fa-music"></i> ${inst.name||inst.instrument||'Unknown'}</div>
-                    ${inst.notes?`<div class="info-list-card-field"><span class="field-label">Notes:</span><span class="field-value">${inst.notes}</span></div>`:''}
-                    ${inst.materials?`<div class="info-list-card-field"><span class="field-label">Materials:</span><span class="field-value">${inst.materials}</span></div>`:''}
-                </div>`).join('')}
-        </div>` : '<div class="info-row-value empty">No instruments listed</div>';
+    return { html, count: defPolicies.length + custPolicies.length + noteCount + (hasCustomerCare ? 1 : 0) };
+}
 
-    const linksContent = s.custom_links?.length ? `
+function renderResourcesSection(s) {
+    const linkCount = (s.custom_links || []).length;
+    if (linkCount === 0) return { html: '', count: 0 };
+
+    const html = `
         <div class="info-list-cards">
             ${s.custom_links.map(l => `
                 <div class="info-list-card">
@@ -1367,22 +1700,163 @@ function buildModalContent(s) {
                     ${l.subheader?`<div class="info-list-card-subtitle">${l.subheader}</div>`:''}
                     ${l.url?`<div class="info-list-card-detail"><i class="fas fa-external-link-alt"></i><a href="${l.url}" target="_blank">${l.url}</a></div>`:''}
                 </div>`).join('')}
-        </div>` : '<div class="info-row-value empty">No custom links available</div>';
-
-    document.getElementById('modalBody').innerHTML = `
-        <div class="modal-tab-content active" data-tab="basic">${basicContent}</div>
-        <div class="modal-tab-content" data-tab="contact">${contactContent}</div>
-        <div class="modal-tab-content" data-tab="pricing">${pricingContent}</div>
-        <div class="modal-tab-content" data-tab="details">${detailsContent}</div>
-        <div class="modal-tab-content" data-tab="customercare">${customerCareContent}</div>
-        <div class="modal-tab-content" data-tab="discounts">${discountsContent}</div>
-        <div class="modal-tab-content" data-tab="scholarships">${scholarshipsContent}</div>
-        <div class="modal-tab-content" data-tab="policies">${policiesContent}</div>
-        <div class="modal-tab-content" data-tab="notes">${notesContent}</div>
-        <div class="modal-tab-content" data-tab="instruments">${instrumentsContent}</div>
-        <div class="modal-tab-content" data-tab="links">${linksContent}</div>
-    `;
+        </div>`;
+    return { html, count: linkCount };
 }
+
+/* ── MODAL SEARCH (filter & highlight inside the open studio) ── */
+function clearModalSearch() {
+    document.getElementById('modalSearch').value = '';
+    document.getElementById('modalSearchClear').classList.remove('visible');
+    document.getElementById('modalSearchInfo').classList.remove('visible');
+    if (currentStudio) {
+        // Re-render to strip highlights and unhide hidden subsections
+        buildModalContent(currentStudio);
+        setupScrollSpy();
+    }
+    // Reset sidebar match-hit state
+    document.querySelectorAll('.modal-nav-item').forEach(el => el.classList.remove('match-hit'));
+}
+
+function onModalSearchInput(e) {
+    const q = e.target.value.trim();
+    document.getElementById('modalSearchClear').classList.toggle('visible', q.length > 0);
+    if (!currentStudio) return;
+    if (!q) {
+        clearModalSearch();
+        return;
+    }
+    runModalSearch(q);
+}
+
+function runModalSearch(query) {
+    if (!currentStudio) return;
+    // Always rebuild from clean state, then apply filtering + highlights on the DOM
+    buildModalContent(currentStudio);
+    setupScrollSpy();
+
+    const lower = query.toLowerCase();
+    const sections = document.querySelectorAll('.modal-section');
+    let totalMatches = 0;
+    const sectionMatchCounts = {};
+
+    sections.forEach(section => {
+        const sectionId = section.dataset.sectionId;
+        const items = section.querySelectorAll('.info-row, .info-list-card, .modal-subsection');
+        let sectionHits = 0;
+
+        // For each leaf item, check if it contains the search term
+        const examined = new Set();
+        items.forEach(item => {
+            // Skip items that are children of other items we'll already examine
+            if (examined.has(item)) return;
+            // For .modal-subsection containers, we'll handle their inner items separately
+            const isSubsection = item.classList.contains('modal-subsection');
+
+            if (!isSubsection) {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(lower);
+                if (matches) {
+                    sectionHits++;
+                    highlightWithinElement(item, query);
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+
+        // After leaf-item processing, hide any subsection whose visible children are all hidden
+        section.querySelectorAll('.modal-subsection').forEach(sub => {
+            const innerItems = sub.querySelectorAll('.info-row, .info-list-card, .info-list, .info-grid-2col, .info-rich-content');
+            // If the subsection title text itself matches, keep it open
+            const titleEl = sub.querySelector('.modal-subsection-title');
+            const titleMatches = titleEl && titleEl.textContent.toLowerCase().includes(lower);
+
+            if (titleMatches) {
+                // Show subsection and ALL its inner items
+                sub.style.display = '';
+                sub.querySelectorAll('.info-row, .info-list-card').forEach(it => it.style.display = '');
+                if (titleEl) highlightWithinElement(titleEl, query);
+                sectionHits++;
+            } else {
+                // Hide the subsection only if every leaf inside is now hidden
+                const anyVisible = [...sub.querySelectorAll('.info-row, .info-list-card')].some(el => el.style.display !== 'none');
+                if (!anyVisible) sub.style.display = 'none';
+            }
+        });
+
+        // Hide section header & section if nothing matched
+        if (sectionHits === 0) {
+            section.classList.add('search-hidden');
+        } else {
+            section.classList.remove('search-hidden');
+            sectionMatchCounts[sectionId] = sectionHits;
+            totalMatches += sectionHits;
+        }
+    });
+
+    // Update sidebar to reflect search hits
+    document.querySelectorAll('.modal-nav-item').forEach(el => {
+        const id = el.dataset.sectionId;
+        const count = sectionMatchCounts[id] || 0;
+        el.classList.toggle('match-hit', count > 0);
+        el.classList.toggle('empty', count === 0);
+        const badge = el.querySelector('.nav-count');
+        if (badge) badge.textContent = count > 0 ? count : 'no match';
+    });
+
+    // Results info bar
+    const info = document.getElementById('modalSearchInfo');
+    if (totalMatches > 0) {
+        info.innerHTML = `<strong>${totalMatches}</strong> match${totalMatches !== 1 ? 'es' : ''} for "${escapeHtml(query)}"`;
+    } else {
+        info.innerHTML = `No matches for "${escapeHtml(query)}" in this studio`;
+    }
+    info.classList.add('visible');
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function highlightWithinElement(el, query) {
+    // Walk text nodes only (don't touch attributes or existing <mark>s)
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: node => {
+            // Skip text inside <mark> already (idempotency)
+            if (node.parentElement && node.parentElement.tagName === 'MARK') return NodeFilter.FILTER_REJECT;
+            // Skip whitespace-only nodes
+            if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+        }
+    });
+    const targets = [];
+    let n; while ((n = walker.nextNode())) targets.push(n);
+
+    const lowerQ = query.toLowerCase();
+    targets.forEach(textNode => {
+        const value = textNode.nodeValue;
+        const lower = value.toLowerCase();
+        if (!lower.includes(lowerQ)) return;
+        const frag = document.createDocumentFragment();
+        let i = 0;
+        while (i < value.length) {
+            const idx = lower.indexOf(lowerQ, i);
+            if (idx === -1) {
+                frag.appendChild(document.createTextNode(value.substring(i)));
+                break;
+            }
+            if (idx > i) frag.appendChild(document.createTextNode(value.substring(i, idx)));
+            const mark = document.createElement('mark');
+            mark.className = 'search-match';
+            mark.textContent = value.substring(idx, idx + query.length);
+            frag.appendChild(mark);
+            i = idx + query.length;
+        }
+        textNode.parentNode.replaceChild(frag, textNode);
+    });
+}
+
 
 function renderInfoRow(icon, label, value, fullWidth = false, type = 'text') {
     let displayValue = 'Not provided';
