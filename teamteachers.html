@@ -47,7 +47,7 @@
             overflow-x: hidden;
         }
 
-        /* SIDEBAR */
+        /* SIDEBAR — unchanged */
         .sidebar {
             position: fixed; top: 0; left: 0;
             width: var(--sidebar-width); height: 100vh;
@@ -118,158 +118,281 @@
         .sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed); }
 
         /* Page Header */
-        .page-header { margin-bottom: 2rem; }
+        .page-header { margin-bottom: 1.5rem; }
         .page-header h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -0.02em; }
         .page-header p { color: var(--text-secondary); font-size: 1rem; }
 
-        /* ============ FILTER SECTION ============ */
-        .filter-section {
-            background: var(--white); border-radius: 16px; padding: 1.5rem;
-            box-shadow: var(--shadow-md); margin-bottom: 1.5rem;
+        /* ============ NEW FILTER BAR (OPTION C) ============ */
+        .filter-bar {
+            background: var(--white); border-radius: 14px; padding: 0.75rem;
+            box-shadow: var(--shadow-sm); margin-bottom: 0.75rem;
         }
-        .filter-header {
-            display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; user-select: none;
+        .filter-bar-row {
+            display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
         }
-        .filter-header-left { display: flex; align-items: center; gap: 0.625rem; }
-        .filter-header-left h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
-        .filter-header-left h3 i { color: var(--primary); }
 
-        /* Active filter count badge */
-        .filter-count-badge {
-            display: none; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; font-size: 0.6875rem; font-weight: 700;
-            width: 20px; height: 20px; border-radius: 50%;
+        /* Smart search */
+        .smart-search-wrap {
+            position: relative; flex: 1; min-width: 240px;
         }
-        .filter-count-badge.visible { display: flex; }
-
-        .filter-header-right { display: flex; align-items: center; gap: 0.75rem; }
-        .reset-filters-btn {
-            display: flex; align-items: center; gap: 0.375rem;
-            padding: 0.5rem 0.875rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border: none; border-radius: 8px;
-            font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; box-shadow: 0 2px 6px rgba(250, 128, 114, 0.3);
+        .smart-search-wrap > i.fa-search {
+            position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+            color: var(--primary); font-size: 0.875rem; pointer-events: none;
         }
-        .reset-filters-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(250, 128, 114, 0.4); }
-        .filter-toggle-icon { color: var(--text-secondary); font-size: 0.875rem; transition: transform 0.2s ease; }
-        .filter-toggle-icon.collapsed { transform: rotate(-90deg); }
-
-        /* Primary filters — always visible */
-        .filter-primary {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem; margin-top: 1.25rem;
-        }
-        .filter-primary.hidden { display: none; }
-
-        /* More filters — toggleable */
-        .more-filters-toggle {
-            display: flex; align-items: center; gap: 0.5rem;
-            margin-top: 1rem; padding: 0.5rem 0;
-            border: none; background: none; cursor: pointer;
-            font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);
-            transition: color 0.2s;
-        }
-        .more-filters-toggle:hover { color: var(--primary); }
-        .more-filters-toggle i { font-size: 0.75rem; transition: transform 0.2s; }
-        .more-filters-toggle.open i { transform: rotate(180deg); }
-        .more-filters-toggle.open { color: var(--primary); }
-
-        .filter-secondary {
-            display: none;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem; margin-top: 0.75rem;
-            padding-top: 0.75rem; border-top: 1px dashed var(--gray-200);
-        }
-        .filter-secondary.open { display: grid; }
-
-        /* Search */
-        .search-input-wrapper { position: relative; grid-column: 1 / -1; }
-        .search-input-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        .search-input {
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
+        .smart-search-input {
+            width: 100%; padding: 0.625rem 2.25rem 0.625rem 2.25rem;
             background: var(--gray-50); border: 1.5px solid var(--gray-200);
-            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary); transition: all 0.2s ease;
+            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
+            transition: all 0.2s ease;
         }
-        .search-input:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1); }
+        .smart-search-input:focus {
+            outline: none; border-color: var(--primary); background: var(--white);
+            box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1);
+        }
+        .smart-search-clear {
+            position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
+            width: 22px; height: 22px; border: none; background: var(--gray-200);
+            color: var(--text-secondary); border-radius: 50%; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            font-size: 0.625rem; transition: all 0.15s;
+        }
+        .smart-search-clear:hover { background: var(--gray-300); color: var(--text-primary); }
+        .smart-search-clear.visible { display: flex; }
 
-        .filter-group label {
-            display: block; font-size: 0.75rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 0.375rem;
-            text-transform: uppercase; letter-spacing: 0.03em;
+        /* Search dropdown */
+        .search-dropdown {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: white; border: 1px solid var(--gray-200); border-radius: 10px;
+            box-shadow: var(--shadow-lg); z-index: 500;
+            max-height: 360px; overflow-y: auto; display: none;
         }
-        .filter-select {
-            width: 100%; padding: 0.625rem 0.875rem;
+        .search-dropdown.active { display: block; }
+        .search-dropdown-section { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); }
+        .search-dropdown-section:last-child { border-bottom: none; }
+        .search-dropdown-label {
+            font-size: 0.6875rem; font-weight: 700; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.05em;
+            padding: 0.25rem 0.875rem 0.5rem;
+        }
+        .search-dropdown-item {
+            display: flex; align-items: center; gap: 0.625rem;
+            padding: 0.5rem 0.875rem; cursor: pointer; transition: background 0.15s;
+            font-size: 0.875rem; color: var(--text-primary);
+        }
+        .search-dropdown-item:hover, .search-dropdown-item.active-suggestion {
+            background: rgba(250, 128, 114, 0.08); color: var(--primary-dark);
+        }
+        .search-dropdown-item i {
+            color: var(--primary); width: 14px; font-size: 0.75rem; flex-shrink: 0;
+        }
+        .search-dropdown-item .item-meta {
+            margin-left: auto; font-size: 0.75rem; color: var(--text-light);
+        }
+        .search-dropdown-item .match { font-weight: 700; color: var(--primary-dark); }
+        .search-dropdown-empty {
+            padding: 1rem; text-align: center; color: var(--text-light); font-size: 0.875rem;
+        }
+
+        /* Filter pill buttons */
+        .filter-pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.625rem 0.875rem; background: var(--white);
             border: 1.5px solid var(--gray-200); border-radius: 10px;
-            font-size: 0.875rem; color: var(--text-primary); background: var(--white); transition: all 0.2s ease;
+            font-size: 0.875rem; font-weight: 600; color: var(--text-primary);
+            cursor: pointer; transition: all 0.15s; white-space: nowrap;
+            position: relative;
         }
-        .filter-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(250, 128, 114, 0.1); }
-
-        /* Zone Tabs */
-        .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; grid-column: 1 / -1; }
-        .zone-tab {
-            padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-secondary); background: var(--gray-50);
-            border: 1.5px solid var(--gray-200); border-radius: 20px;
-            cursor: pointer; transition: all 0.2s ease;
-        }
-        .zone-tab:hover { border-color: var(--primary); color: var(--primary); }
-        .zone-tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        .filter-pill:hover { border-color: var(--primary-light); }
+        .filter-pill > i:first-child { color: var(--primary); font-size: 0.8125rem; }
+        .filter-pill > .fa-chevron-down { color: var(--text-light); font-size: 0.625rem; margin-left: 0.125rem; transition: transform 0.2s; }
+        .filter-pill.open { border-color: var(--primary); }
+        .filter-pill.open > .fa-chevron-down { transform: rotate(180deg); }
+        .filter-pill.has-active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white; border-color: transparent;
             box-shadow: 0 2px 8px rgba(250, 128, 114, 0.3);
         }
+        .filter-pill.has-active > i:first-child,
+        .filter-pill.has-active > .fa-chevron-down { color: white; }
+        .filter-pill .pill-count {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 20px; height: 18px; padding: 0 6px;
+            background: rgba(255, 255, 255, 0.3); border-radius: 9px;
+            font-size: 0.6875rem; font-weight: 700;
+        }
+        .filter-pill:not(.has-active) .pill-count {
+            background: rgba(250, 128, 114, 0.15); color: var(--primary-dark);
+        }
 
-        /* Instrument Checkboxes */
-        .instrument-filter-section { grid-column: 1 / -1; }
-        .instrument-filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
-        .instrument-checkbox-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .instrument-checkbox {
-            display: flex; align-items: center; gap: 0.375rem;
-            padding: 0.5rem 0.875rem; background: var(--gray-50);
-            border: 1.5px solid var(--gray-200); border-radius: 20px;
-            cursor: pointer; transition: all 0.2s; user-select: none;
-            font-size: 0.8125rem; font-weight: 500; color: var(--text-primary);
+        .filter-bar-divider { width: 1px; height: 22px; background: var(--gray-200); margin: 0 0.25rem; }
+
+        .filter-reset-btn {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.5rem 0.75rem; background: transparent; border: none;
+            font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary);
+            cursor: pointer; border-radius: 8px; transition: all 0.15s;
         }
-        .instrument-checkbox:hover { border-color: var(--primary-light); }
-        .instrument-checkbox.selected {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, rgba(250,128,114,0.12), rgba(255,160,122,0.12));
-            color: var(--primary-dark);
+        .filter-reset-btn:hover { background: var(--gray-50); color: var(--danger); }
+
+        /* Zone tab row */
+        .zone-row {
+            display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;
+            margin-top: 0.625rem; padding-top: 0.625rem;
+            border-top: 1px dashed var(--gray-200);
         }
-        .instrument-checkbox .check-icon {
-            width: 16px; height: 16px; border: 2px solid var(--gray-300); border-radius: 3px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.625rem; color: transparent; transition: all 0.2s; flex-shrink: 0;
+        .zone-row-label {
+            font-size: 0.6875rem; color: var(--text-light); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em; margin-right: 0.25rem;
         }
-        .instrument-checkbox.selected .check-icon {
+        .zone-tab {
+            padding: 0.375rem 0.875rem; font-size: 0.8125rem; font-weight: 600;
+            color: var(--text-secondary); background: var(--gray-50);
+            border: 1.5px solid var(--gray-200); border-radius: 16px;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .zone-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .zone-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border-color: transparent;
+            box-shadow: 0 2px 6px rgba(250, 128, 114, 0.3);
+        }
+
+        /* Active filter chips (above results) */
+        .active-chips-row {
+            display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;
+            margin-bottom: 1rem;
+        }
+        .active-chips-row:empty { display: none; }
+        .active-chip {
+            display: inline-flex; align-items: center; gap: 0.375rem;
+            padding: 0.3rem 0.625rem 0.3rem 0.75rem;
+            background: rgba(250, 128, 114, 0.1); color: var(--primary-dark);
+            border-radius: 16px; font-size: 0.8125rem; font-weight: 600;
+        }
+        .active-chip button {
+            background: rgba(250, 128, 114, 0.2); border: none;
+            color: var(--primary-dark); cursor: pointer; width: 16px; height: 16px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.625rem; padding: 0; transition: background 0.15s;
+        }
+        .active-chip button:hover { background: var(--primary); color: white; }
+        .active-chips-clear {
+            background: none; border: 1.5px solid var(--gray-200);
+            color: var(--text-secondary); padding: 0.25rem 0.625rem;
+            border-radius: 16px; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .active-chips-clear:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* ============ POPOVERS ============ */
+        .popover-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 400; display: none;
+        }
+        .popover-backdrop.active { display: block; }
+
+        .popover {
+            position: absolute; background: white; border: 1px solid var(--gray-200);
+            border-radius: 12px; box-shadow: var(--shadow-lg);
+            z-index: 500; padding: 1rem; min-width: 280px;
+            display: none;
+            animation: popoverPop 0.15s ease;
+        }
+        .popover.active { display: block; }
+        @keyframes popoverPop {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .popover-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .popover-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); }
+        .popover-subtitle { font-size: 0.6875rem; color: var(--text-light); font-weight: 500; }
+
+        .popover-field { margin-bottom: 0.75rem; }
+        .popover-field:last-child { margin-bottom: 0; }
+        .popover-field label {
+            display: block; font-size: 0.6875rem; font-weight: 700; color: var(--text-secondary);
+            margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .popover-select {
+            width: 100%; padding: 0.5rem 0.75rem;
+            border: 1.5px solid var(--gray-200); border-radius: 8px;
+            font-size: 0.875rem; color: var(--text-primary); background: white;
+            transition: border-color 0.15s;
+        }
+        .popover-select:focus { outline: none; border-color: var(--primary); }
+
+        .popover-footer {
+            display: flex; gap: 0.5rem; margin-top: 0.875rem;
+            padding-top: 0.75rem; border-top: 1px solid var(--gray-100);
+        }
+        .popover-btn {
+            flex: 1; padding: 0.5rem; border-radius: 8px;
+            font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+            transition: all 0.15s; border: 1.5px solid var(--gray-200);
+            background: white; color: var(--text-secondary);
+        }
+        .popover-btn:hover { border-color: var(--gray-300); color: var(--text-primary); }
+        .popover-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border-color: transparent;
+        }
+        .popover-btn.primary:hover { box-shadow: 0 2px 8px rgba(250, 128, 114, 0.3); }
+
+        /* Instruments popover */
+        .instruments-popover { width: 320px; }
+        .inst-search-wrap { position: relative; margin-bottom: 0.625rem; }
+        .inst-search-wrap i {
+            position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-light); font-size: 0.75rem;
+        }
+        .inst-search-input {
+            width: 100%; padding: 0.4375rem 0.625rem 0.4375rem 1.875rem;
+            background: var(--gray-50); border: 1.5px solid var(--gray-200);
+            border-radius: 8px; font-size: 0.8125rem; color: var(--text-primary);
+        }
+        .inst-search-input:focus { outline: none; border-color: var(--primary); background: white; }
+
+        .match-mode-toggle {
+            display: flex; gap: 0; background: var(--gray-100);
+            border-radius: 8px; padding: 3px; margin-bottom: 0.625rem;
+        }
+        .match-mode-btn {
+            flex: 1; padding: 0.375rem; border: none; background: transparent;
+            font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+            cursor: pointer; border-radius: 6px; transition: all 0.15s;
+        }
+        .match-mode-btn.active {
+            background: white; color: var(--primary-dark);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .inst-list {
+            max-height: 200px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 1px;
+        }
+        .inst-list::-webkit-scrollbar { width: 4px; }
+        .inst-list::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+        .inst-option {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.4375rem 0.5rem; border-radius: 6px;
+            cursor: pointer; user-select: none; transition: background 0.1s;
+        }
+        .inst-option:hover { background: var(--gray-50); }
+        .inst-option.selected { background: rgba(250, 128, 114, 0.08); }
+        .inst-checkbox {
+            width: 16px; height: 16px; border: 1.5px solid var(--gray-300);
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.625rem; color: transparent; transition: all 0.15s; flex-shrink: 0;
+        }
+        .inst-option.selected .inst-checkbox {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             border-color: transparent; color: white;
         }
-        .selected-instruments-info { margin-top: 0.5rem; font-size: 0.75rem; color: var(--primary-dark); font-style: italic; font-weight: 500; }
-
-        /* Active filter chips */
-        .active-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; grid-column: 1 / -1; }
-        .active-filters:empty { display: none; }
-        .filter-chip {
-            display: inline-flex; align-items: center; gap: 0.375rem;
-            padding: 0.375rem 0.75rem; background: rgba(250, 128, 114, 0.1);
-            color: var(--primary-dark); border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
-        }
-        .filter-chip button {
-            background: none; border: none; color: var(--primary-dark); cursor: pointer;
-            font-size: 0.875rem; padding: 0; line-height: 1; opacity: 0.7; transition: opacity 0.2s;
-        }
-        .filter-chip button:hover { opacity: 1; }
-        .clear-all-btn {
-            background: none; border: 1.5px solid var(--gray-200); color: var(--text-secondary);
-            padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.8125rem;
-            font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .clear-all-btn:hover { border-color: var(--danger); color: var(--danger); }
+        .inst-option-label { font-size: 0.875rem; color: var(--text-primary); font-weight: 500; }
+        .inst-option.selected .inst-option-label { color: var(--primary-dark); }
 
         /* ============ RESULTS ============ */
         .results-info {
@@ -279,10 +402,9 @@
         .results-count { font-size: 0.9375rem; color: var(--text-secondary); font-weight: 500; }
         .results-count strong { color: var(--text-primary); }
 
-        /* ============ TEACHER GRID ============ */
+        /* ============ TEACHER GRID — unchanged ============ */
         .teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
 
-        /* ============ TEACHER CARD ============ */
         .teacher-card {
             background: var(--white); border: 1px solid var(--gray-200);
             border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm);
@@ -296,8 +418,6 @@
             padding: 1.25rem; color: white; position: relative;
             display: flex; align-items: center; gap: 1rem;
         }
-
-        /* Photo avatar on card */
         .card-avatar {
             width: 54px; height: 54px; border-radius: 50%;
             background: rgba(255,255,255,0.25); border: 2.5px solid rgba(255,255,255,0.5);
@@ -306,39 +426,20 @@
             font-size: 1.25rem; font-weight: 700; color: white;
         }
         .card-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
         .card-header-text { flex: 1; min-width: 0; }
         .teacher-card-name { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .teacher-card-brand { font-size: 0.8125rem; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         .teacher-card-body { padding: 1rem 1.25rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
-
-        .teacher-info-row {
-            display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem;
-        }
+        .teacher-info-row { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; }
         .teacher-info-row i { color: var(--primary); width: 15px; text-align: center; font-size: 0.8125rem; flex-shrink: 0; }
         .teacher-info-row span { color: var(--text-secondary); line-height: 1.4; }
-
-        /* Mini comfort bar on card */
-        .card-comfort-row {
-            display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem;
-        }
+        .card-comfort-row { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; }
         .card-comfort-row i { color: var(--primary); width: 15px; text-align: center; font-size: 0.8125rem; flex-shrink: 0; }
         .card-comfort-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0.5rem; }
-        .card-comfort-bar {
-            flex: 1; height: 6px; background: var(--gray-200);
-            border-radius: 3px; overflow: hidden;
-        }
-        .card-comfort-fill {
-            height: 100%; border-radius: 3px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-        }
+        .card-comfort-bar { flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+        .card-comfort-fill { height: 100%; border-radius: 3px; background: linear-gradient(135deg, var(--primary), var(--accent)); }
         .card-comfort-label { font-size: 0.75rem; font-weight: 700; color: var(--primary-dark); min-width: 30px; }
-
-        /* Instrument chips in card header */
-        .card-header-instruments {
-            display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.75rem;
-        }
+        .card-header-instruments { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.75rem; }
         .card-header-chip {
             display: inline-flex; align-items: center; gap: 0.375rem;
             padding: 0.3rem 0.75rem;
@@ -348,68 +449,21 @@
             color: white; backdrop-filter: blur(4px);
             transition: background 0.2s, border-color 0.2s;
         }
-        .teacher-card:hover .card-header-chip {
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.65);
-        }
+        .teacher-card:hover .card-header-chip { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.65); }
         .card-header-chip .level-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgba(255,255,255,0.7); }
         .card-header-chip .level-dot.level-beginner { background: #6EE7B7; }
         .card-header-chip .level-dot.level-intermediate { background: #FCD34D; }
         .card-header-chip .level-dot.level-advanced { background: white; }
-
-        /* Instrument chips on card — bigger and more prominent */
-        .teacher-instruments-list { margin-top: 0.25rem; }
-        .teacher-instruments-label {
-            font-size: 0.6875rem; font-weight: 700; color: var(--text-primary);
-            text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem;
-        }
-        .instrument-chip-row { display: flex; flex-wrap: wrap; gap: 0.375rem; }
-        .instrument-chip {
-            display: inline-flex; align-items: center; gap: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            background: var(--gray-50); border: 1.5px solid var(--gray-200);
-            border-radius: 20px; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-primary); transition: all 0.15s;
-        }
-        .teacher-card:hover .instrument-chip { border-color: var(--primary-light); }
-        .instrument-chip .level-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
         .level-beginner { background: var(--success); }
         .level-intermediate { background: var(--warning); }
         .level-advanced { background: var(--primary); }
-
-        /* Bio expand on card */
-        .card-bio-toggle {
-            display: inline-flex; align-items: center; gap: 0.375rem;
-            background: none; border: 1.5px solid var(--gray-200);
-            color: var(--text-secondary); border-radius: 20px;
-            padding: 0.3rem 0.75rem; font-size: 0.75rem; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
-        }
-        .card-bio-toggle:hover { border-color: var(--primary); color: var(--primary); }
-        .card-bio-toggle.open { border-color: var(--primary); color: var(--primary); background: rgba(250,128,114,0.06); }
-        .card-bio-toggle i { font-size: 0.625rem; transition: transform 0.2s; }
-        .card-bio-toggle.open i { transform: rotate(180deg); }
-        .card-bio-panel {
-            display: none; font-size: 0.8125rem; color: var(--text-secondary);
-            line-height: 1.6; margin-top: 0.625rem;
-            padding: 0.75rem; background: var(--gray-50);
-            border-radius: 8px; border-left: 3px solid var(--primary-light);
-        }
-        .card-bio-panel.open { display: block; }
-        .card-bio-panel p { margin-bottom: 0.5rem; }
-        .card-bio-panel p:last-child { margin-bottom: 0; }
-
-        /* Badges at bottom of card */
         .teacher-badges { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: auto; padding-top: 0.625rem; }
-        .teacher-badge {
-            padding: 0.2rem 0.5rem; border-radius: 6px;
-            font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
-        }
+        .teacher-badge { padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; }
         .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .badge-info { background: rgba(250, 128, 114, 0.1); color: var(--primary); }
         .badge-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
 
-        /* ============ MODAL ============ */
+        /* ============ MODAL — unchanged ============ */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2000;
@@ -433,8 +487,6 @@
         }
         .modal-close:hover { background: var(--gray-200); }
         .modal-body { padding: 0; }
-
-        /* Modal hero with photo */
         .modal-hero {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             padding: 1.75rem 1.5rem; display: flex; align-items: center; gap: 1.25rem;
@@ -449,18 +501,13 @@
         .modal-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .modal-hero-text h2 { font-size: 1.375rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
         .modal-hero-text p { font-size: 0.9375rem; color: rgba(255,255,255,0.9); }
-
         .modal-inner { padding: 1.5rem; }
-
-        /* Bio at top of modal */
         .modal-bio {
             background: var(--gray-50); border-radius: 10px;
             padding: 1rem 1.125rem; margin-bottom: 1.5rem;
             font-size: 0.9375rem; color: var(--text-primary); line-height: 1.65;
             border-left: 3px solid var(--primary-light);
         }
-
-        /* Modal dropdowns (bio, notes) */
         .modal-dropdown {
             border: 1.5px solid var(--gray-200); border-radius: 10px;
             margin-bottom: 1rem; overflow: hidden;
@@ -484,8 +531,6 @@
         .modal-bio p { margin-bottom: 0.625rem; }
         .modal-bio p:last-child { margin-bottom: 0; }
 
-        /* Modal dropdowns (bio, notes) */
-        /* ============ INSTRUMENT OVERLAY ============ */
         .instrument-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 3000; align-items: center; justify-content: center; padding: 1rem;
@@ -534,7 +579,6 @@
             border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;
         }
 
-        /* Clickable instrument chips in modal */
         .modal-instrument-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
         .modal-instrument-chip {
             display: inline-flex; align-items: center; gap: 0.5rem;
@@ -558,7 +602,6 @@
         }
         .modal-instrument-chip:hover .chip-arrow { color: var(--primary); transform: translateX(2px); }
 
-        /* ============ INSTRUMENT OVERLAY ============ */
         .detail-section { margin-bottom: 1.5rem; }
         .detail-section-title {
             font-size: 0.8125rem; font-weight: 700; color: var(--primary);
@@ -568,8 +611,6 @@
         .detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
         .detail-item label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.125rem; }
         .detail-item p { font-size: 0.9375rem; color: var(--text-primary); }
-
-        /* Comfort bar in modal — moved up */
         .modal-comfort-display {
             display: flex; align-items: center; gap: 1rem;
             padding: 1rem 1.125rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
@@ -583,8 +624,6 @@
             transition: width 0.4s ease;
         }
         .modal-comfort-value { font-size: 1.375rem; font-weight: 700; color: var(--primary); min-width: 52px; text-align: center; }
-
-        /* Strengths as pill badges */
         .strengths-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
         .strength-pill {
             display: inline-flex; align-items: center; gap: 0.375rem;
@@ -595,23 +634,12 @@
             color: var(--primary-dark);
         }
         .strength-pill i { font-size: 0.75rem; color: var(--primary); }
-
-        .detail-instrument-card {
-            background: var(--gray-50); border: 1px solid var(--gray-200);
-            border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;
-        }
-        .detail-instrument-name { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
-        .detail-instrument-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-        .detail-instrument-grid label { font-size: 0.6875rem; }
-        .detail-instrument-grid p { font-size: 0.8125rem; }
-
         .special-needs-row {
             display: flex; align-items: center; gap: 0.5rem;
             font-size: 0.9375rem; color: var(--text-primary); margin-top: 0.5rem;
         }
         .special-needs-row i { color: var(--success); }
 
-        /* Empty & Loading */
         .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); grid-column: 1 / -1; }
         .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; display: block; }
         .empty-state p { font-size: 1rem; }
@@ -623,11 +651,12 @@
             .main-content { margin-left: 0; padding: 1.5rem; }
             .sidebar.collapsed ~ .main-content { margin-left: 0; }
             .teachers-grid { grid-template-columns: 1fr; }
-            .filter-primary { grid-template-columns: 1fr 1fr; }
-            .detail-grid, .detail-instrument-grid { grid-template-columns: 1fr; }
+            .smart-search-wrap { flex-basis: 100%; }
+            .detail-grid { grid-template-columns: 1fr; }
             .modal-hero { flex-direction: column; text-align: center; }
+            .popover { left: 1rem !important; right: 1rem !important; min-width: 0; width: auto; }
+            .instruments-popover { width: auto; }
         }
-        @media (max-width: 500px) { .filter-primary { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -668,109 +697,181 @@
             <p>Find the right teacher by instrument, level, location, and more</p>
         </div>
 
-        <div class="filter-section">
-            <!-- Filter Header -->
-            <div class="filter-header" onclick="toggleFilters()">
-                <div class="filter-header-left">
-                    <h3><i class="fas fa-sliders-h"></i> Filters</h3>
-                    <span class="filter-count-badge" id="filterCountBadge"></span>
-                </div>
-                <div class="filter-header-right">
-                    <button class="reset-filters-btn" onclick="event.stopPropagation(); clearAllFilters();">
-                        <i class="fas fa-redo-alt"></i> Reset
-                    </button>
-                    <i id="filterToggleIcon" class="fas fa-chevron-down filter-toggle-icon"></i>
-                </div>
-            </div>
-
-            <!-- Primary filters — always visible when expanded -->
-            <div id="filterPrimary" class="filter-primary">
-                <div class="search-input-wrapper">
+        <!-- ============ NEW FILTER BAR ============ -->
+        <div class="filter-bar">
+            <div class="filter-bar-row">
+                <div class="smart-search-wrap">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="teacherSearch" class="search-input" placeholder="Search by teacher name...">
+                    <input type="text" id="smartSearch" class="smart-search-input" placeholder="Search teachers, instruments, cities, brands, languages...">
+                    <button id="smartSearchClear" class="smart-search-clear" onclick="clearSmartSearch()"><i class="fas fa-times"></i></button>
+                    <div id="searchDropdown" class="search-dropdown"></div>
                 </div>
-                <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
-                <div class="filter-group">
-                    <label>State</label>
-                    <select id="filterState" class="filter-select" onchange="onStateFilterChange()"><option value="">All States</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>Brand / Studio</label>
-                    <select id="filterBrand" class="filter-select" onchange="onBrandFilterChange()"><option value="">All Brands</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>City</label>
-                    <select id="filterCity" class="filter-select"><option value="">All Cities</option></select>
-                </div>
-                <div class="instrument-filter-section">
-                    <div class="instrument-filter-label">Instruments (select multiple to find teachers who teach ALL selected)</div>
-                    <div id="instrumentCheckboxGrid" class="instrument-checkbox-grid"></div>
-                    <div id="selectedInstrumentsInfo" class="selected-instruments-info"></div>
-                </div>
-                <div id="activeFilters" class="active-filters"></div>
+
+                <button class="filter-pill" id="pillLocation" onclick="togglePopover('Location', this)">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Location</span>
+                    <span class="pill-count" id="countLocation" style="display:none">0</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+
+                <button class="filter-pill" id="pillInstruments" onclick="togglePopover('Instruments', this)">
+                    <i class="fas fa-music"></i>
+                    <span>Instruments</span>
+                    <span class="pill-count" id="countInstruments" style="display:none">0</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+
+                <button class="filter-pill" id="pillLevel" onclick="togglePopover('Level', this)">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Level &amp; genre</span>
+                    <span class="pill-count" id="countLevel" style="display:none">0</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+
+                <button class="filter-pill" id="pillMore" onclick="togglePopover('More', this)">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>More</span>
+                    <span class="pill-count" id="countMore" style="display:none">0</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+
+                <div class="filter-bar-divider"></div>
+
+                <button class="filter-reset-btn" onclick="clearAllFilters()">
+                    <i class="fas fa-redo-alt"></i> Reset
+                </button>
             </div>
 
-            <!-- More filters toggle button -->
-            <button class="more-filters-toggle" id="moreFiltersToggle" onclick="toggleMoreFilters()">
-                <i class="fas fa-chevron-down"></i> More filters
-            </button>
+            <div class="zone-row" id="zoneRow">
+                <span class="zone-row-label">Zone</span>
+                <div id="zoneFilterTabs" style="display: contents;"></div>
+            </div>
+        </div>
 
-            <!-- Secondary / less-used filters -->
-            <div id="filterSecondary" class="filter-secondary">
-                <div class="filter-group">
-                    <label>Highest Level</label>
-                    <select id="filterLevel" class="filter-select">
-                        <option value="">All Levels</option>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Genre</label>
-                    <select id="filterGenre" class="filter-select"><option value="">All Genres</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>Student Age</label>
-                    <select id="filterAge" class="filter-select">
-                        <option value="">Any Age</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Language</label>
-                    <select id="filterLanguage" class="filter-select"><option value="">All Languages</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>Neurodiverse Comfort</label>
-                    <select id="filterComfort" class="filter-select">
-                        <option value="">Any Comfort Level</option>
-                        <option value="5">5+ (Some Experience)</option>
-                        <option value="6">6+ (Moderate)</option>
-                        <option value="7">7+ (Comfortable)</option>
-                        <option value="8">8+ (Very Comfortable)</option>
-                        <option value="9">9+ (Highly Experienced)</option>
-                        <option value="10">10 (Expert)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Special Needs</label>
-                    <select id="filterSpecialNeeds" class="filter-select">
-                        <option value="">Any</option>
-                        <option value="yes">Willing to Teach</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Formal Education</label>
-                    <select id="filterFormalEd" class="filter-select">
-                        <option value="">Any</option>
-                        <option value="yes">Has Formal Education</option>
-                    </select>
-                </div>
+        <!-- Popover backdrop & popovers -->
+        <div id="popoverBackdrop" class="popover-backdrop" onclick="closeAllPopovers()"></div>
+
+        <!-- Location popover -->
+        <div id="popoverLocation" class="popover">
+            <div class="popover-header">
+                <span class="popover-title">Location</span>
+            </div>
+            <div class="popover-field">
+                <label>State</label>
+                <select id="filterState" class="popover-select"><option value="">All States</option></select>
+            </div>
+            <div class="popover-field">
+                <label>Brand / Studio</label>
+                <select id="filterBrand" class="popover-select"><option value="">All Brands</option></select>
+            </div>
+            <div class="popover-field">
+                <label>City</label>
+                <select id="filterCity" class="popover-select"><option value="">All Cities</option></select>
+            </div>
+            <div class="popover-footer">
+                <button class="popover-btn" onclick="clearLocationFilters()">Clear</button>
+                <button class="popover-btn primary" onclick="closeAllPopovers()">Done</button>
+            </div>
+        </div>
+
+        <!-- Instruments popover -->
+        <div id="popoverInstruments" class="popover instruments-popover">
+            <div class="popover-header">
+                <span class="popover-title">Instruments</span>
+                <span class="popover-subtitle" id="instrumentMatchHint">Match all selected</span>
+            </div>
+            <div class="match-mode-toggle">
+                <button class="match-mode-btn active" id="matchAllBtn" onclick="setMatchMode('all')">Match all</button>
+                <button class="match-mode-btn" id="matchAnyBtn" onclick="setMatchMode('any')">Match any</button>
+            </div>
+            <div class="inst-search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="instrumentSearch" class="inst-search-input" placeholder="Filter instruments...">
+            </div>
+            <div id="instrumentList" class="inst-list"></div>
+            <div class="popover-footer">
+                <button class="popover-btn" onclick="clearInstrumentFilters()">Clear</button>
+                <button class="popover-btn primary" onclick="closeAllPopovers()">Done</button>
+            </div>
+        </div>
+
+        <!-- Level & genre popover -->
+        <div id="popoverLevel" class="popover">
+            <div class="popover-header">
+                <span class="popover-title">Level &amp; genre</span>
+            </div>
+            <div class="popover-field">
+                <label>Highest Level</label>
+                <select id="filterLevel" class="popover-select">
+                    <option value="">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+            </div>
+            <div class="popover-field">
+                <label>Genre</label>
+                <select id="filterGenre" class="popover-select"><option value="">All Genres</option></select>
+            </div>
+            <div class="popover-field">
+                <label>Student Age</label>
+                <select id="filterAge" class="popover-select">
+                    <option value="">Any Age</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            <div class="popover-footer">
+                <button class="popover-btn" onclick="clearLevelFilters()">Clear</button>
+                <button class="popover-btn primary" onclick="closeAllPopovers()">Done</button>
+            </div>
+        </div>
+
+        <!-- More popover -->
+        <div id="popoverMore" class="popover">
+            <div class="popover-header">
+                <span class="popover-title">More filters</span>
+            </div>
+            <div class="popover-field">
+                <label>Language</label>
+                <select id="filterLanguage" class="popover-select"><option value="">All Languages</option></select>
+            </div>
+            <div class="popover-field">
+                <label>Gender</label>
+                <select id="filterGender" class="popover-select"><option value="">Any</option></select>
+            </div>
+            <div class="popover-field">
+                <label>Neurodiverse Comfort</label>
+                <select id="filterComfort" class="popover-select">
+                    <option value="">Any Comfort Level</option>
+                    <option value="5">5+ (Some Experience)</option>
+                    <option value="6">6+ (Moderate)</option>
+                    <option value="7">7+ (Comfortable)</option>
+                    <option value="8">8+ (Very Comfortable)</option>
+                    <option value="9">9+ (Highly Experienced)</option>
+                    <option value="10">10 (Expert)</option>
+                </select>
+            </div>
+            <div class="popover-field">
+                <label>Special Needs</label>
+                <select id="filterSpecialNeeds" class="popover-select">
+                    <option value="">Any</option>
+                    <option value="yes">Willing to Teach</option>
+                </select>
+            </div>
+            <div class="popover-field">
+                <label>Formal Education</label>
+                <select id="filterFormalEd" class="popover-select">
+                    <option value="">Any</option>
+                    <option value="yes">Has Formal Education</option>
+                </select>
+            </div>
+            <div class="popover-footer">
+                <button class="popover-btn" onclick="clearMoreFilters()">Clear</button>
+                <button class="popover-btn primary" onclick="closeAllPopovers()">Done</button>
             </div>
         </div>
 
@@ -779,6 +880,7 @@
         </div>
 
         <div id="content" style="display: none;">
+            <div id="activeChips" class="active-chips-row"></div>
             <div class="results-info">
                 <span id="resultsCount" class="results-count"></span>
             </div>
@@ -824,8 +926,11 @@
         let zones = [];
         let activeZone = 'all';
         let selectedInstruments = [];
-        let filtersExpanded = true;
-        let moreFiltersOpen = false;
+        let instrumentMatchMode = 'all'; // 'all' or 'any'
+        let allInstrumentNames = [];
+        let activePopover = null;
+        let activeSuggestionIndex = -1;
+        let currentSuggestions = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -850,33 +955,67 @@
         }
 
         function setupFilterListeners() {
-            document.getElementById('teacherSearch').addEventListener('input', applyFilters);
-            ['filterCity', 'filterLevel', 'filterGenre', 'filterAge', 'filterLanguage', 'filterComfort', 'filterSpecialNeeds', 'filterFormalEd']
+            // Smart search
+            const search = document.getElementById('smartSearch');
+            search.addEventListener('input', onSearchInput);
+            search.addEventListener('keydown', onSearchKeydown);
+            search.addEventListener('focus', () => { if (search.value.trim()) renderSearchDropdown(search.value); });
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.smart-search-wrap')) closeSearchDropdown();
+            });
+
+            // Location filters cascade
+            document.getElementById('filterState').addEventListener('change', onStateFilterChange);
+            document.getElementById('filterBrand').addEventListener('change', onBrandFilterChange);
+            document.getElementById('filterCity').addEventListener('change', applyFilters);
+
+            // Other filter selects
+            ['filterLevel','filterGenre','filterAge','filterLanguage','filterGender','filterComfort','filterSpecialNeeds','filterFormalEd']
                 .forEach(id => document.getElementById(id).addEventListener('change', applyFilters));
+
+            // Instrument search inside popover
+            document.getElementById('instrumentSearch').addEventListener('input', () => {
+                renderInstrumentList(document.getElementById('instrumentSearch').value);
+            });
         }
 
-        // ============ TOGGLE FILTERS ============
-        function toggleFilters() {
-            filtersExpanded = !filtersExpanded;
-            document.getElementById('filterPrimary').classList.toggle('hidden', !filtersExpanded);
-            document.getElementById('moreFiltersToggle').style.display = filtersExpanded ? '' : 'none';
-            if (!filtersExpanded && moreFiltersOpen) {
-                moreFiltersOpen = false;
-                document.getElementById('filterSecondary').classList.remove('open');
-                document.getElementById('moreFiltersToggle').classList.remove('open');
+        // ============ POPOVERS ============
+        function togglePopover(name, btn) {
+            const id = 'popover' + name;
+            const pop = document.getElementById(id);
+            if (activePopover === id) { closeAllPopovers(); return; }
+            closeAllPopovers();
+
+            // Position the popover under the pill
+            const rect = btn.getBoundingClientRect();
+            const mainRect = document.querySelector('.main-content').getBoundingClientRect();
+            const top = rect.bottom - mainRect.top + 6;
+            let left = rect.left - mainRect.left;
+
+            // Keep inside viewport horizontally
+            const popWidth = name === 'Instruments' ? 320 : 280;
+            const maxLeft = mainRect.width - popWidth - 16;
+            if (left > maxLeft) left = Math.max(16, maxLeft);
+
+            pop.style.top = top + 'px';
+            pop.style.left = left + 'px';
+            pop.classList.add('active');
+            btn.classList.add('open');
+            document.getElementById('popoverBackdrop').classList.add('active');
+            activePopover = id;
+
+            if (name === 'Instruments') {
+                document.getElementById('instrumentSearch').value = '';
+                renderInstrumentList('');
+                setTimeout(() => document.getElementById('instrumentSearch').focus(), 50);
             }
-            document.getElementById('filterToggleIcon').classList.toggle('collapsed', !filtersExpanded);
         }
 
-        function toggleMoreFilters() {
-            moreFiltersOpen = !moreFiltersOpen;
-            document.getElementById('filterSecondary').classList.toggle('open', moreFiltersOpen);
-            document.getElementById('moreFiltersToggle').classList.toggle('open', moreFiltersOpen);
-            document.getElementById('moreFiltersToggle').querySelector('span') &&
-                (document.getElementById('moreFiltersToggle').childNodes[1].textContent = moreFiltersOpen ? ' Fewer filters' : ' More filters');
-            // update text node
-            const btn = document.getElementById('moreFiltersToggle');
-            btn.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = moreFiltersOpen ? ' Fewer filters' : ' More filters'; });
+        function closeAllPopovers() {
+            document.querySelectorAll('.popover').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('open'));
+            document.getElementById('popoverBackdrop').classList.remove('active');
+            activePopover = null;
         }
 
         // ============ LOAD DATA ============
@@ -941,9 +1080,12 @@
             populateSelect('filterState', states, 'All States');
             updateBrandOptions();
             updateCityOptions();
-            renderInstrumentCheckboxes();
+            allInstrumentNames = [...new Set(teachers.flatMap(t => t.instruments.map(i => i.instrument)).filter(Boolean))].sort();
+            renderInstrumentList('');
             const languageNames = [...new Set(teachers.flatMap(t => t.languages.map(l => l.language)).filter(Boolean))].sort();
             populateSelect('filterLanguage', languageNames, 'All Languages');
+            const genders = [...new Set(teachers.map(t => t.gender).filter(Boolean))].sort();
+            populateSelect('filterGender', genders, 'Any');
             const allGenres = new Set();
             teachers.forEach(t => t.instruments.forEach(i => {
                 if (i.genres) i.genres.split(',').forEach(g => { const tr = g.trim(); if (tr) allGenres.add(tr); });
@@ -986,44 +1128,60 @@
             if (cityNames.includes(cur)) document.getElementById('filterCity').value = cur;
         }
 
-        function renderInstrumentCheckboxes() {
-            const instrumentNames = [...new Set(teachers.flatMap(t => t.instruments.map(i => i.instrument)).filter(Boolean))].sort();
-            const container = document.getElementById('instrumentCheckboxGrid');
-            container.innerHTML = instrumentNames.map(inst => {
-                const isSelected = selectedInstruments.includes(inst);
-                return `<div class="instrument-checkbox ${isSelected ? 'selected' : ''}" onclick="toggleInstrumentFilter('${inst}', this)">
-                    <span class="check-icon"><i class="fas fa-check"></i></span>
-                    <span>${inst}</span>
-                </div>`;
-            }).join('');
-            updateSelectedInstrumentsInfo();
-        }
-
-        function toggleInstrumentFilter(instrument, el) {
-            const idx = selectedInstruments.indexOf(instrument);
-            if (idx === -1) { selectedInstruments.push(instrument); el.classList.add('selected'); }
-            else { selectedInstruments.splice(idx, 1); el.classList.remove('selected'); }
-            updateSelectedInstrumentsInfo();
-            applyFilters();
-        }
-
-        function updateSelectedInstrumentsInfo() {
-            const info = document.getElementById('selectedInstrumentsInfo');
-            if (selectedInstruments.length === 0) info.textContent = '';
-            else if (selectedInstruments.length === 1) info.textContent = `Showing teachers who teach: ${selectedInstruments[0]}`;
-            else info.textContent = `Showing teachers who teach ALL of: ${selectedInstruments.join(', ')}`;
-        }
-
         function populateSelect(id, values, defaultLabel) {
             const select = document.getElementById(id);
             select.innerHTML = `<option value="">${defaultLabel}</option>`;
             values.forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v; select.appendChild(opt); });
         }
 
+        // ============ INSTRUMENTS ============
+        function renderInstrumentList(filterText) {
+            const ft = (filterText || '').toLowerCase();
+            const list = document.getElementById('instrumentList');
+            const visible = allInstrumentNames.filter(n => n.toLowerCase().includes(ft));
+            if (visible.length === 0) {
+                list.innerHTML = `<div style="padding:1rem;text-align:center;color:var(--text-light);font-size:0.8125rem;">No matches</div>`;
+                return;
+            }
+            list.innerHTML = visible.map(inst => {
+                const isSelected = selectedInstruments.includes(inst);
+                return `<div class="inst-option ${isSelected ? 'selected' : ''}" onclick="toggleInstrumentSelection('${inst.replace(/'/g, "\\'")}')">
+                    <span class="inst-checkbox"><i class="fas fa-check"></i></span>
+                    <span class="inst-option-label">${inst}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleInstrumentSelection(instrument) {
+            const idx = selectedInstruments.indexOf(instrument);
+            if (idx === -1) selectedInstruments.push(instrument);
+            else selectedInstruments.splice(idx, 1);
+            renderInstrumentList(document.getElementById('instrumentSearch').value);
+            applyFilters();
+        }
+
+        function setMatchMode(mode) {
+            instrumentMatchMode = mode;
+            document.getElementById('matchAllBtn').classList.toggle('active', mode === 'all');
+            document.getElementById('matchAnyBtn').classList.toggle('active', mode === 'any');
+            document.getElementById('instrumentMatchHint').textContent =
+                mode === 'all' ? 'Match all selected' : 'Match any selected';
+            applyFilters();
+        }
+
+        function clearInstrumentFilters() {
+            selectedInstruments = [];
+            renderInstrumentList(document.getElementById('instrumentSearch').value);
+            applyFilters();
+        }
+
+        // ============ ZONE TABS ============
         function renderZoneTabs() {
             const container = document.getElementById('zoneFilterTabs');
             const zonesWithTeachers = zones.filter(z => teachers.some(t => t.zone && t.zone.id === z.id));
-            if (zonesWithTeachers.length === 0) { container.style.display = 'none'; return; }
+            const row = document.getElementById('zoneRow');
+            if (zonesWithTeachers.length === 0) { row.style.display = 'none'; return; }
+            row.style.display = '';
             let html = `<button class="zone-tab ${activeZone === 'all' ? 'active' : ''}" onclick="filterByZone('all')">All Zones</button>`;
             html += zonesWithTeachers.map(z => `<button class="zone-tab ${activeZone === z.id ? 'active' : ''}" onclick="filterByZone('${z.id}')">${z.zone_name}</button>`).join('');
             container.innerHTML = html;
@@ -1035,25 +1193,194 @@
             applyFilters();
         }
 
+        // ============ SMART SEARCH ============
+        function onSearchInput(e) {
+            const q = e.target.value;
+            document.getElementById('smartSearchClear').classList.toggle('visible', q.length > 0);
+            if (q.trim().length > 0) renderSearchDropdown(q);
+            else closeSearchDropdown();
+            applyFilters();
+        }
+
+        function onSearchKeydown(e) {
+            const dropdown = document.getElementById('searchDropdown');
+            if (!dropdown.classList.contains('active')) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, currentSuggestions.length - 1);
+                updateActiveSuggestion();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, -1);
+                updateActiveSuggestion();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeSuggestionIndex >= 0 && currentSuggestions[activeSuggestionIndex]) {
+                    const s = currentSuggestions[activeSuggestionIndex];
+                    applySuggestion(s.type, s.value);
+                }
+            } else if (e.key === 'Escape') {
+                closeSearchDropdown();
+            }
+        }
+
+        function updateActiveSuggestion() {
+            document.querySelectorAll('.search-dropdown-item').forEach((el, i) => {
+                el.classList.toggle('active-suggestion', i === activeSuggestionIndex);
+            });
+        }
+
+        function clearSmartSearch() {
+            document.getElementById('smartSearch').value = '';
+            document.getElementById('smartSearchClear').classList.remove('visible');
+            closeSearchDropdown();
+            applyFilters();
+        }
+
+        function closeSearchDropdown() {
+            document.getElementById('searchDropdown').classList.remove('active');
+            activeSuggestionIndex = -1;
+            currentSuggestions = [];
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return text;
+            const idx = text.toLowerCase().indexOf(query.toLowerCase());
+            if (idx === -1) return text;
+            return text.substring(0, idx) +
+                   `<span class="match">${text.substring(idx, idx + query.length)}</span>` +
+                   text.substring(idx + query.length);
+        }
+
+        function renderSearchDropdown(query) {
+            const q = query.trim().toLowerCase();
+            const dropdown = document.getElementById('searchDropdown');
+            if (!q) { closeSearchDropdown(); return; }
+
+            const sections = [];
+            const MAX_PER_SECTION = 5;
+
+            // Teachers
+            const matchedTeachers = teachers
+                .filter(t => `${t.first_name} ${t.last_name}`.toLowerCase().includes(q))
+                .slice(0, MAX_PER_SECTION)
+                .map(t => ({
+                    type: 'teacher',
+                    value: t.id,
+                    label: `${t.first_name} ${t.last_name}`,
+                    meta: t.brand || ''
+                }));
+            if (matchedTeachers.length) sections.push({ label: 'Teachers', icon: 'fa-user', items: matchedTeachers });
+
+            // Instruments
+            const matchedInst = allInstrumentNames
+                .filter(i => i.toLowerCase().includes(q))
+                .slice(0, MAX_PER_SECTION)
+                .map(i => ({ type: 'instrument', value: i, label: i, meta: '' }));
+            if (matchedInst.length) sections.push({ label: 'Instruments', icon: 'fa-music', items: matchedInst });
+
+            // Cities
+            const allCities = [...new Set(teachers.flatMap(t => t.cities.map(c => c.city)).filter(Boolean))];
+            const matchedCities = allCities
+                .filter(c => c.toLowerCase().includes(q)).sort()
+                .slice(0, MAX_PER_SECTION)
+                .map(c => ({ type: 'city', value: c, label: c, meta: '' }));
+            if (matchedCities.length) sections.push({ label: 'Cities', icon: 'fa-map-marker-alt', items: matchedCities });
+
+            // Brands
+            const allBrands = [...new Set(teachers.map(t => t.brand).filter(Boolean))];
+            const matchedBrands = allBrands
+                .filter(b => b.toLowerCase().includes(q)).sort()
+                .slice(0, MAX_PER_SECTION)
+                .map(b => ({ type: 'brand', value: b, label: b, meta: '' }));
+            if (matchedBrands.length) sections.push({ label: 'Brands', icon: 'fa-building', items: matchedBrands });
+
+            // Languages
+            const allLangs = [...new Set(teachers.flatMap(t => t.languages.map(l => l.language)).filter(Boolean))];
+            const matchedLangs = allLangs
+                .filter(l => l.toLowerCase().includes(q)).sort()
+                .slice(0, MAX_PER_SECTION)
+                .map(l => ({ type: 'language', value: l, label: l, meta: '' }));
+            if (matchedLangs.length) sections.push({ label: 'Languages', icon: 'fa-language', items: matchedLangs });
+
+            // Genres
+            const allGenres = new Set();
+            teachers.forEach(t => t.instruments.forEach(i => {
+                if (i.genres) i.genres.split(',').forEach(g => { const tr = g.trim(); if (tr) allGenres.add(tr); });
+            }));
+            const matchedGenres = [...allGenres]
+                .filter(g => g.toLowerCase().includes(q)).sort()
+                .slice(0, MAX_PER_SECTION)
+                .map(g => ({ type: 'genre', value: g, label: g, meta: '' }));
+            if (matchedGenres.length) sections.push({ label: 'Genres', icon: 'fa-guitar', items: matchedGenres });
+
+            currentSuggestions = sections.flatMap(s => s.items);
+            activeSuggestionIndex = -1;
+
+            if (sections.length === 0) {
+                dropdown.innerHTML = `<div class="search-dropdown-empty">No matches for "${query}"</div>`;
+            } else {
+                dropdown.innerHTML = sections.map(s => `
+                    <div class="search-dropdown-section">
+                        <div class="search-dropdown-label">${s.label}</div>
+                        ${s.items.map(item => `
+                            <div class="search-dropdown-item" onclick="applySuggestion('${item.type}', ${JSON.stringify(item.value).replace(/"/g, '&quot;')})">
+                                <i class="fas ${s.icon}"></i>
+                                <span>${highlightMatch(item.label, query)}</span>
+                                ${item.meta ? `<span class="item-meta">${item.meta}</span>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+            }
+            dropdown.classList.add('active');
+        }
+
+        function applySuggestion(type, value) {
+            // Per spec: add as filter and clear search box
+            document.getElementById('smartSearch').value = '';
+            document.getElementById('smartSearchClear').classList.remove('visible');
+            closeSearchDropdown();
+
+            switch (type) {
+                case 'teacher':
+                    // For teachers, put their name back in the search box (no dedicated filter for a single teacher)
+                    const t = teachers.find(x => x.id === value);
+                    if (t) {
+                        document.getElementById('smartSearch').value = `${t.first_name} ${t.last_name}`;
+                        document.getElementById('smartSearchClear').classList.add('visible');
+                    }
+                    break;
+                case 'instrument':
+                    if (!selectedInstruments.includes(value)) selectedInstruments.push(value);
+                    break;
+                case 'city':
+                    document.getElementById('filterCity').value = value;
+                    break;
+                case 'brand':
+                    document.getElementById('filterBrand').value = value;
+                    updateCityOptions();
+                    break;
+                case 'language':
+                    document.getElementById('filterLanguage').value = value;
+                    break;
+                case 'genre':
+                    document.getElementById('filterGenre').value = value;
+                    break;
+            }
+            applyFilters();
+        }
+
+        // ============ FILTERS ============
         function getActiveFilters() {
             const filters = {};
-            const search = document.getElementById('teacherSearch').value.trim();
+            const search = document.getElementById('smartSearch').value.trim();
             if (search) filters.search = search;
             if (activeZone !== 'all') filters.zone = activeZone;
-            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterGender','filterComfort','filterSpecialNeeds','filterFormalEd']
                 .forEach(id => { const val = document.getElementById(id).value; if (val) filters[id] = val; });
             if (selectedInstruments.length > 0) filters.selectedInstruments = [...selectedInstruments];
             return filters;
-        }
-
-        function countActiveFilters(filters) {
-            let count = 0;
-            if (filters.search) count++;
-            if (filters.zone) count++;
-            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
-                .forEach(id => { if (filters[id]) count++; });
-            if (filters.selectedInstruments) count += filters.selectedInstruments.length;
-            return count;
         }
 
         function applyFilters() {
@@ -1062,15 +1389,33 @@
             const levelOrder = { beginner: 1, intermediate: 2, advanced: 3 };
 
             const filtered = teachers.filter(t => {
-                if (searchLower && !`${t.first_name} ${t.last_name}`.toLowerCase().includes(searchLower)) return false;
+                // Multi-field search
+                if (searchLower) {
+                    const haystack = [
+                        `${t.first_name} ${t.last_name}`,
+                        t.brand || '',
+                        t.state || '',
+                        ...t.cities.map(c => c.city),
+                        ...t.languages.map(l => l.language),
+                        ...t.instruments.map(i => i.instrument),
+                        ...t.instruments.flatMap(i => (i.genres || '').split(',').map(g => g.trim())),
+                    ].join(' ').toLowerCase();
+                    if (!haystack.includes(searchLower)) return false;
+                }
                 if (filters.zone && (!t.zone || t.zone.id !== filters.zone)) return false;
                 if (filters.filterState && t.state !== filters.filterState) return false;
                 if (filters.filterBrand && t.brand !== filters.filterBrand) return false;
                 if (filters.filterCity && !t.cities.some(c => c.city === filters.filterCity)) return false;
                 if (filters.filterLanguage && !t.languages.some(l => l.language === filters.filterLanguage)) return false;
+                if (filters.filterGender && t.gender !== filters.filterGender) return false;
+
                 if (filters.selectedInstruments && filters.selectedInstruments.length > 0) {
                     const teacherInsts = t.instruments.map(i => i.instrument);
-                    if (!filters.selectedInstruments.every(inst => teacherInsts.includes(inst))) return false;
+                    if (instrumentMatchMode === 'all') {
+                        if (!filters.selectedInstruments.every(inst => teacherInsts.includes(inst))) return false;
+                    } else {
+                        if (!filters.selectedInstruments.some(inst => teacherInsts.includes(inst))) return false;
+                    }
                 }
                 if (filters.filterLevel) {
                     const targetLevel = levelOrder[filters.filterLevel] || 0;
@@ -1095,25 +1440,47 @@
                 return true;
             });
 
-            // Update filter count badge
-            const count = countActiveFilters(filters);
-            const badge = document.getElementById('filterCountBadge');
-            if (count > 0) { badge.textContent = count; badge.classList.add('visible'); }
-            else badge.classList.remove('visible');
-
-            // Auto-open more filters if a secondary filter is active
-            if (!moreFiltersOpen && ['filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd'].some(id => filters[id])) {
-                moreFiltersOpen = true;
-                document.getElementById('filterSecondary').classList.add('open');
-                document.getElementById('moreFiltersToggle').classList.add('open');
-            }
-
-            renderActiveFilterChips(filters);
+            updatePillCounts(filters);
+            renderActiveChips(filters);
             renderTeachers(filtered);
         }
 
-        function renderActiveFilterChips(filters) {
-            const container = document.getElementById('activeFilters');
+        function updatePillCounts(filters) {
+            // Location: state + brand + city
+            let locCount = 0;
+            ['filterState','filterBrand','filterCity'].forEach(id => { if (filters[id]) locCount++; });
+            setPillCount('Location', locCount);
+
+            // Instruments
+            const instCount = (filters.selectedInstruments || []).length;
+            setPillCount('Instruments', instCount);
+
+            // Level: level + genre + age
+            let lvlCount = 0;
+            ['filterLevel','filterGenre','filterAge'].forEach(id => { if (filters[id]) lvlCount++; });
+            setPillCount('Level', lvlCount);
+
+            // More: language + gender + comfort + specialNeeds + formalEd
+            let moreCount = 0;
+            ['filterLanguage','filterGender','filterComfort','filterSpecialNeeds','filterFormalEd'].forEach(id => { if (filters[id]) moreCount++; });
+            setPillCount('More', moreCount);
+        }
+
+        function setPillCount(name, count) {
+            const pill = document.getElementById('pill' + name);
+            const badge = document.getElementById('count' + name);
+            if (count > 0) {
+                pill.classList.add('has-active');
+                badge.style.display = 'inline-flex';
+                badge.textContent = count;
+            } else {
+                pill.classList.remove('has-active');
+                badge.style.display = 'none';
+            }
+        }
+
+        function renderActiveChips(filters) {
+            const container = document.getElementById('activeChips');
             const chips = [];
             const labels = {
                 zone: () => { const z = zones.find(z => z.id === filters.zone); return z ? `Zone: ${z.zone_name}` : null; },
@@ -1124,6 +1491,7 @@
                 filterGenre: () => `Genre: ${filters.filterGenre}`,
                 filterAge: () => `Age: ${filters.filterAge}`,
                 filterLanguage: () => `Language: ${filters.filterLanguage}`,
+                filterGender: () => `Gender: ${filters.filterGender}`,
                 filterComfort: () => `Comfort: ${filters.filterComfort}+`,
                 filterSpecialNeeds: () => `Special Needs: Yes`,
                 filterFormalEd: () => `Formal Education: Yes`,
@@ -1133,23 +1501,26 @@
                     const label = labels[key]();
                     if (label) {
                         const clearAction = key === 'zone' ? `filterByZone('all')` : `clearFilter('${key}')`;
-                        chips.push(`<span class="filter-chip">${label}<button onclick="${clearAction}">&times;</button></span>`);
+                        chips.push(`<span class="active-chip">${label}<button onclick="${clearAction}"><i class="fas fa-times"></i></button></span>`);
                     }
                 }
             });
             if (filters.selectedInstruments) {
                 filters.selectedInstruments.forEach(inst => {
-                    chips.push(`<span class="filter-chip">Instrument: ${inst}<button onclick="clearInstrumentFilter('${inst}')">&times;</button></span>`);
+                    chips.push(`<span class="active-chip">Instrument: ${inst}<button onclick="removeInstrumentChip('${inst.replace(/'/g, "\\'")}')"><i class="fas fa-times"></i></button></span>`);
                 });
             }
-            if (chips.length > 1) chips.push(`<button class="clear-all-btn" onclick="clearAllFilters()">Clear All</button>`);
+            if (filters.search) {
+                chips.push(`<span class="active-chip">Search: "${filters.search}"<button onclick="clearSmartSearch()"><i class="fas fa-times"></i></button></span>`);
+            }
+            if (chips.length > 1) chips.push(`<button class="active-chips-clear" onclick="clearAllFilters()">Clear all</button>`);
             container.innerHTML = chips.join('');
         }
 
-        function clearInstrumentFilter(instrument) {
+        function removeInstrumentChip(instrument) {
             const idx = selectedInstruments.indexOf(instrument);
             if (idx !== -1) selectedInstruments.splice(idx, 1);
-            renderInstrumentCheckboxes();
+            renderInstrumentList(document.getElementById('instrumentSearch')?.value || '');
             applyFilters();
         }
 
@@ -1166,16 +1537,36 @@
             applyFilters();
         }
 
+        function clearLocationFilters() {
+            ['filterState','filterBrand','filterCity'].forEach(id => document.getElementById(id).value = '');
+            updateBrandOptions(); updateCityOptions();
+            applyFilters();
+        }
+        function clearLevelFilters() {
+            ['filterLevel','filterGenre','filterAge'].forEach(id => document.getElementById(id).value = '');
+            applyFilters();
+        }
+        function clearMoreFilters() {
+            ['filterLanguage','filterGender','filterComfort','filterSpecialNeeds','filterFormalEd'].forEach(id => document.getElementById(id).value = '');
+            applyFilters();
+        }
+
         function clearAllFilters() {
-            document.getElementById('teacherSearch').value = '';
+            document.getElementById('smartSearch').value = '';
+            document.getElementById('smartSearchClear').classList.remove('visible');
             activeZone = 'all';
             renderZoneTabs();
-            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterComfort','filterSpecialNeeds','filterFormalEd']
+            ['filterState','filterBrand','filterCity','filterLevel','filterGenre','filterAge','filterLanguage','filterGender','filterComfort','filterSpecialNeeds','filterFormalEd']
                 .forEach(id => document.getElementById(id).value = '');
             selectedInstruments = [];
-            renderInstrumentCheckboxes();
+            instrumentMatchMode = 'all';
+            document.getElementById('matchAllBtn').classList.add('active');
+            document.getElementById('matchAnyBtn').classList.remove('active');
+            document.getElementById('instrumentMatchHint').textContent = 'Match all selected';
+            renderInstrumentList('');
             updateBrandOptions();
             updateCityOptions();
+            closeSearchDropdown();
             applyFilters();
         }
 
@@ -1206,12 +1597,6 @@
                 const avatarHtml = t.photo_url
                     ? `<img src="${t.photo_url}" alt="${t.first_name}">`
                     : initials;
-
-                const instrumentChips = t.instruments.map(i => `
-                    <span class="instrument-chip">
-                        <span class="level-dot level-${i.teacher_level || 'beginner'}"></span>
-                        ${i.instrument}${i.teacher_level ? ` <span style="font-weight:400;opacity:0.7;">(${i.teacher_level})</span>` : ''}
-                    </span>`).join('');
 
                 const cityList = t.cities.map(c => c.city).join(', ');
                 const languageList = t.languages.map(l => l.language).join(', ');
@@ -1259,18 +1644,11 @@
             }).join('');
         }
 
-        // ============ MODAL DROPDOWN TOGGLES ============
+        // ============ MODAL ============
         function toggleModalDropdown(btn) {
             btn.closest('.modal-dropdown').classList.toggle('open');
         }
 
-        // ============ CARD SECTION TOGGLES ============
-        function toggleCardSection(btn) {
-            btn.classList.toggle('open');
-            btn.nextElementSibling.classList.toggle('open');
-        }
-
-        // ============ MODAL ============
         function openTeacherDetail(teacherId) {
             const t = teachers.find(x => x.id === teacherId);
             if (!t) return;
@@ -1286,7 +1664,6 @@
             const comfortLevel = t.learning_needs_comfort || 0;
 
             let html = `
-                <!-- Hero with photo -->
                 <div class="modal-hero">
                     <div class="modal-avatar">${avatarHtml}</div>
                     <div class="modal-hero-text">
@@ -1296,7 +1673,6 @@
                 </div>
                 <div class="modal-inner">`;
 
-            // Instruments — right at the top, above bio
             if (t.instruments.length > 0) {
                 html += `
                 <div class="detail-section">
@@ -1312,7 +1688,6 @@
                 </div>`;
             }
 
-            // Bio — collapsible, below instruments
             if (t.bio) {
                 html += `
                 <div class="modal-dropdown">
@@ -1326,7 +1701,6 @@
                 </div>`;
             }
 
-            // Additional notes — collapsible
             if (t.additional_notes) {
                 html += `
                 <div class="modal-dropdown">
@@ -1340,7 +1714,6 @@
                 </div>`;
             }
 
-            // Comfort bar
             if (comfortLevel > 0) {
                 html += `
                     <div class="detail-section">
@@ -1364,7 +1737,6 @@
                     </div>`;
             }
 
-            // Overview
             html += `
                 <div class="detail-section">
                     <div class="detail-section-title">Overview</div>
@@ -1379,7 +1751,6 @@
                     </div>
                 </div>`;
 
-            // Education & Strengths — shown directly, no dropdown
             if (t.formal_music_education || t.formal_education_details || strengths.length > 0) {
                 html += `<div class="detail-section"><div class="detail-section-title">Education & Strengths</div>`;
                 if (strengths.length > 0) {
@@ -1391,7 +1762,7 @@
                 html += `</div>`;
             }
 
-            html += `</div>`; // close modal-inner
+            html += `</div>`;
 
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('teacherModal').classList.add('active');
@@ -1460,8 +1831,10 @@
             if (e.key === 'Escape') {
                 if (document.getElementById('instrumentOverlay').classList.contains('active')) {
                     closeInstrumentOverlay();
-                } else {
+                } else if (document.getElementById('teacherModal').classList.contains('active')) {
                     closeModal();
+                } else if (activePopover) {
+                    closeAllPopovers();
                 }
             }
         });
