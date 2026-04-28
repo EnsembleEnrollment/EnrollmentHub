@@ -135,7 +135,7 @@
             margin-bottom: 1rem;
         }
         .smart-search-wrap > i.fa-search {
-            position: absolute; left: 0.875rem; top: 1.25rem; transform: translateY(-50%);
+            position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
             color: var(--primary); font-size: 0.875rem; pointer-events: none;
         }
         .smart-search-input {
@@ -149,7 +149,7 @@
             box-shadow: 0 0 0 3px rgba(250,128,114,0.1);
         }
         .smart-search-clear {
-            position: absolute; right: 0.625rem; top: 1.25rem; transform: translateY(-50%);
+            position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
             width: 22px; height: 22px; border: none; background: var(--gray-200);
             color: var(--text-secondary); border-radius: 50%; cursor: pointer;
             display: none; align-items: center; justify-content: center;
@@ -157,40 +157,6 @@
         }
         .smart-search-clear:hover { background: var(--gray-300); color: var(--text-primary); }
         .smart-search-clear.visible { display: flex; }
-
-        .search-dropdown {
-            position: relative;
-            margin-top: 0.5rem;
-            background: white; border: 1px solid var(--gray-200); border-radius: 10px;
-            box-shadow: var(--shadow-md); z-index: 500;
-            max-height: 360px; overflow-y: auto; display: none;
-        }
-        .search-dropdown.active { display: block; }
-        .search-dropdown-section { padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); }
-        .search-dropdown-section:last-child { border-bottom: none; }
-        .search-dropdown-label {
-            font-size: 0.6875rem; font-weight: 700; color: var(--text-light);
-            text-transform: uppercase; letter-spacing: 0.05em;
-            padding: 0.25rem 0.875rem 0.5rem;
-        }
-        .search-dropdown-item {
-            display: flex; align-items: center; gap: 0.625rem;
-            padding: 0.5rem 0.875rem; cursor: pointer; transition: background 0.15s;
-            font-size: 0.875rem; color: var(--text-primary);
-        }
-        .search-dropdown-item:hover, .search-dropdown-item.active-suggestion {
-            background: rgba(250, 128, 114, 0.08); color: var(--primary-dark);
-        }
-        .search-dropdown-item i {
-            color: var(--primary); width: 14px; font-size: 0.75rem; flex-shrink: 0;
-        }
-        .search-dropdown-item .item-meta {
-            margin-left: auto; font-size: 0.75rem; color: var(--text-light);
-        }
-        .search-dropdown-item .match { font-weight: 700; color: var(--primary-dark); }
-        .search-dropdown-empty {
-            padding: 1rem; text-align: center; color: var(--text-light); font-size: 0.875rem;
-        }
 
         .zone-filter-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
         .zone-tab {
@@ -832,12 +798,11 @@
                 <h2 class="section-title"><i class="fas fa-building"></i> Brands</h2>
             </div>
 
-            <!-- Smart search -->
+            <!-- Search -->
             <div class="smart-search-wrap">
                 <i class="fas fa-search"></i>
-                <input type="text" id="brandSearch" class="smart-search-input" placeholder="Search brands, cities, states, prices, zones...">
+                <input type="text" id="brandSearch" class="smart-search-input" placeholder="Search by brand, city, or state...">
                 <button id="brandSearchClear" class="smart-search-clear" onclick="clearBrandSearch()"><i class="fas fa-times"></i></button>
-                <div id="searchDropdown" class="search-dropdown"></div>
             </div>
 
             <div class="zone-filter-tabs" id="zoneFilterTabs"></div>
@@ -916,10 +881,6 @@ let activeZone = 'all', activeCategory = null;
 // Enriched studio data
 let studioInstruments = [], studioLinks = [], studioAdmins = [];
 let studioScholarships = [], studioNotes = [], studioPolicies = [], studioDiscounts = [];
-
-// Smart search state
-let activeSuggestionIndex = -1;
-let currentSuggestions = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1015,16 +976,9 @@ async function loadData() {
         renderTabs();
         renderTabContents();
 
-        // Smart search wiring
+        // Search wiring — simple filter on brand name, city, state
         const brandSearch = document.getElementById('brandSearch');
         brandSearch.addEventListener('input', onSearchInput);
-        brandSearch.addEventListener('keydown', onSearchKeydown);
-        brandSearch.addEventListener('focus', () => {
-            if (brandSearch.value.trim()) renderSearchDropdown(brandSearch.value);
-        });
-        document.addEventListener('click', e => {
-            if (!e.target.closest('.smart-search-wrap')) closeSearchDropdown();
-        });
 
         // Modal search wiring (debounced — re-rendering the modal on each keystroke is expensive)
         const modalSearch = document.getElementById('modalSearch');
@@ -1039,7 +993,7 @@ async function loadData() {
         // Close modals on overlay click
         document.getElementById('studioModal').addEventListener('click', e => { if (e.target.id === 'studioModal') closeModal(); });
         document.getElementById('pickerOverlay').addEventListener('click', e => { if (e.target.id === 'pickerOverlay') closePicker(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closePicker(); closeSearchDropdown(); } });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closePicker(); } });
 
     } catch(err) {
         console.error(err);
@@ -1065,166 +1019,16 @@ function filterByZone(zoneId) {
     renderBrands();
 }
 
-/* ── SMART SEARCH ── */
+/* ── SEARCH ── */
 function onSearchInput(e) {
     const q = e.target.value;
     document.getElementById('brandSearchClear').classList.toggle('visible', q.length > 0);
-    if (q.trim().length > 0) renderSearchDropdown(q);
-    else closeSearchDropdown();
     renderBrands();
-}
-
-function onSearchKeydown(e) {
-    const dropdown = document.getElementById('searchDropdown');
-    if (!dropdown.classList.contains('active')) return;
-    if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, currentSuggestions.length - 1);
-        updateActiveSuggestion();
-    } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, -1);
-        updateActiveSuggestion();
-    } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (activeSuggestionIndex >= 0 && currentSuggestions[activeSuggestionIndex]) {
-            const s = currentSuggestions[activeSuggestionIndex];
-            applySuggestion(s.type, s.value);
-        }
-    } else if (e.key === 'Escape') {
-        closeSearchDropdown();
-    }
-}
-
-function updateActiveSuggestion() {
-    document.querySelectorAll('.search-dropdown-item').forEach((el, i) => {
-        el.classList.toggle('active-suggestion', i === activeSuggestionIndex);
-    });
 }
 
 function clearBrandSearch() {
     document.getElementById('brandSearch').value = '';
     document.getElementById('brandSearchClear').classList.remove('visible');
-    closeSearchDropdown();
-    renderBrands();
-}
-
-function closeSearchDropdown() {
-    document.getElementById('searchDropdown').classList.remove('active');
-    activeSuggestionIndex = -1;
-    currentSuggestions = [];
-}
-
-function highlightMatch(text, query) {
-    if (!query) return text;
-    const idx = text.toLowerCase().indexOf(query.toLowerCase());
-    if (idx === -1) return text;
-    return text.substring(0, idx) +
-           `<span class="match">${text.substring(idx, idx + query.length)}</span>` +
-           text.substring(idx + query.length);
-}
-
-function renderSearchDropdown(query) {
-    const q = query.trim().toLowerCase();
-    const dropdown = document.getElementById('searchDropdown');
-    if (!q) { closeSearchDropdown(); return; }
-
-    const sections = [];
-    const MAX_PER_SECTION = 5;
-
-    // Brands by name, price, annual fee
-    const matchedBrands = allBrands
-        .filter(b =>
-            (b.name||'').toLowerCase().includes(q) ||
-            (b.display_price||'').toLowerCase().includes(q) ||
-            (b.display_annual_fee||'').toLowerCase().includes(q) ||
-            (b.phone_number||'').toLowerCase().includes(q)
-        )
-        .slice(0, MAX_PER_SECTION)
-        .map(b => ({
-            type: 'brand',
-            value: b.id,
-            label: b.name || 'Unnamed brand',
-            meta: [b.state, b.zone?.zone_name].filter(Boolean).join(' · ')
-        }));
-    if (matchedBrands.length) sections.push({ label: 'Brands', icon: 'fa-building', items: matchedBrands });
-
-    // States
-    const allStates = [...new Set(allBrands.map(b => b.state).filter(Boolean))];
-    const matchedStates = allStates
-        .filter(s => s.toLowerCase().includes(q)).sort()
-        .slice(0, MAX_PER_SECTION)
-        .map(s => ({ type: 'state', value: s, label: s, meta: '' }));
-    if (matchedStates.length) sections.push({ label: 'States', icon: 'fa-flag-usa', items: matchedStates });
-
-    // Cities (from studios)
-    const cityMap = new Map(); // city -> brand_id of first match
-    allStudios.forEach(st => {
-        if (st.city && !cityMap.has(st.city) && st.city.toLowerCase().includes(q)) {
-            cityMap.set(st.city, st.brand_id);
-        }
-    });
-    const matchedCities = [...cityMap.entries()]
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .slice(0, MAX_PER_SECTION)
-        .map(([city, brandId]) => {
-            const brand = allBrands.find(b => b.id === brandId);
-            return { type: 'city', value: city, label: city, meta: brand ? brand.name : '' };
-        });
-    if (matchedCities.length) sections.push({ label: 'Cities', icon: 'fa-city', items: matchedCities });
-
-    // Zones
-    const matchedZones = allZones
-        .filter(z => (z.zone_name||'').toLowerCase().includes(q))
-        .slice(0, MAX_PER_SECTION)
-        .map(z => ({ type: 'zone', value: z.id, label: z.zone_name, meta: '' }));
-    if (matchedZones.length) sections.push({ label: 'Zones', icon: 'fa-layer-group', items: matchedZones });
-
-    currentSuggestions = sections.flatMap(s => s.items);
-    activeSuggestionIndex = -1;
-
-    if (sections.length === 0) {
-        dropdown.innerHTML = `<div class="search-dropdown-empty">No matches for "${query}"</div>`;
-    } else {
-        dropdown.innerHTML = sections.map(s => `
-            <div class="search-dropdown-section">
-                <div class="search-dropdown-label">${s.label}</div>
-                ${s.items.map(item => `
-                    <div class="search-dropdown-item" onclick="applySuggestion('${item.type}', ${JSON.stringify(item.value).replace(/"/g, '&quot;')})">
-                        <i class="fas ${s.icon}"></i>
-                        <span>${highlightMatch(item.label, query)}</span>
-                        ${item.meta ? `<span class="item-meta">${item.meta}</span>` : ''}
-                    </div>
-                `).join('')}
-            </div>
-        `).join('');
-    }
-    dropdown.classList.add('active');
-}
-
-function applySuggestion(type, value) {
-    closeSearchDropdown();
-    document.getElementById('brandSearch').value = '';
-    document.getElementById('brandSearchClear').classList.remove('visible');
-
-    switch (type) {
-        case 'brand':
-            // Open the studio modal directly for that brand
-            handleInfoClick(value);
-            break;
-        case 'state':
-            // Use the state in the search to filter brands
-            document.getElementById('brandSearch').value = value;
-            document.getElementById('brandSearchClear').classList.add('visible');
-            break;
-        case 'city':
-            document.getElementById('brandSearch').value = value;
-            document.getElementById('brandSearchClear').classList.add('visible');
-            break;
-        case 'zone':
-            filterByZone(value);
-            break;
-    }
     renderBrands();
 }
 
@@ -1236,19 +1040,14 @@ function renderBrands() {
     let filtered = allBrands;
     if (activeZone !== 'all') filtered = filtered.filter(b => b.zone_id === activeZone);
 
-    // Multi-field smart filter: name, state, price, annual fee, phone, zone, plus studio cities
+    // Filter: brand name, city (from studios), or state
     if (q) {
         filtered = filtered.filter(b => {
             const studiosOfBrand = allStudios.filter(s => s.brand_id === b.id);
             const haystack = [
                 b.name || '',
                 b.state || '',
-                b.display_price || '',
-                b.display_annual_fee || '',
-                b.phone_number || '',
-                b.zone?.zone_name || '',
                 ...studiosOfBrand.map(s => s.city || ''),
-                ...studiosOfBrand.map(s => s.address || ''),
             ].join(' ').toLowerCase();
             return haystack.includes(q);
         });
