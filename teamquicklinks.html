@@ -1040,17 +1040,24 @@ function renderBrands() {
     let filtered = allBrands;
     if (activeZone !== 'all') filtered = filtered.filter(b => b.zone_id === activeZone);
 
-    // Filter: brand name, city (from studios), or state
+    // Filter + prioritize: brand name first, then city, then state
     if (q) {
-        filtered = filtered.filter(b => {
+        const brandMatches = [];
+        const cityMatches = [];
+        const stateMatches = [];
+
+        filtered.forEach(b => {
+            const name = (b.name || '').toLowerCase();
+            const state = (b.state || '').toLowerCase();
             const studiosOfBrand = allStudios.filter(s => s.brand_id === b.id);
-            const haystack = [
-                b.name || '',
-                b.state || '',
-                ...studiosOfBrand.map(s => s.city || ''),
-            ].join(' ').toLowerCase();
-            return haystack.includes(q);
+            const cityHit = studiosOfBrand.some(s => (s.city || '').toLowerCase().includes(q));
+
+            if (name.includes(q))       brandMatches.push(b);
+            else if (cityHit)           cityMatches.push(b);
+            else if (state.includes(q)) stateMatches.push(b);
         });
+
+        filtered = [...brandMatches, ...cityMatches, ...stateMatches];
     }
 
     if (!filtered.length) {
