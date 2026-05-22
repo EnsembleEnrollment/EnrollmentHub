@@ -3,589 +3,1210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Teacher Directory - Enrollment Hub</title>
+    <title>Admin Teacher Directory — Enrollment Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #60A5FA;
-            --primary-light: #93C5FD;
-            --primary-dark: #3B82F6;
-            --accent: #38BDF8;
-            --accent-light: #7DD3FC;
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F8F9FA;
-            --text-primary: #2D3748;
-            --text-secondary: #718096;
-            --text-light: #A0AEC0;
-            --white: #FFFFFF;
-            --gray-50: #F8F9FA;
-            --gray-100: #F1F3F5;
-            --gray-200: #E9ECEF;
-            --gray-300: #DEE2E6;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --pending: #8B5CF6;
-            --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
-            --shadow-xl: 0 20px 40px 0 rgba(0, 0, 0, 0.15);
-            --sidebar-width: 260px;
-            --sidebar-collapsed: 70px;
-            --transition-speed: 0.3s;
+            /* Coral accent (kept for badges) */
+            --coral: #F07050;
+            --coral-h: #E05838;
+            --coral-light: #FEF0EB;
+            --coral-soft: #FDF6F3;
+            --coral-mid: #F5C4B3;
+            --coral-dark: #7A3020;
+
+            /* Pastel palette */
+            --pastel-sage:   #DDE7D5;  --pastel-sage-ink:   #5A6B4A;
+            --pastel-blush:  #F5D8CF;  --pastel-blush-ink:  #8A4A3F;
+            --pastel-butter: #F5E2A8;  --pastel-butter-ink: #7A6420;
+            --pastel-sky:    #D5DFEC;  --pastel-sky-ink:    #455F7A;
+            --pastel-lilac:  #E0D6E8;  --pastel-lilac-ink:  #5F4A75;
+            --pastel-clay:   #E8C8B5;  --pastel-clay-ink:   #7A4E35;
+            --pastel-mint:   #CFE4DC;  --pastel-mint-ink:   #3F6B5C;
+            --pastel-rose:   #F0CFD3;  --pastel-rose-ink:   #8A4555;
+
+            /* Primary: light pastel blue */
+            --primary:        #C5D3E5;
+            --primary-hover:  #B0C2D8;
+            --primary-soft:   #EEF3F9;
+            --primary-ink:    #3D5478;
+            --primary-ink-h:  #2A3F60;
+
+            --green: #16A34A;
+            --green-light: #F0FDF4;
+
+            --red: #DC2626;
+            --red-light: #FEF2F2;
+            --red-border: #FECACA;
+
+            --pending: #B5A3D8;
+            --pending-ink: #5A4A85;
+            --pending-light: #F0EAFA;
+
+            --bg: #F5F5F4;
+            --bg-deep: #EDEDEB;
+            --surface: #FFFFFF;
+            --surface-warm: #FAFAF9;
+
+            --border: #E8E8E5;
+            --border-soft: #F0F0EE;
+            --border-strong: #D4D4D0;
+
+            --text: #1F1F23;
+            --text-2: #6B6B70;
+            --text-3: #A8A8AC;
+            --text-4: #C9C9CC;
+
+            --shadow-xs: 0 1px 2px rgba(20, 20, 30, 0.04);
+            --shadow-sm: 0 2px 8px rgba(20, 20, 30, 0.06);
+            --shadow-md: 0 4px 16px rgba(20, 20, 30, 0.08);
+            --shadow-lg: 0 12px 32px rgba(20, 20, 30, 0.10);
+            --shadow-primary: 0 4px 14px rgba(197, 211, 229, 0.5);
+
+            --r-xs: 8px;
+            --r-sm: 12px;
+            --r: 16px;
+            --r-lg: 20px;
+            --r-xl: 24px;
+
+            --sidebar-width: 240px;
+            --sidebar-collapsed: 68px;
+            --t-fast: 0.15s;
+            --t-med: 0.22s;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #F8F9FA;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            color: var(--text-primary);
+            font-size: 15px;
+            line-height: 1.5;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'cv11', 'ss01', 'ss03';
+            letter-spacing: -0.005em;
         }
 
-        /* SIDEBAR */
+        /* ── SIDEBAR ── */
         .sidebar {
             position: fixed; top: 0; left: 0;
-            width: var(--sidebar-width); height: 100vh;
-            background: var(--white);
-            border-right: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-            transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
-            z-index: 1000; display: flex; flex-direction: column;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            transition: transform var(--t-med) var(--ease), width var(--t-med) var(--ease);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
         }
         .sidebar.collapsed { width: var(--sidebar-collapsed); }
 
         .sidebar-header {
-            padding: 1.5rem 1.25rem; display: flex; align-items: center;
-            justify-content: space-between; border-bottom: 1px solid var(--gray-200);
+            padding: 18px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            min-height: 68px;
         }
-        .logo-section { display: flex; align-items: center; gap: 0.75rem; transition: opacity var(--transition-speed) ease; }
-        .sidebar.collapsed .logo-section { opacity: 0; pointer-events: none; }
-        .logo-icon {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; flex-shrink: 0; color: var(--white); font-weight: 700;
-        }
-        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
-        .admin-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; font-size: 0.625rem; font-weight: 700;
-            padding: 0.125rem 0.5rem; border-radius: 4px; margin-left: 0.5rem;
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        .toggle-btn {
-            width: 32px; height: 32px; border: 1px solid var(--gray-200);
-            background: var(--white); color: var(--text-secondary); border-radius: 6px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease; flex-shrink: 0;
-        }
-        .toggle-btn:hover { background: var(--gray-50); border-color: var(--gray-300); }
-        .sidebar.collapsed .toggle-icon { transform: rotate(180deg); }
-        .toggle-icon { transition: transform var(--transition-speed) ease; font-size: 1rem; }
 
-        .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1rem 0; }
+        .logo-section {
+            display: flex; align-items: center; gap: 11px;
+            transition: opacity var(--t-med) var(--ease);
+            min-width: 0;
+        }
+        .sidebar.collapsed .logo-section { opacity: 0; pointer-events: none; }
+
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            color: var(--primary-ink);
+            font-weight: 700; font-size: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-text-wrap { display: flex; flex-direction: column; min-width: 0; }
+        .logo-text { font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; line-height: 1.2; letter-spacing: -0.02em; }
+        .admin-badge {
+            font-size: 10px; font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 2px;
+        }
+
+        .toggle-btn {
+            width: 30px; height: 30px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all var(--t-fast) var(--ease);
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .toggle-btn:hover { background: var(--bg); border-color: var(--text-3); color: var(--text); }
+        .toggle-icon { transition: transform var(--t-med) var(--ease); font-size: 14px; line-height: 1; }
+        .sidebar.collapsed .toggle-icon { transform: rotate(180deg); }
+
+        .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 14px 0; }
         .sidebar-nav::-webkit-scrollbar { width: 4px; }
-        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        .nav-section-label {
+            font-size: 10px; font-weight: 700;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 14px 22px 7px;
+            white-space: nowrap;
+            transition: opacity var(--t-med) var(--ease);
+        }
+        .sidebar.collapsed .nav-section-label { opacity: 0; pointer-events: none; }
 
         .nav-item {
-            display: flex; align-items: center; gap: 0.875rem;
-            padding: 0.875rem 1.5rem; margin: 0.25rem 0.75rem;
-            color: var(--text-secondary); text-decoration: none; border-radius: 10px;
-            transition: all 0.2s ease; cursor: pointer; border: none;
-            background: transparent; width: calc(100% - 1.5rem);
-            font-size: 0.9375rem; font-weight: 500;
+            display: flex; align-items: center; gap: 11px;
+            padding: 10px 14px;
+            margin: 1px 10px;
+            color: var(--text-2);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all var(--t-fast) var(--ease);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 14px; font-weight: 500;
+            font-family: inherit;
+            width: calc(100% - 20px);
+            position: relative;
+            letter-spacing: -0.005em;
         }
-        .nav-item:hover { background: var(--gray-100); color: var(--text-primary); }
+        .nav-item:hover { background: var(--bg); color: var(--text); }
         .nav-item.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: var(--white); box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+            background: var(--primary);
+            color: var(--primary-ink);
+            font-weight: 600;
         }
-        .nav-icon { font-size: 1.25rem; flex-shrink: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-        .nav-text { white-space: nowrap; transition: opacity var(--transition-speed) ease; }
+
+        .nav-icon { font-size: 14px; flex-shrink: 0; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; transition: transform var(--t-fast) var(--ease); }
+        .nav-item:hover .nav-icon { transform: scale(1.08); }
+        .nav-item.active .nav-icon { color: var(--primary-ink); }
+        .nav-text { white-space: nowrap; transition: opacity var(--t-med) var(--ease); }
         .sidebar.collapsed .nav-text { opacity: 0; pointer-events: none; }
-        .sidebar.collapsed .nav-item { justify-content: center; padding: 0.875rem; }
-        .sidebar-footer { padding: 0.5rem 0 1rem 0; border-top: 1px solid var(--gray-200); }
-        .logout-btn { color: var(--danger) !important; }
-        .logout-btn:hover { background: rgba(239, 68, 68, 0.1) !important; }
+        .sidebar.collapsed .nav-item { justify-content: center; padding: 10px; }
+
+        .sidebar-footer { padding: 8px 0 14px 0; border-top: 1px solid var(--border); }
+        .logout-btn { color: var(--red) !important; }
+        .logout-btn:hover { background: var(--red-light) !important; color: var(--red) !important; }
 
         .sidebar-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); z-index: 999;
-            opacity: 0; pointer-events: none; transition: opacity var(--transition-speed) ease;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(20, 20, 30, 0.4);
+            z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity var(--t-med) var(--ease);
         }
         .sidebar-overlay.active { opacity: 1; pointer-events: all; }
 
+        /* ── MAIN ── */
         .main-content {
-            margin-left: var(--sidebar-width); min-height: 100vh; padding: 2rem 2.5rem;
-            transition: margin-left var(--transition-speed) ease;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 36px 40px;
+            max-width: 1400px;
+            transition: margin-left var(--t-med) var(--ease);
         }
         .sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed); }
 
-        /* Page Header */
-        .page-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
-        .page-header-left h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -0.02em; }
-        .page-header-left p { color: var(--text-secondary); font-size: 1rem; }
-        .page-header-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        /* ── PAGE HEADER ── */
+        .page-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+            gap: 24px; flex-wrap: wrap;
+        }
+        .page-header-eyebrow {
+            font-size: 12px; font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+        }
+        .page-header-left h1 {
+            font-size: 42px; color: var(--text);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
+            max-width: 640px;
+        }
+        .page-header-left h1 em {
+            font-style: normal;
+            font-weight: 400;
+            color: var(--primary-ink);
+            opacity: 0.7;
+        }
+        .page-header-left p {
+            color: var(--text-2);
+            font-size: 15px;
+            line-height: 1.5;
+            margin-top: 10px;
+            max-width: 500px;
+        }
+        .page-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        /* Buttons */
+        /* ── BUTTONS ── */
         .btn {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.75rem 1.25rem; border-radius: 10px;
-            font-size: 0.9375rem; font-weight: 600; cursor: pointer;
-            border: none; transition: all 0.2s ease; text-decoration: none;
+            display: inline-flex; align-items: center;
+            gap: 7px; padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all var(--t-fast) var(--ease);
+            text-decoration: none;
+            font-family: inherit;
+            line-height: 1.2;
+            white-space: nowrap;
+            letter-spacing: -0.005em;
         }
+        .btn:active { transform: translateY(1px); }
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+            background: var(--primary);
+            color: var(--primary-ink);
+            border-color: var(--primary);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(96, 165, 250, 0.4); }
-        .btn-secondary { background: var(--white); color: var(--text-primary); border: 1.5px solid var(--gray-200); }
-        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: #059669; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #DC2626; }
-        .btn-small { padding: 0.5rem 0.875rem; font-size: 0.8125rem; }
-        .btn-icon-only { width: 40px; padding: 0.5rem; justify-content: center; }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-secondary { background: var(--surface); color: var(--text-2); border-color: var(--border); }
+        .btn-secondary:hover { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-ink); }
+        .btn-icon-only { width: 36px; padding: 8px; justify-content: center; }
+        .btn-small { padding: 8px 13px; font-size: 13px; }
+        .btn-success { background: var(--pastel-sage); color: var(--pastel-sage-ink); border-color: var(--pastel-sage); }
+        .btn-success:hover { background: #CDD9C4; }
+        .btn-danger { background: var(--pastel-blush); color: var(--pastel-blush-ink); border-color: var(--pastel-blush); }
+        .btn-danger:hover { background: #ECC5BB; }
+        .btn-danger-ghost { background: transparent; color: var(--text-3); border-color: transparent; }
+        .btn-danger-ghost:hover { background: var(--red-light); color: var(--red); }
 
-        /* Status Tabs */
-        .status-tabs {
-            display: flex; gap: 0.25rem;
-            background: var(--white); border-radius: 16px;
-            padding: 1.25rem 1.5rem; box-shadow: var(--shadow-md);
-            margin-bottom: 1.5rem; flex-wrap: wrap;
+        /* ── STATUS PILLS (status filter) ── */
+        .status-pills {
+            display: flex; gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
         }
-        .status-tab {
-            padding: 0.625rem 1.25rem; border: 1.5px solid var(--gray-200);
-            background: var(--white); border-radius: 10px;
-            font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+        .status-pill {
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
+            letter-spacing: -0.005em;
+            display: inline-flex; align-items: center; gap: 8px;
         }
-        .status-tab:hover { border-color: var(--primary); color: var(--primary); }
-        .status-tab.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; border-color: transparent; box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
+        .status-pill:hover {
+            border-color: var(--text-3);
+            color: var(--text);
         }
-        .tab-count {
-            background: rgba(255,255,255,0.25); padding: 0.125rem 0.5rem;
-            border-radius: 10px; font-size: 0.75rem; font-weight: 700;
+        .status-pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-ink);
         }
-        .status-tab:not(.active) .tab-count {
-            background: var(--gray-100); color: var(--text-secondary);
+        .status-pill .tab-count {
+            background: var(--bg);
+            color: var(--text-2);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 24px;
+            text-align: center;
+        }
+        .status-pill.active .tab-count {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--primary-ink);
         }
         .pending-pulse {
             width: 8px; height: 8px; border-radius: 50%;
             background: var(--pending); animation: pulse 2s infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
-        /* Search & Filter */
-        .search-section {
-            background: var(--white); border-radius: 16px; padding: 1.5rem;
-            box-shadow: var(--shadow-md); margin-bottom: 1.5rem;
+        /* ── SEARCH & FILTERS BAR ── */
+        .filter-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .search-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
-        .search-input-wrapper { flex: 1; min-width: 250px; position: relative; }
-        .search-input-wrapper i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--primary); }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 240px;
+            display: flex;
+            align-items: center;
+        }
+        .search-wrap > i.search-icon {
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-3); font-size: 15px;
+            pointer-events: none;
+            transition: color var(--t-fast) var(--ease);
+        }
+        .search-wrap:focus-within > i.search-icon { color: var(--primary-ink); }
         .search-input {
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
-            background: var(--gray-50); border: 1.5px solid var(--gray-200);
-            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary); transition: all 0.2s ease;
+            flex: 1;
+            padding: 10px 36px 10px 38px;
+            border: 1px solid transparent;
+            background: var(--bg);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+            letter-spacing: -0.005em;
+            width: 100%;
+            transition: all var(--t-fast) var(--ease);
         }
-        .search-input:focus { outline: none; border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1); }
-        .filter-select {
-            padding: 0.75rem 1rem; border: 1.5px solid var(--gray-200);
-            border-radius: 10px; font-size: 0.9375rem; color: var(--text-primary);
-            background: var(--white); min-width: 150px;
+        .search-input::placeholder { color: var(--text-3); }
+        .search-input:focus {
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--primary-soft);
         }
-        .filter-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1); }
 
-        /* Teachers Section */
-        .teachers-section {
-            background: var(--white); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow-md);
+        .filter-select-wrap {
+            position: relative;
+            min-width: 180px;
         }
+        .filter-select-wrap > i {
+            position: absolute;
+            left: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-3);
+            font-size: 12px;
+            pointer-events: none;
+        }
+        .filter-select-wrap::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-3);
+            font-size: 11px;
+            pointer-events: none;
+        }
+        .filter-select {
+            width: 100%;
+            padding: 10px 32px 10px 34px;
+            border: 1px solid transparent;
+            background: var(--bg);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            letter-spacing: -0.005em;
+            transition: all var(--t-fast) var(--ease);
+        }
+        .filter-select:focus, .filter-select:hover {
+            border-color: var(--primary);
+            background: var(--surface);
+        }
+        .filter-select:focus { box-shadow: 0 0 0 3px var(--primary-soft); }
+
+        .filter-clear {
+            background: transparent;
+            border: none;
+            color: var(--text-3);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: all var(--t-fast) var(--ease);
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+        .filter-clear.visible { display: inline-flex; }
+        .filter-clear:hover { background: var(--bg); color: var(--text); }
+
+        /* ── TEACHERS SECTION ── */
+        .teachers-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-xs);
+        }
+
         .section-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+            margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
+        }
+        .section-title-wrap { display: flex; flex-direction: column; gap: 2px; }
+        .section-eyebrow {
+            font-size: 11px; font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
         .section-title {
-            font-size: 1.25rem; font-weight: 700; color: var(--text-primary);
-            display: flex; align-items: center; gap: 0.625rem;
+            font-size: 22px; font-weight: 700; color: var(--text);
+            letter-spacing: -0.025em; line-height: 1.2;
+            display: flex; align-items: center; gap: 10px;
         }
-        .section-title i { color: var(--primary); font-size: 1.125rem; }
+        .section-title-count {
+            font-size: 12px; font-weight: 700;
+            color: var(--text-2);
+            background: var(--bg);
+            padding: 4px 11px;
+            border-radius: 20px;
+        }
 
+        /* ── TEACHER CARDS (pastel themed) ── */
         .teachers-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
         }
 
-        /* Teacher Card */
         .teacher-card {
-            background: var(--white); border: 1px solid var(--gray-200);
-            border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
+            background: var(--surface);
+            border-radius: var(--r);
+            overflow: hidden;
+            transition: all var(--t-fast) var(--ease);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
         }
-        .teacher-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); }
-        .teacher-card.pending-card { border-left: 4px solid var(--pending); }
+        .teacher-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .teacher-card.pending-card {
+            border-color: var(--pending);
+            background: var(--pending-light);
+        }
 
         .teacher-card-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            padding: 1.25rem; color: white; position: relative;
+            background: var(--primary);
+            padding: 18px 20px;
+            color: var(--primary-ink);
+            position: relative;
+            min-height: 96px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .teacher-card-header.pending-header {
-            background: linear-gradient(135deg, var(--pending) 0%, #A78BFA 100%);
+            background: var(--pending);
+            color: var(--pending-ink);
         }
-        .teacher-card-name { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; padding-right: 60px; }
-        .teacher-card-studio { font-size: 0.875rem; opacity: 0.9; padding-right: 60px; }
 
-        /* Teacher card avatar */
+        /* Pastel cycle for variety based on id hash */
+        .teacher-card.theme-sage   .teacher-card-header { background: var(--pastel-sage);   color: var(--pastel-sage-ink); }
+        .teacher-card.theme-blush  .teacher-card-header { background: var(--pastel-blush);  color: var(--pastel-blush-ink); }
+        .teacher-card.theme-butter .teacher-card-header { background: var(--pastel-butter); color: var(--pastel-butter-ink); }
+        .teacher-card.theme-sky    .teacher-card-header { background: var(--pastel-sky);    color: var(--pastel-sky-ink); }
+        .teacher-card.theme-lilac  .teacher-card-header { background: var(--pastel-lilac);  color: var(--pastel-lilac-ink); }
+        .teacher-card.theme-clay   .teacher-card-header { background: var(--pastel-clay);   color: var(--pastel-clay-ink); }
+        .teacher-card.theme-mint   .teacher-card-header { background: var(--pastel-mint);   color: var(--pastel-mint-ink); }
+        .teacher-card.theme-rose   .teacher-card-header { background: var(--pastel-rose);   color: var(--pastel-rose-ink); }
+
+        .teacher-card-eyebrow {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.75;
+            margin-bottom: 4px;
+            padding-right: 62px;
+        }
+        .teacher-card-name {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            padding-right: 62px;
+            line-height: 1.2;
+        }
+        .teacher-card-studio {
+            font-size: 13px;
+            opacity: 0.85;
+            padding-right: 62px;
+            margin-top: 4px;
+        }
+
         .teacher-card-avatar {
             width: 52px; height: 52px; border-radius: 50%;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(8px);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; font-weight: 700; color: white;
+            font-size: 16px; font-weight: 700; color: currentColor;
             flex-shrink: 0; overflow: hidden;
-            border: 2.5px solid rgba(255,255,255,0.45);
-            position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%);
+            border: 2.5px solid rgba(255,255,255,0.85);
+            position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+            letter-spacing: -0.02em;
         }
         .teacher-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .teacher-card-body { padding: 1.25rem; }
-        .teacher-info-row {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100); font-size: 0.875rem;
+        .teacher-card-body {
+            padding: 16px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-        .teacher-info-row:last-child { border-bottom: none; }
-        .teacher-info-row i { color: var(--primary); width: 16px; text-align: center; }
-        .teacher-info-row span { color: var(--text-secondary); }
+        .teacher-info-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 7px 0;
+            font-size: 13px;
+        }
+        .teacher-info-row + .teacher-info-row { border-top: 1px solid var(--border-soft); }
+        .teacher-info-row i {
+            color: var(--primary-ink);
+            opacity: 0.6;
+            width: 14px; text-align: center;
+            font-size: 12px;
+        }
+        .teacher-info-row span { color: var(--text); }
 
-        /* Bio snippet on card */
         .teacher-bio-snippet {
-            font-size: 0.8125rem; color: var(--text-secondary);
-            line-height: 1.5; padding: 0.625rem 0;
-            border-bottom: 1px solid var(--gray-100);
+            font-size: 13px; color: var(--text-2);
+            line-height: 1.5; padding: 8px 0 10px;
             display: -webkit-box; -webkit-line-clamp: 2;
             -webkit-box-orient: vertical; overflow: hidden;
         }
+        .teacher-bio-snippet + .teacher-info-row { border-top: 1px solid var(--border-soft); }
 
-        .teacher-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
-        .teacher-badge { padding: 0.25rem 0.625rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .badge-info { background: rgba(96, 165, 250, 0.1); color: var(--primary); }
-        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .badge-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
-        .badge-pending { background: rgba(139, 92, 246, 0.1); color: var(--pending); }
+        .teacher-badges {
+            display: flex; gap: 5px; flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .teacher-badge {
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.005em;
+            text-transform: capitalize;
+        }
+        .badge-success { background: var(--pastel-sage); color: var(--pastel-sage-ink); }
+        .badge-info { background: var(--pastel-sky); color: var(--pastel-sky-ink); }
+        .badge-warning { background: var(--pastel-butter); color: var(--pastel-butter-ink); }
+        .badge-purple { background: var(--pastel-lilac); color: var(--pastel-lilac-ink); }
+        .badge-pending { background: var(--pending); color: var(--pending-ink); }
 
-        .teacher-card-actions { display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); }
+        .teacher-card-actions {
+            display: flex; gap: 6px;
+            margin-top: 14px; padding-top: 14px;
+            border-top: 1px solid var(--border-soft);
+        }
 
-        /* Pending Actions */
-        .pending-actions { display: flex; gap: 0.5rem; flex: 1; }
+        .pending-actions { display: flex; gap: 6px; flex: 1; }
         .pending-actions .btn { flex: 1; justify-content: center; }
 
-        /* Photo Upload */
+        /* ── PHOTO UPLOAD ── */
         .photo-upload-section {
-            display: flex; align-items: center; gap: 1.5rem;
-            padding: 1.25rem; background: var(--gray-50);
-            border-radius: 12px; margin-bottom: 1.25rem;
-            border: 1.5px solid var(--gray-200);
+            display: flex; align-items: center; gap: 18px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            margin-bottom: 18px;
         }
         .photo-preview {
             width: 80px; height: 80px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: var(--primary);
+            color: var(--primary-ink);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.75rem; color: white; font-weight: 700;
+            font-size: 26px; font-weight: 700;
             flex-shrink: 0; overflow: hidden;
-            border: 3px solid var(--gray-200);
-            transition: border-color 0.2s;
+            border: 3px solid var(--surface);
+            box-shadow: var(--shadow-xs);
+            letter-spacing: -0.02em;
         }
         .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
         .photo-upload-info { flex: 1; }
-        .photo-upload-info strong { font-size: 0.9375rem; color: var(--text-primary); }
-        .photo-upload-info p { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .photo-upload-info strong { font-size: 14px; color: var(--text); font-weight: 600; }
+        .photo-upload-info p { font-size: 12px; color: var(--text-3); margin-top: 3px; }
         .photo-remove-btn {
-            background: none; border: none; color: var(--danger);
-            font-size: 0.8125rem; cursor: pointer; font-weight: 600;
-            padding: 0; margin-top: 0.5rem; display: block;
-            transition: opacity 0.2s;
+            background: none; border: none; color: var(--red);
+            font-size: 12px; cursor: pointer; font-weight: 600;
+            padding: 0; margin-top: 6px; display: block;
+            transition: opacity var(--t-fast) var(--ease);
+            font-family: inherit;
         }
-        .photo-remove-btn:hover { opacity: 0.75; }
+        .photo-remove-btn:hover { opacity: 0.7; }
 
-        /* Modal */
+        /* ── MODAL ── */
         .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); z-index: 2000;
-            align-items: center; justify-content: center; padding: 1rem;
+            display: none;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(20, 20, 30, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center; justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            transition: opacity var(--t-fast) var(--ease);
         }
-        .modal.active { display: flex; }
+        .modal.active { display: flex; opacity: 1; }
         .modal-content {
-            background: white; border-radius: 16px; max-width: 900px; width: 100%;
-            max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-xl);
+            background: var(--surface);
+            border-radius: var(--r-xl);
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.96);
+            transition: transform var(--t-fast) var(--ease);
         }
+        .modal.active .modal-content { transform: scale(1); }
         .modal-header {
-            padding: 1.5rem; border-bottom: 1px solid var(--gray-200);
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; background: white; z-index: 10;
+            padding: 22px 26px 0;
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 16px;
+            position: sticky; top: 0; background: var(--surface); z-index: 10;
+            padding-bottom: 18px;
         }
-        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+        .modal-eyebrow {
+            font-size: 11px; font-weight: 600;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
+        .modal-title {
+            font-size: 26px; font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+        }
         .modal-close {
-            width: 32px; height: 32px; border: none; background: var(--gray-100);
-            color: var(--text-secondary); border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+            width: 34px; height: 34px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
+            flex-shrink: 0;
         }
-        .modal-close:hover { background: var(--gray-200); }
-        .modal-body { padding: 1.5rem; }
+        .modal-close:hover { background: var(--bg); border-color: var(--text-3); color: var(--text); transform: rotate(90deg); }
+        .modal-body { padding: 0 26px 22px; }
         .modal-footer {
-            padding: 1.5rem; border-top: 1px solid var(--gray-200);
-            display: flex; gap: 0.75rem; justify-content: flex-end;
-            position: sticky; bottom: 0; background: white;
+            padding: 16px 26px 22px;
+            display: flex; gap: 10px; justify-content: flex-end;
+            position: sticky; bottom: 0; background: var(--surface);
+            border-top: 1px solid var(--border-soft);
         }
 
         /* Modal Tabs */
         .modal-tabs {
-            display: flex; gap: 0.25rem; border-bottom: 2px solid var(--gray-200);
-            margin-bottom: 1.5rem; flex-wrap: wrap;
+            display: flex; gap: 2px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 22px;
+            flex-wrap: wrap;
         }
         .modal-tab {
-            padding: 0.75rem 1rem; background: transparent; border: none;
-            border-bottom: 3px solid transparent; color: var(--text-secondary);
-            font-size: 0.875rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s ease; margin-bottom: -2px;
+            padding: 10px 14px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-2);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--t-fast) var(--ease);
+            margin-bottom: -1px;
+            font-family: inherit;
+            letter-spacing: -0.005em;
         }
-        .modal-tab:hover { color: var(--text-primary); }
-        .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .modal-tab:hover { color: var(--text); }
+        .modal-tab.active {
+            color: var(--primary-ink);
+            border-bottom-color: var(--primary);
+        }
         .modal-tab-content { display: none; }
-        .modal-tab-content.active { display: block; }
-
-        /* Form */
-        .form-group { margin-bottom: 1.25rem; }
-        .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; }
-        .form-input, .form-textarea, .form-select {
-            width: 100%; padding: 0.75rem 1rem; background: var(--gray-50);
-            border: 1.5px solid var(--gray-200); border-radius: 10px;
-            font-size: 0.9375rem; color: var(--text-primary); transition: all 0.2s ease; font-family: inherit;
+        .modal-tab-content.active { display: block; animation: fadeIn 0.22s var(--ease); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-3px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
-            outline: none; border-color: var(--primary); background: var(--white);
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+
+        /* ── FORM ── */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block;
+            font-size: 11px; font-weight: 700;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 7px;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text);
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
+            outline: none;
+            letter-spacing: -0.005em;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--primary-soft);
         }
         .form-textarea { resize: vertical; min-height: 100px; }
-        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .form-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 0.25rem; }
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .form-hint { font-size: 11px; color: var(--text-3); margin-top: 5px; font-style: italic; }
 
-        /* Toggle Switch */
+        /* Toggle */
         .toggle-group {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 1rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
+            padding: 14px 16px;
+            background: var(--bg);
+            border-radius: 12px;
+            margin-bottom: 14px;
         }
-        .toggle-label { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); }
-        .toggle-switch { position: relative; width: 50px; height: 26px; }
+        .toggle-label { font-size: 14px; font-weight: 600; color: var(--text); }
+        .toggle-switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--gray-300); transition: 0.3s; border-radius: 26px;
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--border-strong);
+            transition: 0.25s var(--ease);
+            border-radius: 26px;
         }
         .toggle-slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px;
-            left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%;
+            position: absolute; content: "";
+            height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
+            background: white;
+            transition: 0.25s var(--ease);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
-        .toggle-switch input:checked + .toggle-slider {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-        }
-        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-        /* Comfort Level Slider */
+        /* Comfort Slider */
         .comfort-slider-group {
-            padding: 1.25rem; background: var(--gray-50); border-radius: 10px; margin-bottom: 1rem;
+            padding: 18px;
+            background: var(--bg);
+            border-radius: 12px;
+            margin-bottom: 14px;
         }
         .comfort-slider-label {
-            font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;
+            font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px;
         }
         .comfort-slider-description {
-            font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;
+            font-size: 12px; color: var(--text-2);
+            margin-bottom: 14px; line-height: 1.5;
         }
         .comfort-slider-wrapper {
-            display: flex; align-items: center; gap: 1rem;
+            display: flex; align-items: center; gap: 14px;
         }
         .comfort-slider-input {
             flex: 1; -webkit-appearance: none; appearance: none;
-            height: 8px; border-radius: 4px; background: var(--gray-200); outline: none;
+            height: 6px; border-radius: 4px;
+            background: var(--border-strong);
+            outline: none;
         }
         .comfort-slider-input::-webkit-slider-thumb {
             -webkit-appearance: none; appearance: none;
             width: 22px; height: 22px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            cursor: pointer; box-shadow: 0 2px 6px rgba(96, 165, 250, 0.4);
+            background: var(--primary);
+            cursor: pointer;
+            border: 3px solid var(--surface);
+            box-shadow: var(--shadow-sm);
         }
         .comfort-slider-input::-moz-range-thumb {
             width: 22px; height: 22px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            cursor: pointer; border: none;
+            background: var(--primary);
+            cursor: pointer;
+            border: 3px solid var(--surface);
+            box-shadow: var(--shadow-sm);
         }
         .comfort-slider-value {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border-radius: 8px;
+            width: 42px; height: 42px;
+            background: var(--primary);
+            color: var(--primary-ink);
+            border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; font-weight: 700;
+            font-size: 16px; font-weight: 700;
         }
         .comfort-slider-labels {
             display: flex; justify-content: space-between;
-            margin-top: 0.5rem; font-size: 0.6875rem; color: var(--text-light);
+            margin-top: 8px; font-size: 11px; color: var(--text-3);
         }
 
-        /* Rich Text Editor */
+        /* Rich Editor */
         .rich-editor {
-            border: 1.5px solid var(--gray-200); border-radius: 10px; overflow: hidden;
-            background: var(--gray-50); transition: all 0.2s ease;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg);
+            transition: all var(--t-fast) var(--ease);
         }
         .rich-editor:focus-within {
-            border-color: var(--primary); background: var(--white);
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--primary-soft);
         }
         .rich-editor-toolbar {
-            display: flex; gap: 0.25rem; padding: 0.5rem;
-            background: var(--gray-100); border-bottom: 1px solid var(--gray-200);
+            display: flex; gap: 4px;
+            padding: 6px;
+            background: rgba(0,0,0,0.02);
+            border-bottom: 1px solid var(--border-soft);
         }
         .toolbar-btn {
-            width: 32px; height: 32px; border: 1px solid var(--gray-200);
-            background: var(--white); color: var(--text-secondary); border-radius: 6px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.875rem; transition: all 0.2s ease;
+            width: 28px; height: 28px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-2);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
         }
-        .toolbar-btn:hover { background: var(--gray-50); border-color: var(--primary); color: var(--primary); }
+        .toolbar-btn:hover { background: var(--primary-soft); color: var(--primary-ink); }
         .rich-editor-content {
-            min-height: 100px; padding: 0.75rem 1rem; font-size: 0.9375rem;
-            color: var(--text-primary); line-height: 1.6; outline: none;
+            min-height: 90px;
+            padding: 11px 14px;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.55;
+            outline: none;
+            letter-spacing: -0.005em;
         }
-        .rich-editor-content:empty:before { content: attr(data-placeholder); color: var(--text-light); pointer-events: none; }
-        .rich-editor-content.small { min-height: 60px; }
+        .rich-editor-content:empty:before {
+            content: attr(data-placeholder);
+            color: var(--text-3);
+            pointer-events: none;
+        }
 
         /* Tags */
         .tags-container {
-            display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem;
-            background: var(--gray-50); border-radius: 10px; min-height: 60px;
+            display: flex; flex-wrap: wrap; gap: 6px;
+            padding: 14px;
+            background: var(--bg);
+            border-radius: 12px;
+            min-height: 60px;
         }
         .tag {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white; border-radius: 20px; font-size: 0.875rem; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 11px;
+            background: var(--primary);
+            color: var(--primary-ink);
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
         }
         .tag button {
-            background: rgba(255,255,255,0.3); border: none; color: white;
-            width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
-            transition: all 0.2s;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            color: var(--primary-ink);
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px;
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
         }
-        .tag button:hover { background: rgba(255,255,255,0.5); }
-        .add-tag-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .tag button:hover { background: rgba(255,255,255,0.8); }
+        .add-tag-row {
+            display: flex; gap: 8px;
+            margin-top: 12px;
+        }
         .add-tag-row input {
-            flex: 1; padding: 0.625rem 1rem; border: 1.5px solid var(--gray-200);
-            border-radius: 8px; font-size: 0.875rem;
+            flex: 1;
+            padding: 9px 14px;
+            border: 1px solid transparent;
+            background: var(--bg);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            color: var(--text);
+            transition: all var(--t-fast) var(--ease);
+            letter-spacing: -0.005em;
         }
-        .add-tag-row input:focus { outline: none; border-color: var(--primary); }
+        .add-tag-row input:focus {
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
 
         /* Instrument Cards */
         .instrument-card {
-            background: var(--gray-50); border: 1px solid var(--gray-200);
-            border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            transition: all var(--t-fast) var(--ease);
         }
-        .instrument-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-        .instrument-card-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
+        .instrument-card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .instrument-card-title {
+            font-size: 14px; font-weight: 700;
+            color: var(--primary-ink);
+            letter-spacing: -0.01em;
+        }
         .remove-instrument-btn {
-            width: 32px; height: 32px; border: none;
-            background: rgba(239, 68, 68, 0.1); color: var(--danger); border-radius: 6px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+            width: 28px; height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--text-3);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all var(--t-fast) var(--ease);
+            font-family: inherit;
+            font-size: 12px;
         }
-        .remove-instrument-btn:hover { background: var(--danger); color: white; }
+        .remove-instrument-btn:hover { background: var(--red-light); color: var(--red); }
+        .instrument-card .form-input,
+        .instrument-card .form-select,
+        .instrument-card .form-textarea {
+            background: var(--surface);
+        }
+        .instrument-card .form-input:focus,
+        .instrument-card .form-select:focus,
+        .instrument-card .form-textarea:focus {
+            background: var(--surface);
+        }
 
-        /* Import Section */
+        /* ── IMPORT SECTION ── */
         .import-section {
-            background: var(--white); border-radius: 16px; padding: 1.5rem;
-            box-shadow: var(--shadow-md); margin-bottom: 1.5rem; display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 22px;
+            margin-bottom: 18px;
+            display: none;
         }
-        .import-section.active { display: block; }
-        .import-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-        .import-header h3 { font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        .import-header h3 i { color: var(--primary); }
+        .import-section.active { display: block; animation: fadeIn 0.22s var(--ease); }
+        .import-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 14px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .import-header h3 {
+            font-size: 17px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+            letter-spacing: -0.015em;
+        }
+        .import-header h3 i { color: var(--primary-ink); opacity: 0.6; font-size: 15px; }
 
         .import-dropzone {
-            border: 2px dashed var(--gray-300); border-radius: 12px;
-            padding: 2rem; text-align: center; cursor: pointer;
-            transition: all 0.2s; background: var(--gray-50);
+            border: 2px dashed var(--border-strong);
+            border-radius: 14px;
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--t-fast) var(--ease);
+            background: var(--bg);
         }
-        .import-dropzone:hover { border-color: var(--primary); background: rgba(96, 165, 250, 0.03); }
-        .import-dropzone.dragover { border-color: var(--primary); background: rgba(96, 165, 250, 0.06); }
-        .import-dropzone i { font-size: 2rem; color: var(--gray-300); margin-bottom: 0.5rem; }
-        .import-dropzone p { color: var(--text-secondary); font-size: 0.9375rem; }
-        .import-dropzone .file-types { font-size: 0.8125rem; color: var(--text-light); margin-top: 0.25rem; }
+        .import-dropzone:hover { border-color: var(--primary); background: var(--primary-soft); }
+        .import-dropzone.dragover { border-color: var(--primary); background: var(--primary-soft); }
+        .import-dropzone i {
+            font-size: 32px;
+            color: var(--text-3);
+            margin-bottom: 8px;
+        }
+        .import-dropzone p { color: var(--text-2); font-size: 14px; font-weight: 500; }
+        .import-dropzone .file-types { font-size: 12px; color: var(--text-3); margin-top: 4px; }
         .import-dropzone input { display: none; }
 
-        .import-preview { margin-top: 1rem; display: none; }
+        .import-preview { margin-top: 14px; display: none; }
         .import-preview.active { display: block; }
         .import-preview-header {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0.75rem 1rem; background: rgba(16, 185, 129, 0.08);
-            border-radius: 8px; margin-bottom: 1rem;
+            padding: 10px 14px;
+            background: var(--pastel-sage);
+            color: var(--pastel-sage-ink);
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
-        .import-preview-header span { font-size: 0.875rem; font-weight: 600; color: var(--success); }
-        .import-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+        .import-preview-header span {
+            font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .import-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 13px;
+        }
         .import-table th {
-            padding: 0.625rem 0.75rem; text-align: left;
-            background: var(--gray-50); border-bottom: 2px solid var(--gray-200);
-            font-weight: 700; color: var(--text-secondary); text-transform: uppercase;
-            font-size: 0.6875rem; letter-spacing: 0.03em;
+            padding: 9px 12px; text-align: left;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            font-weight: 700; color: var(--text-3);
+            text-transform: uppercase;
+            font-size: 10px; letter-spacing: 0.06em;
         }
-        .import-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--gray-100); color: var(--text-primary); }
-        .import-table tr:hover td { background: var(--gray-50); }
-        .import-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1rem; }
+        .import-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border-soft);
+            color: var(--text);
+        }
+        .import-table tr:hover td { background: var(--bg); }
+        .import-actions {
+            display: flex; gap: 8px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
 
         .template-link {
-            font-size: 0.8125rem; color: var(--primary); cursor: pointer;
-            font-weight: 600; display: flex; align-items: center; gap: 0.375rem;
-            transition: color 0.2s;
+            font-size: 12px;
+            color: var(--primary-ink);
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 5px;
+            transition: opacity var(--t-fast) var(--ease);
+            padding: 4px 8px;
+            border-radius: 6px;
         }
-        .template-link:hover { color: var(--primary-dark); }
+        .template-link:hover { background: var(--primary-soft); }
 
-        /* Empty & Loading States */
-        .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); }
-        .empty-state i { font-size: 3rem; color: var(--gray-300); margin-bottom: 0.75rem; }
-        .empty-state p { font-size: 1rem; margin-bottom: 1rem; }
-        .loading { display: flex; align-items: center; justify-content: center; min-height: 400px; color: var(--text-secondary); font-size: 1.125rem; }
+        /* ── EMPTY / LOADING / TOAST ── */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-2);
+        }
+        .empty-state-icon {
+            width: 72px; height: 72px;
+            margin: 0 auto 14px;
+            background: var(--bg);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-3);
+            font-size: 26px;
+        }
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .empty-state-sub { font-size: 13px; color: var(--text-3); line-height: 1.5; }
 
-        /* Toast */
+        .loading {
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; min-height: 400px;
+            color: var(--text-2); font-size: 14px;
+            flex-direction: column;
+        }
+        .spinner {
+            width: 32px; height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .toast {
-            position: fixed; bottom: 2rem; right: 2rem; background: white;
-            border-radius: 12px; padding: 1rem 1.5rem; box-shadow: var(--shadow-xl);
-            display: flex; align-items: center; gap: 0.75rem; z-index: 3000;
-            transform: translateY(100px); opacity: 0; transition: all 0.3s ease;
+            position: fixed;
+            bottom: 26px; right: 26px;
+            padding: 14px 22px 14px 16px;
+            border-radius: var(--r);
+            font-size: 14px; font-weight: 600;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+            pointer-events: none;
+            color: var(--primary-ink);
+            background: var(--primary);
+            transform: translateY(20px) scale(0.96);
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: var(--shadow-lg);
+            letter-spacing: -0.005em;
         }
-        .toast.show { transform: translateY(0); opacity: 1; }
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast-icon { font-size: 1.25rem; }
-        .toast.success .toast-icon { color: var(--success); }
-        .toast.error .toast-icon { color: var(--danger); }
-        .toast-message { font-size: 0.9375rem; color: var(--text-primary); font-weight: 500; }
+        .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+        .toast.error { background: var(--red); color: #fff; }
+        .toast-icon {
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.45);
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .toast.error .toast-icon { background: rgba(255, 255, 255, 0.25); }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar:not(.collapsed) { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 1.5rem; }
+            .main-content { margin-left: 0; padding: 22px; }
             .sidebar.collapsed ~ .main-content { margin-left: 0; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .page-header-left h1 { font-size: 32px; }
             .teachers-grid { grid-template-columns: 1fr; }
-            .page-header { flex-direction: column; gap: 1rem; }
             .form-row { grid-template-columns: 1fr; }
-            .status-tabs { flex-direction: column; }
-            .search-row { flex-direction: column; }
-            .filter-select { width: 100%; }
+            .filter-select-wrap { min-width: 100%; }
+            .search-wrap { min-width: 100%; }
         }
     </style>
 </head>
@@ -595,25 +1216,55 @@
         <div class="sidebar-header">
             <div class="logo-section">
                 <div class="logo-icon">EH</div>
-                <span class="logo-text">Admin<span class="admin-badge">Admin</span></span>
+                <div class="logo-text-wrap">
+                    <span class="logo-text">Enrollment Hub</span>
+                    <span class="admin-badge">Admin Panel</span>
+                </div>
             </div>
-            <button id="sidebarToggle" class="toggle-btn"><span class="toggle-icon">‹</span></button>
+            <button id="sidebarToggle" class="toggle-btn" aria-label="Toggle sidebar">
+                <span class="toggle-icon">‹</span>
+            </button>
         </div>
+
         <nav class="sidebar-nav">
-            <a href="admindashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-chart-line"></i></span><span class="nav-text">Dashboard</span></a>
-            <a href="adminquicklinks.html" class="nav-item"><span class="nav-icon"><i class="fas fa-link"></i></span><span class="nav-text">Quick Links</span></a>
-            <a href="adminstudio-directory.html" class="nav-item"><span class="nav-icon"><i class="fas fa-building"></i></span><span class="nav-text">Studio Directory</span></a>
-            <a href="adminteacher-directory.html" class="nav-item active"><span class="nav-icon"><i class="fas fa-chalkboard-teacher"></i></span><span class="nav-text">Teacher Directory</span></a>
-            <a href="adminsnippets.html" class="nav-item"><span class="nav-icon"><i class="fas fa-clipboard"></i></span><span class="nav-text">Snippets</span></a>
-            <a href="adminmap.html" class="nav-item"><span class="nav-icon"><i class="fas fa-map-marked-alt"></i></span><span class="nav-text">Map</span></a>
-            <a href="adminprograms.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-text">Programs</span></a>
-            <a href="admintraining-hub.html" class="nav-item"><span class="nav-icon"><i class="far fa-book-open"></i></span><span class="nav-text">Training Hub</span></a>
-            <a href="adminpolicies.html" class="nav-item"><span class="nav-icon"><i class="far fa-file-alt"></i></span><span class="nav-text">Policies</span></a>
-            <a href="adminprofiles.html" class="nav-item"><span class="nav-icon"><i class="far fa-user"></i></span><span class="nav-text">Profiles</span></a>
-            <a href="admindirectors.html" class="nav-item"><span class="nav-icon"><i class="fas fa-user-tie"></i></span><span class="nav-text">DirectorsPage</span></a>
+            <div class="nav-section-label">Overview</div>
+            <a href="adminquicklinks.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-link"></i></span>
+                <span class="nav-text">Quick Links</span>
+            </a>
+
+            <div class="nav-section-label">Directories</div>
+            <a href="adminstudio-directory.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-building"></i></span>
+                <span class="nav-text">Studio Directory</span>
+            </a>
+            <a href="adminteacher-directory.html" class="nav-item active">
+                <span class="nav-icon"><i class="fas fa-chalkboard-teacher"></i></span>
+                <span class="nav-text">Teacher Directory</span>
+            </a>
+            <a href="adminsnippets.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-code"></i></span>
+                <span class="nav-text">Snippets</span>
+            </a>
+
+            <div class="nav-section-label">Resources</div>
+            <a href="adminprograms.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
+                <span class="nav-text">Programs</span>
+            </a>
+
+            <div class="nav-section-label">People</div>
+            <a href="admindirectors.html" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
+                <span class="nav-text">Directors</span>
+            </a>
         </nav>
+
         <div class="sidebar-footer">
-            <button id="logoutBtn" class="nav-item logout-btn"><span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span><span class="nav-text">Logout</span></button>
+            <button id="logoutBtn" class="nav-item logout-btn">
+                <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span class="nav-text">Logout</span>
+            </button>
         </div>
     </div>
 
@@ -622,8 +1273,9 @@
     <main class="main-content">
         <div class="page-header">
             <div class="page-header-left">
-                <h1>Teacher Directory Management</h1>
-                <p>Manage all teacher information, approve submissions, and import data</p>
+                <div class="page-header-eyebrow">Admin Panel</div>
+                <h1>Manage <em>your</em> teachers</h1>
+                <p>Approve submissions, edit profiles, and curate your roster of educators.</p>
             </div>
             <div class="page-header-actions">
                 <button class="btn btn-secondary" onclick="toggleImport()">
@@ -642,15 +1294,15 @@
         <div id="importSection" class="import-section">
             <div class="import-header">
                 <h3><i class="fas fa-file-import"></i> Bulk Import Teachers</h3>
-                <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <span class="template-link" onclick="downloadTemplate('csv')"><i class="fas fa-download"></i> CSV Template</span>
                     <span class="template-link" onclick="downloadTemplate('json')"><i class="fas fa-download"></i> JSON Template</span>
-                    <button class="btn btn-secondary btn-small" onclick="toggleImport()"><i class="fas fa-times"></i></button>
+                    <button class="btn btn-secondary btn-small btn-icon-only" onclick="toggleImport()" aria-label="Close"><i class="fas fa-times"></i></button>
                 </div>
             </div>
             <div class="import-dropzone" id="importDropzone" onclick="document.getElementById('importFile').click()">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p>Drag & drop a file here, or click to browse</p>
+                <p>Drag &amp; drop a file here, or click to browse</p>
                 <span class="file-types">Accepts .csv or .json files</span>
                 <input type="file" id="importFile" accept=".csv,.json" onchange="handleImportFile(this.files[0])">
             </div>
@@ -673,38 +1325,59 @@
             </div>
         </div>
 
-        <!-- Status Tabs -->
-        <div class="status-tabs">
-            <button class="status-tab active" onclick="switchStatusTab('all')">
+        <!-- Status Pills -->
+        <div class="status-pills">
+            <button class="status-pill active" data-status="all" onclick="switchStatusTab('all', event)">
                 <i class="fas fa-users"></i> All <span class="tab-count" id="countAll">0</span>
             </button>
-            <button class="status-tab" onclick="switchStatusTab('pending')">
+            <button class="status-pill" data-status="pending" onclick="switchStatusTab('pending', event)">
                 <span class="pending-pulse"></span> Pending <span class="tab-count" id="countPending">0</span>
             </button>
-            <button class="status-tab" onclick="switchStatusTab('active')">
+            <button class="status-pill" data-status="active" onclick="switchStatusTab('active', event)">
                 <i class="fas fa-check-circle"></i> Active <span class="tab-count" id="countActive">0</span>
             </button>
-            <button class="status-tab" onclick="switchStatusTab('inactive')">
+            <button class="status-pill" data-status="inactive" onclick="switchStatusTab('inactive', event)">
                 <i class="fas fa-pause-circle"></i> Inactive <span class="tab-count" id="countInactive">0</span>
             </button>
         </div>
 
-        <div class="search-section">
-            <div class="search-row">
-                <div class="search-input-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="teacherSearch" class="search-input" placeholder="Search teachers by name...">
-                </div>
-                <select id="studioFilter" class="filter-select"><option value="">All Studios</option></select>
+        <!-- Search + Filters -->
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="teacherSearch" class="search-input" placeholder="Search by name…" autocomplete="off">
             </div>
+            <div class="filter-select-wrap">
+                <i class="fas fa-building"></i>
+                <select id="studioFilter" class="filter-select">
+                    <option value="">All Brands</option>
+                </select>
+            </div>
+            <div class="filter-select-wrap">
+                <i class="fas fa-map-marker-alt"></i>
+                <select id="cityFilter" class="filter-select">
+                    <option value="">All Cities</option>
+                </select>
+            </div>
+            <button class="filter-clear" id="filterClear" onclick="clearFilters()">
+                <i class="fas fa-times"></i> Clear filters
+            </button>
         </div>
 
-        <div id="loading" class="loading"><i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i> Loading...</div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <div>Loading…</div>
+        </div>
 
         <div id="content" class="teachers-section" style="display: none;">
             <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-chalkboard-teacher"></i> Teachers</h2>
-                <span id="teacherCount" style="color: var(--text-secondary); font-size: 0.875rem;"></span>
+                <div class="section-title-wrap">
+                    <div class="section-eyebrow">Roster</div>
+                    <div class="section-title">
+                        Teachers
+                        <span class="section-title-count" id="teacherCount">0</span>
+                    </div>
+                </div>
             </div>
             <div id="teachersGrid" class="teachers-grid"></div>
         </div>
@@ -714,8 +1387,13 @@
     <div id="teacherModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="teacherModalTitle">Add Teacher</h3>
-                <button class="modal-close" onclick="closeTeacherModal()"><i class="fas fa-times"></i></button>
+                <div>
+                    <div class="modal-eyebrow">Teacher</div>
+                    <h3 class="modal-title" id="teacherModalTitle">Add teacher</h3>
+                </div>
+                <button class="modal-close" onclick="closeTeacherModal()" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="teacherForm">
@@ -731,8 +1409,6 @@
 
                     <!-- Basic Info Tab -->
                     <div id="basicTab" class="modal-tab-content active">
-
-                        <!-- Photo Upload -->
                         <div class="photo-upload-section">
                             <div class="photo-preview" id="photoPreview">
                                 <span id="photoInitials">?</span>
@@ -741,9 +1417,9 @@
                                 <strong>Profile Photo</strong>
                                 <p>JPG or PNG, max 5MB</p>
                                 <input type="file" id="teacherPhotoFile" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handlePhotoPreview(this)">
-                                <div style="display:flex;gap:0.75rem;align-items:center;margin-top:0.625rem;">
+                                <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
                                     <button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById('teacherPhotoFile').click()">
-                                        <i class="fas fa-upload"></i> Upload Photo
+                                        <i class="fas fa-upload"></i> Upload
                                     </button>
                                     <button type="button" class="photo-remove-btn" id="photoRemoveBtn" style="display:none" onclick="removePhoto()">
                                         <i class="fas fa-times"></i> Remove
@@ -777,7 +1453,7 @@
                             <div class="form-group">
                                 <label class="form-label">Gender</label>
                                 <select class="form-select" id="teacherGender">
-                                    <option value="">Select gender...</option>
+                                    <option value="">Select gender…</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
@@ -798,7 +1474,6 @@
                             </select>
                         </div>
 
-                        <!-- Bio -->
                         <div class="form-group">
                             <label class="form-label">Teacher Bio</label>
                             <div class="rich-editor">
@@ -806,9 +1481,8 @@
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherBio').focus();document.execCommand('bold')" title="Bold"><i class="fas fa-bold"></i></button>
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherBio').focus();document.execCommand('italic')" title="Italic"><i class="fas fa-italic"></i></button>
                                 </div>
-                                <div class="rich-editor-content" id="teacherBio" contenteditable="true" data-placeholder="e.g., Sarah has been teaching piano for 10 years and specializes in classical technique and music theory..."></div>
+                                <div class="rich-editor-content" id="teacherBio" contenteditable="true" data-placeholder="A short paragraph about this teacher's background and style…"></div>
                             </div>
-                            <div class="form-hint">A short paragraph about this teacher's background and teaching style.</div>
                         </div>
                     </div>
 
@@ -828,7 +1502,7 @@
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherEducationDetails').focus();document.execCommand('bold')" title="Bold"><i class="fas fa-bold"></i></button>
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherEducationDetails').focus();document.execCommand('italic')" title="Italic"><i class="fas fa-italic"></i></button>
                                 </div>
-                                <div class="rich-editor-content" id="teacherEducationDetails" contenteditable="true" data-placeholder="e.g., Juilliard School - Bachelor of Music"></div>
+                                <div class="rich-editor-content" id="teacherEducationDetails" contenteditable="true" data-placeholder="e.g., Juilliard School — Bachelor of Music"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -865,8 +1539,8 @@
                                 <div class="comfort-slider-value" id="comfortSliderValue">5</div>
                             </div>
                             <div class="comfort-slider-labels">
-                                <span>1 - Less comfortable</span>
-                                <span>10 - Very comfortable</span>
+                                <span>1 — Less comfortable</span>
+                                <span>10 — Very comfortable</span>
                             </div>
                         </div>
 
@@ -877,14 +1551,14 @@
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherNotes').focus();document.execCommand('bold')" title="Bold"><i class="fas fa-bold"></i></button>
                                     <button type="button" class="toolbar-btn" onclick="document.getElementById('teacherNotes').focus();document.execCommand('italic')" title="Italic"><i class="fas fa-italic"></i></button>
                                 </div>
-                                <div class="rich-editor-content" id="teacherNotes" contenteditable="true" data-placeholder="Any other information about this teacher..."></div>
+                                <div class="rich-editor-content" id="teacherNotes" contenteditable="true" data-placeholder="Any other information about this teacher…"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Cities Tab -->
                     <div id="citiesTab" class="modal-tab-content">
-                        <div class="form-label" style="margin-bottom: 0.75rem;">Cities Where Teacher Works</div>
+                        <label class="form-label">Cities Where Teacher Works</label>
                         <div id="citiesContainer" class="tags-container"></div>
                         <div class="add-tag-row">
                             <input type="text" id="newCity" placeholder="Add city">
@@ -894,7 +1568,7 @@
 
                     <!-- Languages Tab -->
                     <div id="languagesTab" class="modal-tab-content">
-                        <div class="form-label" style="margin-bottom: 0.75rem;">Languages Teacher Can Teach In</div>
+                        <label class="form-label">Languages Teacher Can Teach In</label>
                         <div id="languagesContainer" class="tags-container"></div>
                         <div class="add-tag-row">
                             <input type="text" id="newLanguage" placeholder="Add language">
@@ -904,8 +1578,8 @@
 
                     <!-- Instruments Tab -->
                     <div id="instrumentsTab" class="modal-tab-content">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <div class="form-label" style="margin-bottom: 0;">Instruments Taught</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <label class="form-label" style="margin-bottom: 0;">Instruments Taught</label>
                             <button type="button" class="btn btn-primary btn-small" onclick="addInstrument()"><i class="fas fa-plus"></i> Add Instrument</button>
                         </div>
                         <div id="instrumentsContainer"></div>
@@ -919,18 +1593,22 @@
         </div>
     </div>
 
-    <div id="toast" class="toast"><i class="fas fa-check-circle toast-icon"></i><span class="toast-message"></span></div>
+    <div id="toast" class="toast">
+        <div class="toast-icon"><i class="fas fa-check"></i></div>
+        <span class="toast-message"></span>
+    </div>
 
     <script>
         const SUPABASE_URL = 'https://kvyvjwepfrqqkvyyutdw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
+
+        const PASTEL_THEMES = ['theme-sage', 'theme-blush', 'theme-butter', 'theme-sky', 'theme-lilac', 'theme-clay', 'theme-mint', 'theme-rose'];
 
         let supabaseClient;
         let teachers = [];
         let currentStatusTab = 'all';
         let importData = [];
 
-        // Current editing state
         let currentCities = [];
         let currentLanguages = [];
         let currentInstruments = [];
@@ -938,7 +1616,6 @@
         let deletedLanguageIds = [];
         let deletedInstrumentIds = [];
 
-        // Photo state
         let currentPhotoFile = null;
         let photoRemoved = false;
 
@@ -954,6 +1631,18 @@
 
         function updateComfortSliderDisplay(value) {
             document.getElementById('comfortSliderValue').textContent = value;
+        }
+
+        // Pick stable pastel theme based on teacher id
+        function themeForId(id) {
+            if (!id) return PASTEL_THEMES[0];
+            let hash = 0;
+            const s = String(id);
+            for (let i = 0; i < s.length; i++) {
+                hash = ((hash << 5) - hash) + s.charCodeAt(i);
+                hash |= 0;
+            }
+            return PASTEL_THEMES[Math.abs(hash) % PASTEL_THEMES.length];
         }
 
         // ============ PHOTO HANDLING ============
@@ -999,7 +1688,6 @@
                 .upload(path, currentPhotoFile, { upsert: true });
             if (error) throw error;
             const { data } = supabaseClient.storage.from('teacher-photos').getPublicUrl(path);
-            // Bust cache so updated photo shows immediately
             return data.publicUrl + '?t=' + Date.now();
         }
 
@@ -1032,6 +1720,7 @@
         function setupSearch() {
             document.getElementById('teacherSearch').addEventListener('input', applyFilters);
             document.getElementById('studioFilter').addEventListener('change', applyFilters);
+            document.getElementById('cityFilter').addEventListener('change', applyFilters);
         }
 
         function setupTagInputs() {
@@ -1040,10 +1729,11 @@
         }
 
         // ============ STATUS TABS ============
-        function switchStatusTab(status) {
+        function switchStatusTab(status, evt) {
             currentStatusTab = status;
-            document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.status-pill').forEach(t => t.classList.remove('active'));
+            if (evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+            else document.querySelector(`.status-pill[data-status="${status}"]`)?.classList.add('active');
             applyFilters();
         }
 
@@ -1055,17 +1745,30 @@
         }
 
         function applyFilters() {
-            const searchTerm = document.getElementById('teacherSearch').value.toLowerCase();
+            const searchTerm = document.getElementById('teacherSearch').value.toLowerCase().trim();
             const studioFilter = document.getElementById('studioFilter').value;
+            const cityFilter = document.getElementById('cityFilter').value;
 
             const filtered = teachers.filter(t => {
                 const matchesSearch = !searchTerm || `${t.first_name} ${t.last_name}`.toLowerCase().includes(searchTerm);
                 const matchesStudio = !studioFilter || t.brand === studioFilter;
+                const matchesCity = !cityFilter || (t.cities || []).some(c => c.city === cityFilter);
                 const matchesStatus = currentStatusTab === 'all' || t.status === currentStatusTab;
-                return matchesSearch && matchesStudio && matchesStatus;
+                return matchesSearch && matchesStudio && matchesCity && matchesStatus;
             });
 
+            // Update clear filters button visibility
+            const hasFilters = searchTerm || studioFilter || cityFilter;
+            document.getElementById('filterClear').classList.toggle('visible', !!hasFilters);
+
             renderTeachers(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('teacherSearch').value = '';
+            document.getElementById('studioFilter').value = '';
+            document.getElementById('cityFilter').value = '';
+            applyFilters();
         }
 
         // ============ LOAD DATA ============
@@ -1086,10 +1789,27 @@
                     instruments: (instrumentsResult.data || []).filter(i => i.teacher_id === t.id)
                 }));
 
+                // Populate brand filter
                 const studios = [...new Set(teachers.map(t => t.brand).filter(Boolean))].sort();
                 const studioSelect = document.getElementById('studioFilter');
-                studioSelect.innerHTML = '<option value="">All Studios</option>';
-                studios.forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; studioSelect.appendChild(opt); });
+                studioSelect.innerHTML = '<option value="">All Brands</option>';
+                studios.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    studioSelect.appendChild(opt);
+                });
+
+                // Populate city filter from all teacher_cities entries
+                const cities = [...new Set((citiesResult.data || []).map(c => c.city).filter(Boolean))].sort();
+                const citySelect = document.getElementById('cityFilter');
+                citySelect.innerHTML = '<option value="">All Cities</option>';
+                cities.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    citySelect.appendChild(opt);
+                });
 
                 updateStatusCounts();
                 document.getElementById('loading').style.display = 'none';
@@ -1105,10 +1825,15 @@
         function renderTeachers(teachersList) {
             const container = document.getElementById('teachersGrid');
             const countEl = document.getElementById('teacherCount');
-            countEl.textContent = `${teachersList.length} teacher${teachersList.length !== 1 ? 's' : ''}`;
+            countEl.textContent = teachersList.length;
 
             if (teachersList.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-chalkboard-teacher"></i><p>No teachers found</p></div>`;
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <p>No teachers found</p>
+                        <div class="empty-state-sub">Try clearing your filters or adding a new teacher.</div>
+                    </div>`;
                 return;
             }
 
@@ -1119,22 +1844,24 @@
                 const avatarHtml = teacher.photo_url
                     ? `<img src="${teacher.photo_url}" alt="${teacher.first_name}">`
                     : initials;
-
-                // Strip HTML tags from bio for plain-text snippet
                 const bioText = teacher.bio ? teacher.bio.replace(/<[^>]*>/g, '') : '';
+                const theme = isPending ? '' : themeForId(teacher.id);
+                const cityNames = (teacher.cities || []).map(c => c.city).filter(Boolean);
 
                 return `
-                <div class="teacher-card ${isPending ? 'pending-card' : ''}">
+                <div class="teacher-card ${isPending ? 'pending-card' : theme}">
                     <div class="teacher-card-header ${isPending ? 'pending-header' : ''}">
                         <div class="teacher-card-avatar">${avatarHtml}</div>
+                        <div class="teacher-card-eyebrow">${isPending ? 'Pending review' : 'Teacher'}</div>
                         <div class="teacher-card-name">${teacher.first_name} ${teacher.last_name}</div>
-                        <div class="teacher-card-studio">${teacher.brand || 'N/A'}</div>
+                        <div class="teacher-card-studio">${teacher.brand || 'No brand'}</div>
                     </div>
                     <div class="teacher-card-body">
                         ${bioText ? `<div class="teacher-bio-snippet">${bioText}</div>` : ''}
                         ${teacher.state ? `<div class="teacher-info-row"><i class="fas fa-map-marker-alt"></i><span>${teacher.state}</span></div>` : ''}
+                        ${cityNames.length > 0 ? `<div class="teacher-info-row"><i class="fas fa-city"></i><span>${cityNames.join(', ')}</span></div>` : ''}
                         ${teacher.instruments && teacher.instruments.length > 0 ? `<div class="teacher-info-row"><i class="fas fa-music"></i><span>${teacher.instruments.map(i => i.instrument).join(', ')}</span></div>` : ''}
-                        ${comfortLevel ? `<div class="teacher-info-row"><i class="fas fa-heart"></i><span>Learning Needs Comfort: ${comfortLevel}/10</span></div>` : ''}
+                        ${comfortLevel ? `<div class="teacher-info-row"><i class="fas fa-heart"></i><span>Learning needs comfort: ${comfortLevel}/10</span></div>` : ''}
                         <div class="teacher-badges">
                             <span class="teacher-badge ${teacher.status === 'active' ? 'badge-success' : teacher.status === 'pending' ? 'badge-pending' : 'badge-warning'}">
                                 ${teacher.status || 'active'}
@@ -1156,7 +1883,7 @@
                             <button class="btn btn-secondary btn-small" onclick='editTeacher("${teacher.id}")' style="flex: 1;">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-secondary btn-small btn-icon-only" onclick="deleteTeacher('${teacher.id}')">
+                            <button class="btn btn-danger-ghost btn-small btn-icon-only" onclick="deleteTeacher('${teacher.id}')" aria-label="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1261,7 +1988,7 @@
         async function executeImport() {
             const btn = document.getElementById('importBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing…';
             let successCount = 0;
 
             try {
@@ -1343,7 +2070,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // ============ TEACHER MODAL (Edit/Add) ============
+        // ============ TEACHER MODAL ============
         function resetPhotoState() {
             currentPhotoFile = null;
             photoRemoved = false;
@@ -1354,7 +2081,7 @@
         }
 
         function openTeacherModal() {
-            document.getElementById('teacherModalTitle').textContent = 'Add Teacher';
+            document.getElementById('teacherModalTitle').textContent = 'Add teacher';
             document.getElementById('teacherForm').reset();
             document.getElementById('teacherId').value = '';
             document.querySelectorAll('.modal-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
@@ -1374,7 +2101,7 @@
         function editTeacher(teacherId) {
             const teacher = teachers.find(t => t.id === teacherId);
             if (!teacher) { showToast('Teacher not found', 'error'); return; }
-            document.getElementById('teacherModalTitle').textContent = 'Edit Teacher';
+            document.getElementById('teacherModalTitle').textContent = 'Edit teacher';
             document.getElementById('teacherId').value = teacher.id;
             document.querySelectorAll('.modal-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
             document.querySelectorAll('.modal-tab-content').forEach((tc, i) => tc.classList.toggle('active', i === 0));
@@ -1397,7 +2124,6 @@
             document.getElementById('teacherNotes').innerHTML = teacher.additional_notes || '';
             document.getElementById('teacherBio').innerHTML = teacher.bio || '';
 
-            // Photo
             currentPhotoFile = null;
             photoRemoved = false;
             const existingUrl = teacher.photo_url || '';
@@ -1434,12 +2160,12 @@
         // Cities
         function addCity() { const input = document.getElementById('newCity'); const v = input.value.trim(); if (v && !currentCities.some(c => c.city === v)) { currentCities.push({ id: null, city: v, isNew: true }); renderCities(); input.value = ''; } }
         function removeCity(i) { const c = currentCities[i]; if (c.id && !c.isNew) deletedCityIds.push(c.id); currentCities.splice(i, 1); renderCities(); }
-        function renderCities() { const c = document.getElementById('citiesContainer'); if (currentCities.length === 0) { c.innerHTML = '<span style="color:var(--text-light);font-size:0.875rem;">No cities added yet</span>'; return; } c.innerHTML = currentCities.map((ci, i) => `<span class="tag">${ci.city}<button type="button" onclick="removeCity(${i})"><i class="fas fa-times"></i></button></span>`).join(''); }
+        function renderCities() { const c = document.getElementById('citiesContainer'); if (currentCities.length === 0) { c.innerHTML = '<span style="color:var(--text-3);font-size:13px;">No cities added yet</span>'; return; } c.innerHTML = currentCities.map((ci, i) => `<span class="tag">${ci.city}<button type="button" onclick="removeCity(${i})"><i class="fas fa-times"></i></button></span>`).join(''); }
 
         // Languages
         function addLanguage() { const input = document.getElementById('newLanguage'); const v = input.value.trim(); if (v && !currentLanguages.some(l => l.language === v)) { currentLanguages.push({ id: null, language: v, isNew: true }); renderLanguages(); input.value = ''; } }
         function removeLanguage(i) { const l = currentLanguages[i]; if (l.id && !l.isNew) deletedLanguageIds.push(l.id); currentLanguages.splice(i, 1); renderLanguages(); }
-        function renderLanguages() { const c = document.getElementById('languagesContainer'); if (currentLanguages.length === 0) { c.innerHTML = '<span style="color:var(--text-light);font-size:0.875rem;">No languages added yet</span>'; return; } c.innerHTML = currentLanguages.map((l, i) => `<span class="tag">${l.language}<button type="button" onclick="removeLanguage(${i})"><i class="fas fa-times"></i></button></span>`).join(''); }
+        function renderLanguages() { const c = document.getElementById('languagesContainer'); if (currentLanguages.length === 0) { c.innerHTML = '<span style="color:var(--text-3);font-size:13px;">No languages added yet</span>'; return; } c.innerHTML = currentLanguages.map((l, i) => `<span class="tag">${l.language}<button type="button" onclick="removeLanguage(${i})"><i class="fas fa-times"></i></button></span>`).join(''); }
 
         // Instruments
         function addInstrument() {
@@ -1460,12 +2186,12 @@
 
         function renderInstruments() {
             const c = document.getElementById('instrumentsContainer');
-            if (currentInstruments.length === 0) { c.innerHTML = '<p style="color:var(--text-light);font-size:0.875rem;text-align:center;padding:2rem;">No instruments added yet.</p>'; return; }
+            if (currentInstruments.length === 0) { c.innerHTML = '<p style="color:var(--text-3);font-size:13px;text-align:center;padding:32px 16px;">No instruments added yet.</p>'; return; }
             c.innerHTML = currentInstruments.map((inst, i) => `
                 <div class="instrument-card">
                     <div class="instrument-card-header">
-                        <span class="instrument-card-title">${inst.instrument || 'New Instrument'}</span>
-                        <button type="button" class="remove-instrument-btn" onclick="removeInstrument(${i})"><i class="fas fa-times"></i></button>
+                        <span class="instrument-card-title">${inst.instrument || 'New instrument'}</span>
+                        <button type="button" class="remove-instrument-btn" onclick="removeInstrument(${i})" aria-label="Remove"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -1475,7 +2201,7 @@
                         <div class="form-group">
                             <label class="form-label">Highest Teaching Level</label>
                             <select class="form-select" onchange="updateInstrument(${i},'teacher_level',this.value)">
-                                <option value="">Select level...</option>
+                                <option value="">Select level…</option>
                                 <option value="beginner" ${inst.teacher_level === 'beginner' ? 'selected' : ''}>Beginner</option>
                                 <option value="intermediate" ${inst.teacher_level === 'intermediate' ? 'selected' : ''}>Intermediate</option>
                                 <option value="advanced" ${inst.teacher_level === 'advanced' ? 'selected' : ''}>Advanced</option>
@@ -1498,13 +2224,13 @@
                         <div class="form-hint">At our studio, teachers teach all genres. List any specializations here.</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Certifications & Experience</label>
+                        <label class="form-label">Certifications &amp; Experience</label>
                         <input type="text" class="form-input" value="${inst.achievements_credentials}" onchange="updateInstrument(${i},'achievements_credentials',this.value)" placeholder="e.g., MTAC Certified, 10 years teaching">
                         <div class="form-hint">Certifications (MTAC, RCM) and notable experience</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Notes</label>
-                        <textarea class="form-textarea" style="min-height:60px;" onchange="updateInstrument(${i},'notes',this.value)" placeholder="Additional notes...">${inst.notes || ''}</textarea>
+                        <textarea class="form-textarea" style="min-height:60px;" onchange="updateInstrument(${i},'notes',this.value)" placeholder="Additional notes…">${inst.notes || ''}</textarea>
                     </div>
                 </div>
             `).join('');
@@ -1545,7 +2271,6 @@
                     teacherId = result.data[0].id;
                 }
 
-                // Upload photo if a new file was selected
                 if (currentPhotoFile) {
                     try {
                         const photoUrl = await uploadPhoto(teacherId);
@@ -1605,7 +2330,7 @@
             const toast = document.getElementById('toast');
             toast.className = 'toast ' + type;
             toast.querySelector('.toast-message').textContent = message;
-            toast.querySelector('.toast-icon').className = type === 'success' ? 'fas fa-check-circle toast-icon' : 'fas fa-exclamation-circle toast-icon';
+            toast.querySelector('.toast-icon i').className = type === 'success' ? 'fas fa-check' : 'fas fa-exclamation';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
