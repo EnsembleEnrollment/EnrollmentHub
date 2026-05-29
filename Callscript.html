@@ -1677,7 +1677,7 @@ function scriptOfText(full, script) {
 }
 
 /* ─── TRANSFORM A SUPABASE STUDIO ROW INTO CALL-SCRIPT SHAPE ─── */
-function transformStudio(s, brandsById) {
+function transformStudio(s, brandsById, countTeachers) {
     const brand = brandsById[s.brand_id] || { name: 'Unknown brand' };
 
     // Notes — drop any not flagged show_in_enroll? No — keep all notes (they're not toggle-gated on the script side per our spec).
@@ -1728,16 +1728,20 @@ function transformStudio(s, brandsById) {
             desc: scriptOfText(d.description, d.description_script),
         }));
 
-    // Instruments — always show on script per our spec
-    const instruments = (s.instruments || []).map(i => ({
-        name: i.name || i.instrument || 'Instrument',
-        icon: i.icon || 'fa-music',
-        startAge: i.start_age != null ? i.start_age : 5,
-        method: i.method || '—',
-        teacherCount: i.teacher_count != null ? i.teacher_count : 0,
-        bringInstrument: !!i.bring_instrument,
-        bringNote: i.bring_note || '',
-    }));
+    // Instruments — teacher count is DERIVED from the teacher directory:
+    //   active teachers, same brand, same city, teaching this instrument.
+    const instruments = (s.instruments || []).map(i => {
+        const instName = i.name || i.instrument || 'Instrument';
+        return {
+            name: instName,
+            icon: i.icon || 'fa-music',
+            startAge: i.start_age != null ? i.start_age : 5,
+            method: i.method || '—',
+            teacherCount: countTeachers ? countTeachers(brand.name, s.city, instName) : 0,
+            bringInstrument: !!i.bring_instrument,
+            bringNote: i.bring_note || '',
+        };
+    });
 
     // Prices — call script wants {30, 45, 60}
     const prices = {
@@ -1775,13 +1779,16 @@ function transformStudio(s, brandsById) {
 /* ─── LOAD ALL STUDIOS FROM SUPABASE ─── */
 async function loadStudios() {
     try {
-        const [brandsRes, studiosRes, instrumentsRes, notesRes, policiesRes, discountsRes] = await Promise.all([
+        const [brandsRes, studiosRes, instrumentsRes, notesRes, policiesRes, discountsRes, teachersRes, teacherCitiesRes, teacherInstrumentsRes] = await Promise.all([
             supabaseClient.from('brands').select('*'),
             supabaseClient.from('studios').select('*').order('city'),
             supabaseClient.from('studio_instruments').select('*').order('order_index'),
             supabaseClient.from('studio_notes').select('*').order('order_index'),
             supabaseClient.from('studio_policies').select('*').order('order_index'),
             supabaseClient.from('studio_discounts').select('*').order('order_index'),
+            supabaseClient.from('teachers').select('*'),
+            supabaseClient.from('teacher_cities').select('*'),
+            supabaseClient.from('teacher_instruments').select('*'),
         ]);
         if (brandsRes.error) throw brandsRes.error;
         if (studiosRes.error) throw studiosRes.error;
@@ -1789,12 +1796,45 @@ async function loadStudios() {
         const brandsById = {};
         (brandsRes.data || []).forEach(b => { brandsById[b.id] = b; });
 
+        // ─── Build a teacher index for counting active teachers per studio+instrument ───
+        // Schema notes:
+        //  - teachers.brand is a TEXT name (matches brands.name, not brands.id)
+        //  - teacher_cities is a join table mapping teacher_id → city (text)
+        //  - teacher_instruments is a join table mapping teacher_id → instrument (text name)
+        //  - teachers.state is text; teachers.status is one of 'pending'/'active'/'inactive'
+        // We only count teachers with status === 'active'.
+        const activeTeachers = (teachersRes.data || []).filter(t => t.status === 'active');
+        const citiesByTeacher = {};
+        (teacherCitiesRes.data || []).forEach(tc => {
+            if (!citiesByTeacher[tc.teacher_id]) citiesByTeacher[tc.teacher_id] = [];
+            citiesByTeacher[tc.teacher_id].push((tc.city || '').toLowerCase().trim());
+        });
+        const instrumentsByTeacher = {};
+        (teacherInstrumentsRes.data || []).forEach(ti => {
+            if (!instrumentsByTeacher[ti.teacher_id]) instrumentsByTeacher[ti.teacher_id] = [];
+            instrumentsByTeacher[ti.teacher_id].push((ti.instrument || '').toLowerCase().trim());
+        });
+        // Returns # of active teachers at this brand+city who teach this instrument.
+        function countTeachers(brandName, city, instrumentName) {
+            if (!brandName || !instrumentName) return 0;
+            const brandLower = brandName.toLowerCase().trim();
+            const cityLower = (city || '').toLowerCase().trim();
+            const instLower = instrumentName.toLowerCase().trim();
+            return activeTeachers.filter(t => {
+                if ((t.brand || '').toLowerCase().trim() !== brandLower) return false;
+                const teacherCities = citiesByTeacher[t.id] || [];
+                if (cityLower && !teacherCities.includes(cityLower)) return false;
+                const teacherInsts = instrumentsByTeacher[t.id] || [];
+                return teacherInsts.includes(instLower);
+            }).length;
+        }
+
         const studios = (studiosRes.data || []).map(s => {
             s.instruments = (instrumentsRes.data || []).filter(i => i.studio_id === s.id);
             s.studio_notes = (notesRes.data || []).filter(n => n.studio_id === s.id);
             s.policies = (policiesRes.data || []).filter(p => p.studio_id === s.id);
             s.discounts = (discountsRes.data || []).filter(d => d.studio_id === s.id);
-            return transformStudio(s, brandsById);
+            return transformStudio(s, brandsById, countTeachers);
         });
 
         STUDIOS = studios;
