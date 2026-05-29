@@ -1853,9 +1853,9 @@
                         <div class="form-group" style="margin-top: 6px;">
                             <label class="form-label">Trial / First Lesson</label>
                             <div class="radio-pill-group" id="studioTrialType">
-                                <label class="radio-pill"><input type="radio" name="trialType" value="free" checked><span>🎁 Free trial</span></label>
-                                <label class="radio-pill"><input type="radio" name="trialType" value="discounted"><span>% Discounted trial</span></label>
-                                <label class="radio-pill"><input type="radio" name="trialType" value="none"><span>✕ No trial</span></label>
+                                <label class="radio-pill"><input type="radio" name="trialType" value="free" checked><span>🎁 First Lesson Free</span></label>
+                                <label class="radio-pill"><input type="radio" name="trialType" value="discounted"><span>% Discounted Trial</span></label>
+                                <label class="radio-pill"><input type="radio" name="trialType" value="none"><span>✕ No Trial</span></label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -2576,7 +2576,6 @@
                 icon: i.icon || 'fa-music',
                 start_age: i.start_age != null ? i.start_age : '',
                 method: i.method || '',
-                teacher_count: i.teacher_count != null ? i.teacher_count : '',
                 bring_instrument: !!i.bring_instrument,
                 bring_note: i.bring_note || '',
                 notes: i.notes || '',
@@ -2874,7 +2873,6 @@
                 icon: 'fa-music',
                 start_age: '',
                 method: '',
-                teacher_count: '',
                 bring_instrument: false,
                 bring_note: '',
                 notes: '',
@@ -2917,21 +2915,15 @@
                             <input type="number" class="form-input" style="padding: 9px 12px; font-size: 13px;" min="3" max="99" placeholder="e.g., 5" value="${escapeHtml(String(inst.start_age || ''))}" onchange="updateInstrument(${index}, 'start_age', this.value ? parseInt(this.value) : null)">
                         </div>
                     </div>
-                    <div class="instrument-fields" style="margin-top: 10px;">
-                        <div class="instrument-field">
-                            <label>Teaching Method</label>
-                            <input type="text" class="form-input" style="padding: 9px 12px; font-size: 13px;" placeholder="e.g., Faber Piano Adventures" value="${escapeHtml(inst.method || '')}" onchange="updateInstrument(${index}, 'method', this.value)">
-                        </div>
-                        <div class="instrument-field">
-                            <label>Teacher Count</label>
-                            <input type="number" class="form-input" style="padding: 9px 12px; font-size: 13px;" min="0" placeholder="e.g., 8" value="${escapeHtml(String(inst.teacher_count || ''))}" onchange="updateInstrument(${index}, 'teacher_count', this.value ? parseInt(this.value) : null)">
-                        </div>
+                    <div class="instrument-field" style="margin-top: 10px;">
+                        <label>Teaching Method</label>
+                        <input type="text" class="form-input" style="padding: 9px 12px; font-size: 13px;" placeholder="e.g., Faber Piano Adventures" value="${escapeHtml(inst.method || '')}" onchange="updateInstrument(${index}, 'method', this.value)">
                     </div>
 
                     <!-- Bring instrument? -->
                     <div class="toggle-group" style="margin: 12px 0 10px; padding: 11px 14px;">
                         <div>
-                            <span class="toggle-label" style="font-size: 13px;">Student brings instrument on Day 1?</span>
+                            <span class="toggle-label" style="font-size: 13px;">Student required to bring instrument on Day 1?</span>
                             <div style="font-size: 11px; color: var(--text-3); margin-top: 2px;">Toggle OFF if the studio provides the instrument.</div>
                         </div>
                         <label class="toggle-switch">
@@ -3250,7 +3242,6 @@
                         icon: inst.icon || 'fa-music',
                         start_age: inst.start_age != null && inst.start_age !== '' ? parseInt(inst.start_age) : null,
                         method: inst.method || null,
-                        teacher_count: inst.teacher_count != null && inst.teacher_count !== '' ? parseInt(inst.teacher_count) : null,
                         bring_instrument: !!inst.bring_instrument,
                         bring_note: inst.bring_note || null,
                         notes_script: inst.notes_script || null,
