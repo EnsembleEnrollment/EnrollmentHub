@@ -3,2570 +3,570 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Call Script — Enrollment Hub</title>
+<title>Call Script — full-screen card</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-    --primary: #FA8072;
-    --primary-light: #FFB4A2;
-    --primary-dark: #E96E5D;
-    --accent: #FFA07A;
-    --bg-secondary: #F8F9FA;
-    --text-primary: #2D3748;
-    --text-secondary: #718096;
-    --text-light: #A0AEC0;
-    --white: #FFFFFF;
-    --gray-50: #F8F9FA;
-    --gray-100: #F1F3F5;
-    --gray-200: #E9ECEF;
-    --gray-300: #DEE2E6;
-    --success: #10B981;
-    --success-dark: #059669;
-    --warning: #F59E0B;
-    --shadow-sm: 0 2px 4px 0 rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px 0 rgba(0,0,0,0.08);
-    --shadow-lg: 0 10px 30px 0 rgba(0,0,0,0.12);
-    --sidebar-width: 260px;
+:root{
+  --primary:#FA8072; --primary-light:#FFB4A2; --primary-dark:#E96E5D; --accent:#FFA07A;
+  --bg:#F1F3F5;
+  --text:#2D3748; --text-2:#718096; --text-3:#A0AEC0;
+  --white:#fff; --g50:#F8F9FA; --g100:#F1F3F5; --g200:#E9ECEF; --g300:#DEE2E6;
+  --success:#10B981; --success-dark:#059669; --warning:#F59E0B;
+  --sh-sm:0 2px 4px rgba(0,0,0,.05); --sh-md:0 4px 12px rgba(0,0,0,.08); --sh-lg:0 10px 30px rgba(0,0,0,.12);
+  --sidebar:236px;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg-secondary);
-    min-height: 100vh; color: var(--text-primary);
-    overflow-x: hidden;
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--text);overflow:hidden;
 }
 
-/* ── APP SIDEBAR ── */
-.app-sidebar {
-    position: fixed; top: 0; left: 0;
-    width: var(--sidebar-width); height: 100vh;
-    background: var(--white);
-    border-right: 1px solid var(--gray-200);
-    box-shadow: var(--shadow-sm);
-    z-index: 1000; display: flex; flex-direction: column;
-}
-.app-sidebar-header {
-    padding: 1.5rem 1.25rem;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex; align-items: center; gap: 0.75rem;
-}
-.logo-icon {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: 700;
-}
-.logo-text { font-size: 1.25rem; font-weight: 700; }
-.app-sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
-.nav-item {
-    display: flex; align-items: center; gap: 0.875rem;
-    padding: 0.875rem 1.5rem; margin: 0.25rem 0.75rem;
-    color: var(--text-secondary); text-decoration: none;
-    border-radius: 10px; font-size: 0.9375rem; font-weight: 500;
-    transition: all 0.2s;
-}
-.nav-item:hover { background: var(--gray-100); color: var(--text-primary); }
-.nav-item.active {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; box-shadow: 0 4px 12px rgba(250,128,114,0.3);
-}
-.nav-item i { font-size: 1.125rem; width: 20px; text-align: center; }
+/* sidebar */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;background:var(--white);
+  border-right:1px solid var(--g200);display:flex;flex-direction:column;z-index:50}
+.sidebar-head{display:flex;align-items:center;gap:.7rem;padding:1.25rem 1.1rem;border-bottom:1px solid var(--g200)}
+.logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.logo-text{font-weight:700;font-size:1.15rem}
+.sidebar-nav{padding:.75rem .6rem;display:flex;flex-direction:column;gap:.2rem;overflow-y:auto}
+.nav{display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;border-radius:10px;color:var(--text-2);
+  text-decoration:none;font-size:.9rem;font-weight:500}
+.nav i{width:18px;text-align:center;font-size:1rem}
+.nav:hover{background:var(--g100);color:var(--text)}
+.nav.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;box-shadow:0 4px 12px rgba(250,128,114,.3)}
 
-/* ── LAYOUT ── */
-.main-wrap {
-    margin-left: var(--sidebar-width);
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-}
+/* shell */
+.wrap{margin-left:var(--sidebar);height:100vh;display:flex;flex-direction:column;padding:1rem 1.25rem 1.25rem}
+.searchbar{flex:0 0 auto;position:relative;margin-bottom:.85rem}
+.searchbar i.lead{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--primary)}
+.searchbar input{width:100%;padding:.7rem 1rem .7rem 2.75rem;background:var(--white);border:1.5px solid var(--g200);
+  border-radius:12px;font-size:.95rem;font-family:inherit}
+.searchbar input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(250,128,114,.12)}
+.dd{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--white);border:1px solid var(--g200);
+  border-radius:12px;box-shadow:var(--sh-lg);overflow:hidden;display:none;z-index:80;max-height:340px;overflow-y:auto}
+.dd.open{display:block}
+.dd-row{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;cursor:pointer;border-bottom:1px solid var(--g100)}
+.dd-row:last-child{border-bottom:none}
+.dd-row:hover{background:var(--g50)}
+.dd-row .pin{width:30px;height:30px;border-radius:8px;background:var(--g100);color:var(--text-3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dd-row .city{font-weight:600}
+.dd-row .meta{font-size:.75rem;color:var(--text-3)}
 
-/* ── PAGE HEADER ── */
-.page-header { padding: 1.5rem 2rem 0.75rem; background: var(--bg-secondary); }
-.page-header-inner { max-width: 1200px; margin: 0 auto; }
-.page-header h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.25rem; }
-.page-header p { color: var(--text-secondary); font-size: 0.9375rem; }
+/* THE FULL-SCREEN CARD */
+.card{flex:1 1 auto;min-height:0;background:var(--white);border:1px solid var(--g200);border-radius:18px;
+  box-shadow:var(--sh-md);display:flex;flex-direction:column;overflow:hidden}
 
-/* ── TOP SEARCH BAR (studio picker) ── */
-.top-search-bar {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-    margin: 0.5rem 2rem 0;
-    padding: 1rem 1.25rem;
-    position: relative;
-    z-index: 50;
-}
-.top-search-bar-inner { max-width: 1200px; margin: 0 auto; position: relative; }
-.search-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+/* empty state */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.empty .ic{width:88px;height:88px;border-radius:22px;background:linear-gradient(135deg,rgba(250,128,114,.12),rgba(255,160,122,.12));
+  display:flex;align-items:center;justify-content:center;font-size:2.25rem;color:var(--primary);margin-bottom:1.1rem}
+.empty h2{font-size:1.35rem;margin-bottom:.4rem}
+.empty p{color:var(--text-2);max-width:380px;line-height:1.55}
 
-.search-field { flex: 1; min-width: 280px; position: relative; }
-.search-field > i.fa-search {
-    position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
-    color: var(--primary); font-size: 0.9375rem; pointer-events: none;
-}
-.search-input {
-    width: 100%; padding: 0.75rem 2.75rem;
-    background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 12px; font-size: 0.9375rem;
-    transition: all 0.2s;
-}
-.search-input::placeholder { color: var(--text-light); }
-.search-input:focus {
-    outline: none; border-color: var(--primary); background: var(--white);
-    box-shadow: 0 0 0 3px rgba(250,128,114,0.1);
-}
-.search-clear {
-    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px; border: none; background: var(--gray-200);
-    color: var(--text-secondary); border-radius: 50%; cursor: pointer;
-    display: none; align-items: center; justify-content: center;
-    font-size: 0.625rem; transition: all 0.15s;
-}
-.search-clear:hover { background: var(--gray-300); color: var(--text-primary); }
-.search-clear.visible { display: flex; }
+/* card header — salmon gradient (the style you liked) */
+.card-head{flex:0 0 auto;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
+  padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative;overflow:hidden}
+.card-head::before{content:'';position:absolute;top:-60%;right:-10%;width:50%;height:220%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 60%)}
+.card-head .ht{position:relative;z-index:1;min-width:0}
+.card-head .eyebrow{font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85;
+  display:flex;align-items:center;gap:.4rem;margin-bottom:.2rem}
+.card-head h1{font-size:1.4rem;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-head .addr{font-size:.85rem;opacity:.95;display:flex;align-items:center;gap:.4rem;margin-top:.2rem}
+.card-head .hc{position:relative;z-index:1;display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.head-btn{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.22);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.5rem .8rem;border-radius:10px;font-size:.8125rem;
+  font-weight:700;text-decoration:none;white-space:nowrap;transition:all .2s}
+.head-btn:hover{background:#fff;color:var(--primary-dark);border-color:#fff}
+.prog-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);
+  border-radius:10px;padding:.4rem .7rem;font-size:.8125rem;font-weight:700;white-space:nowrap}
+.prog-pill .pv{opacity:.95}
+.prog-pill a{margin-left:.2rem;background:#fff;color:var(--primary-dark);text-decoration:none;font-size:.6875rem;
+  font-weight:800;padding:.2rem .45rem;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
 
-.selected-pill {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    padding: 0.5rem 0.875rem;
-    border-radius: 10px;
-    font-size: 0.875rem; font-weight: 600;
-    box-shadow: 0 2px 8px rgba(250,128,114,0.3);
-    white-space: nowrap;
-}
-.selected-pill i { font-size: 0.875rem; opacity: 0.9; }
-.selected-pill .change-btn {
-    background: rgba(255,255,255,0.25); border: none; color: white;
-    padding: 0.2rem 0.5rem; border-radius: 6px;
-    font-size: 0.6875rem; font-weight: 700; cursor: pointer;
-    margin-left: 0.25rem; transition: background 0.15s;
-    text-transform: uppercase; letter-spacing: 0.04em;
-}
-.selected-pill .change-btn:hover { background: rgba(255,255,255,0.4); }
+/* color-meaning legend */
+.legend{flex:0 0 auto;display:flex;gap:1.4rem;align-items:center;padding:.45rem 1.4rem;background:var(--g50);
+  border-bottom:1px solid var(--g200);font-size:.7rem;font-weight:600;color:var(--text-2)}
+.legend .lg{display:inline-flex;align-items:center;gap:.45rem}
+.legend .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend .dot.good{background:var(--success)}
+.legend .dot.flag{background:var(--warning)}
 
-.quick-brands {
-    display: flex; gap: 0.4rem; align-items: center;
-    overflow-x: auto; padding-bottom: 2px;
-}
-.quick-brands-label {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    flex-shrink: 0;
-}
-.quick-brand-chip {
-    background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
-    color: var(--text-secondary);
-    padding: 0.3rem 0.75rem;
-    border-radius: 16px;
-    font-size: 0.75rem; font-weight: 600;
-    cursor: pointer; transition: all 0.15s;
-    white-space: nowrap; flex-shrink: 0;
-}
-.quick-brand-chip:hover { border-color: var(--primary); color: var(--primary); }
-.quick-brand-chip.active {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; border-color: transparent;
-}
+/* card body — two columns */
+.card-body{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:0.92fr 1.08fr;gap:0}
+.col{min-height:0;display:flex;flex-direction:column;padding:1.25rem 1.4rem;overflow-y:auto}
+.col-money{border-right:1px solid var(--g200);background:var(--g50)}
+.col-lesson{overflow:hidden}        /* lesson manages its own inner scroll */
 
-.search-dropdown {
-    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 14px;
-    box-shadow: var(--shadow-lg);
-    max-height: 460px; overflow-y: auto;
-    z-index: 100; display: none;
-}
-.search-dropdown.open { display: block; }
-.search-dropdown::-webkit-scrollbar { width: 6px; }
-.search-dropdown::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
-.dropdown-section { padding: 0.5rem 0; }
-.dropdown-section + .dropdown-section { border-top: 1px solid var(--gray-100); }
-.dropdown-brand-header {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.07em;
-    padding: 0.5rem 1.25rem 0.375rem;
-    display: flex; align-items: center; gap: 0.4rem;
-}
-.dropdown-brand-header i { color: var(--primary); }
-.dropdown-row {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.625rem 1.25rem; cursor: pointer; transition: background 0.15s;
-}
-.dropdown-row:hover { background: var(--gray-50); }
-.dropdown-row.active {
-    background: linear-gradient(90deg, rgba(250,128,114,0.08), transparent);
-    border-left: 3px solid var(--primary);
-    padding-left: calc(1.25rem - 3px);
-}
-.dropdown-row .pin {
-    width: 30px; height: 30px;
-    background: var(--gray-100); color: var(--text-light);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8125rem; flex-shrink: 0;
-}
-.dropdown-row.active .pin {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-}
-.dropdown-row-info { flex: 1; min-width: 0; }
-.dropdown-row-city { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
-.dropdown-row-state { font-size: 0.6875rem; font-weight: 600; color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.125rem; }
-.dropdown-row-address { font-size: 0.75rem; color: var(--text-light); margin-top: 0.125rem;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dropdown-row-arrow { color: var(--text-light); font-size: 0.75rem;
-    transition: transform 0.15s, color 0.15s; }
-.dropdown-row:hover .dropdown-row-arrow { color: var(--primary); transform: translateX(2px); }
-.dropdown-empty { padding: 2rem 1.25rem; text-align: center; color: var(--text-light); font-size: 0.875rem; }
-.dropdown-empty i { font-size: 2rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300); }
-mark.search-hit { background: #FEF3C7; color: #78350F; padding: 0 2px; border-radius: 3px; font-weight: 700; }
+.block-label{font-size:.6875rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);
+  display:flex;align-items:center;gap:.4rem;margin-bottom:.6rem}
+.block-label i{color:var(--primary)}
+.block + .block{margin-top:1.25rem}
 
-/* ── CONSOLE ── */
-.console { flex: 1; padding: 1.25rem 2rem 3rem; }
-.console-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; flex-direction: column; gap: 1.25rem;
-}
-.console-empty {
-    background: var(--white);
-    border: 1.5px dashed var(--gray-200);
-    border-radius: 16px;
-    padding: 3rem 2rem;
-    text-align: center; color: var(--text-secondary);
-}
-.console-empty .icon-wrap {
-    width: 88px; height: 88px;
-    background: linear-gradient(135deg, rgba(250,128,114,0.1), rgba(255,160,122,0.1));
-    border-radius: 22px;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1.25rem; font-size: 2.25rem; color: var(--primary);
-}
-.console-empty h2 { font-size: 1.375rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
-.console-empty p { max-width: 420px; margin: 0 auto; line-height: 1.6; }
+/* price */
+.price-row{display:flex;align-items:flex-end;gap:.75rem;flex-wrap:wrap}
+.price-amt{font-size:2.75rem;font-weight:800;line-height:.9;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.price-unit{font-size:.9rem;color:var(--text-2);padding-bottom:.35rem}
+.price-badge{margin-bottom:.45rem;font-size:.625rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text-2);background:var(--g100);padding:.22rem .5rem;border-radius:6px}
+.cadence{margin-top:.5rem;color:var(--text-2);font-size:.9rem}
+.cadence strong{color:var(--text)}
+.other{margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.other .ol{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--g200);background:var(--white);
+  border-radius:9px;padding:.35rem .65rem;font-size:.8125rem}
+.other .ol .l{color:var(--text-3)}
+.other .ol .p{font-weight:700;font-variant-numeric:tabular-nums}
 
-/* ── STUDIO BANNER ── */
-.studio-banner {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white; padding: 1.25rem 1.75rem;
-    position: relative; overflow: hidden;
-    border-radius: 16px;
-    box-shadow: var(--shadow-md);
-}
-.studio-banner::before {
-    content: ''; position: absolute; top: -50%; right: -20%;
-    width: 60%; height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
-    pointer-events: none;
-}
-.studio-banner-inner {
-    position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; flex-wrap: wrap;
-}
-.studio-banner-text { flex: 1; min-width: 0; }
-.studio-banner .eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    opacity: 0.85; margin-bottom: 0.375rem;
-    display: flex; align-items: center; gap: 0.4rem;
-}
-.studio-banner h1 { font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.375rem; }
-.studio-banner .address {
-    font-size: 0.875rem; opacity: 0.95;
-    display: flex; align-items: center; gap: 0.375rem;
-}
+/* billing */
+.steps{display:flex;flex-direction:column;gap:.55rem}
+.step{display:flex;align-items:center;gap:.65rem}
+.step .num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800}
+.step .sl{font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.step .sv{font-weight:700;font-size:.875rem}
+.step .sv.warn{color:var(--warning)}
+.annual{margin-bottom:.85rem;padding:.7rem .85rem;background:rgba(245,158,11,.08);
+  border:1px solid rgba(245,158,11,.3);border-radius:10px}
+.annual-top{display:flex;align-items:center;gap:.55rem}
+.annual-ic{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--warning),#FBBF24);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.annual-amt{font-weight:800;font-size:1.05rem;color:#92400E}
+.annual-amt .per{font-size:.7rem;color:var(--text-2);font-weight:500}
+.annual-lbl{font-size:.625rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+.covers{margin-top:.55rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.cchip{font-size:.72rem;border:1px solid rgba(16,185,129,.25);background:var(--white);border-radius:7px;
+  padding:.2rem .5rem;display:inline-flex;align-items:center;gap:.3rem}
+.cchip i{color:var(--success-dark);font-size:.6rem}
 
-/* "View Studio Info" button in the banner */
-.studio-info-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(255,255,255,0.22);
-    backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255,255,255,0.4);
-    color: white;
-    padding: 0.625rem 1rem;
-    border-radius: 10px;
-    font-size: 0.875rem; font-weight: 700;
-    cursor: pointer; text-decoration: none;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.studio-info-btn:hover {
-    background: white;
-    color: var(--primary-dark);
-    border-color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-.studio-info-btn i { font-size: 0.875rem; }
+/* promos */
+.promo{display:flex;align-items:center;gap:.65rem;padding:.5rem .7rem;background:var(--white);border:1px solid var(--g200);
+  border-left:3px solid var(--primary);border-radius:9px}
+.promo + .promo{margin-top:.45rem}
+.promo .pct{flex-shrink:0;font-size:.78rem;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--accent));padding:.25rem .55rem;border-radius:8px;min-width:54px;text-align:center}
+.promo .pn{font-weight:700;font-size:.875rem}
+.promo .pd{color:var(--text-3);font-size:.78rem}
+.promo-none{font-size:.85rem;color:var(--text-3);font-style:italic}
 
-/* ── ✨ FROZEN INSTRUMENT BAR (v8 — vertical stack) ── */
-.instrument-bar {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    padding: 0.875rem 1rem;
-    display: flex; flex-direction: column;
-    gap: 0.75rem;
-    transition: box-shadow 0.2s, border-color 0.2s;
-}
-.instrument-bar.stuck {
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    border-color: rgba(250,128,114,0.3);
-}
+/* instrument selector */
+.inst-zone{flex:0 0 auto}
+.inst-pick{position:relative}
+.inst-field{position:relative}
+.inst-field i.lead{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--primary);z-index:2}
+.inst-input{width:100%;padding:.7rem 2.3rem .7rem 2.6rem;background:var(--g50);border:1.5px solid var(--g200);
+  border-radius:11px;font-size:.95rem;font-weight:600;font-family:inherit;color:var(--text)}
+.inst-input::placeholder{color:var(--text-3);font-weight:500}
+.inst-input:focus{outline:none;border-color:var(--primary);background:var(--white);box-shadow:0 0 0 3px rgba(250,128,114,.1)}
+.inst-input.chosen{background:linear-gradient(135deg,rgba(250,128,114,.06),rgba(255,160,122,.06));border-color:var(--primary);color:var(--primary-dark);font-weight:700}
+.inst-caret{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:.75rem;pointer-events:none}
+.inst-clear{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;
+  background:var(--primary);color:#fff;border-radius:50%;cursor:pointer;font-size:.6rem}
+.inst-dd{position:absolute;left:0;right:0;top:calc(100% + 5px);background:var(--white);border:1px solid var(--g200);
+  border-radius:11px;box-shadow:var(--sh-lg);overflow:hidden;display:none;z-index:30;max-height:240px;overflow-y:auto}
+.inst-dd.open{display:block}
+.inst-dd-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .8rem;cursor:pointer;border-bottom:1px solid var(--g100)}
+.inst-dd-row:last-child{border-bottom:none}
+.inst-dd-row:hover{background:var(--g50)}
+.inst-dd-row .di{width:26px;height:26px;border-radius:7px;background:var(--g100);color:var(--text-3);
+  display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0}
+.inst-dd-row:hover .di{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
+.inst-dd-row .n{font-weight:600;font-size:.875rem}
+.inst-dd-row .s{font-size:.7rem;color:var(--text-3)}
 
-/* Top row: instrument search field + programs pill */
-.instrument-bar-top {
-    display: flex; align-items: center; gap: 0.75rem;
-    flex-wrap: wrap;
-}
+/* instrument facts — 2x2 */
+.facts{margin-top:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.fact{display:flex;align-items:center;gap:.6rem;padding:.6rem .7rem;background:var(--g50);border:1px solid var(--g200);border-radius:10px}
+.fact .fi{width:30px;height:30px;border-radius:8px;background:var(--white);border:1px solid var(--g200);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.fact .fk{font-size:.6rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em}
+.fact .fv{font-weight:700;font-size:.85rem;margin-top:.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fact.bring-yes{background:rgba(245,158,11,.1)}
+.fact.bring-yes .fi{color:#92400E;border-color:rgba(245,158,11,.4)} .fact.bring-yes .fv{color:#92400E}
+.fact.bring-no{background:rgba(16,185,129,.08)}
+.fact.bring-no .fi{color:var(--success-dark);border-color:rgba(16,185,129,.35)} .fact.bring-no .fv{color:var(--success-dark)}
+.inst-empty{margin-top:.85rem;padding:.75rem .9rem;border:1.5px dashed var(--primary-light);border-radius:10px;
+  background:linear-gradient(135deg,rgba(250,128,114,.04),rgba(255,160,122,.04));color:var(--text-2);font-size:.85rem;
+  display:flex;align-items:center;gap:.5rem}
+.inst-empty i{color:var(--primary)}
 
-/* Instrument selector — autocomplete style */
-.inst-selector {
-    flex: 1;
-    min-width: 240px;
-    position: relative;
-}
-.inst-selector-field { position: relative; }
-.inst-selector-leading-icon {
-    position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
-    color: var(--primary); font-size: 0.9375rem; pointer-events: none;
-    z-index: 2;
-}
-.inst-selector-input {
-    width: 100%;
-    padding: 0.625rem 2.25rem 0.625rem 2.625rem;
-    background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 10px;
-    font-size: 0.9375rem; font-weight: 600;
-    color: var(--text-primary);
-    transition: all 0.15s;
-}
-.inst-selector-input::placeholder { color: var(--text-light); font-weight: 500; }
-.inst-selector-input:focus {
-    outline: none; border-color: var(--primary); background: var(--white);
-    box-shadow: 0 0 0 3px rgba(250,128,114,0.1);
-}
-.inst-selector-input.has-selection {
-    background: linear-gradient(135deg, rgba(250,128,114,0.06), rgba(255,160,122,0.06));
-    border-color: var(--primary);
-    color: var(--primary-dark);
-    font-weight: 700;
-}
-.inst-selector-caret {
-    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
-    color: var(--text-light); pointer-events: none; font-size: 0.75rem;
-}
-.inst-selector-clear {
-    position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
-    width: 20px; height: 20px; border: none; background: var(--gray-200);
-    color: var(--text-secondary); border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.625rem; transition: all 0.15s;
-}
-.inst-selector-clear:hover { background: var(--primary); color: white; }
+/* policies — scrolls internally */
+.pol-zone{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin-top:1.25rem}
+.pol-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding-right:.25rem}
+.pol-scroll::-webkit-scrollbar{width:6px}.pol-scroll::-webkit-scrollbar-thumb{background:var(--g300);border-radius:3px}
+.policy{display:flex;gap:.7rem;align-items:flex-start;padding:.7rem .8rem;background:var(--g50);border:1px solid var(--g100);border-radius:11px}
+.policy .pi{width:30px;height:30px;border-radius:8px;background:var(--white);border:1px solid var(--g200);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;margin-top:.05rem}
+.policy .pt{font-weight:700;font-size:.82rem}
+.policy .pb{color:var(--text-2);font-size:.82rem;margin-top:.1rem;line-height:1.45}
+.pol-none{color:var(--text-3);font-style:italic;font-size:.85rem}
 
-.inst-dropdown {
-    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 12px;
-    box-shadow: var(--shadow-lg);
-    max-height: 320px; overflow-y: auto;
-    z-index: 100; display: none;
-}
-.inst-dropdown.open { display: block; }
-.inst-dropdown::-webkit-scrollbar { width: 4px; }
-.inst-dropdown::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+/* notes strip */
+.notes-strip{flex:0 0 auto;border-top:1px solid var(--g200);background:var(--g50);padding:.7rem 1.4rem;
+  display:flex;align-items:center;gap:.7rem;overflow-x:auto}
+.notes-strip::-webkit-scrollbar{height:6px}.notes-strip::-webkit-scrollbar-thumb{background:var(--g300);border-radius:3px}
+.notes-label{font-size:.625rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;
+  display:flex;align-items:center;gap:.35rem}
+.notes-label i{color:var(--primary)}
+.note{flex-shrink:0;display:flex;align-items:center;gap:.55rem;background:var(--white);border:1px solid var(--g200);
+  border-left:3px solid var(--g300);border-radius:10px;padding:.5rem .75rem;max-width:420px}
+.note.important{border-left-color:var(--warning)}
+.note.tip{border-left-color:var(--success)}
+.note .ntag{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .4rem;border-radius:5px;flex-shrink:0}
+.note.info .ntag{background:var(--g100);color:var(--text-2)}
+.note.important .ntag{background:rgba(245,158,11,.15);color:#92400E}
+.note.tip .ntag{background:rgba(16,185,129,.15);color:var(--success-dark)}
+.note .nt{font-size:.8rem;color:var(--text);white-space:nowrap}
+.notes-none{font-size:.8rem;color:var(--text-3);font-style:italic}
 
-.inst-dropdown-row {
-    display: flex; align-items: center; gap: 0.625rem;
-    padding: 0.625rem 0.875rem;
-    cursor: pointer; transition: background 0.15s;
-    border-bottom: 1px solid var(--gray-100);
-}
-.inst-dropdown-row:last-child { border-bottom: none; }
-.inst-dropdown-row:hover { background: var(--gray-50); }
-.inst-dropdown-row.active {
-    background: linear-gradient(90deg, rgba(250,128,114,0.08), transparent);
-    border-left: 3px solid var(--primary);
-    padding-left: calc(0.875rem - 3px);
-}
-.inst-dropdown-icon {
-    width: 28px; height: 28px;
-    background: var(--gray-100); color: var(--text-light);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8125rem; flex-shrink: 0;
-}
-.inst-dropdown-row.active .inst-dropdown-icon,
-.inst-dropdown-row:hover .inst-dropdown-icon {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-}
-.inst-dropdown-info { flex: 1; min-width: 0; }
-.inst-dropdown-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
-.inst-dropdown-sub {
-    font-size: 0.6875rem; color: var(--text-light);
-    margin-top: 0.125rem;
-}
-.inst-dropdown-empty { padding: 1.25rem; text-align: center; color: var(--text-light); font-size: 0.8125rem; }
+/* loading + error overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(241,243,245,.92);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;z-index:999}
+.loading-overlay.visible{display:flex}
+.loading-card{background:var(--white);border-radius:16px;padding:32px 48px;box-shadow:var(--sh-lg);text-align:center}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--g200);border-top-color:var(--primary);
+  border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;font-weight:500;color:var(--text-2)}
 
-/* ── INSTRUMENT INFO ROW (full width, below search) — flowing cells ── */
-.inst-info-row {
-    display: flex; align-items: stretch;
-    background: linear-gradient(135deg, rgba(250,128,114,0.04), rgba(255,160,122,0.04));
-    border: 1px solid var(--gray-200);
-    border-left: 3px solid var(--primary);
-    border-radius: 10px;
-    overflow: hidden;
-    animation: fadeIn 0.25s ease;
-}
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
-.inst-info-cell {
-    flex: 1; min-width: 0;
-    padding: 0.625rem 1rem;
-    display: flex; align-items: center; gap: 0.625rem;
-    border-right: 1px solid var(--gray-200);
-}
-.inst-info-cell:last-child { border-right: none; }
-
-/* First cell: instrument name — slightly emphasized */
-.inst-info-cell.name-cell {
-    flex: 0 0 auto;
-    background: rgba(250,128,114,0.06);
-    padding-right: 1.25rem;
-}
-.inst-info-cell.name-cell .inst-info-icon {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border: none;
-    width: 32px; height: 32px;
-}
-.inst-info-cell.name-cell .inst-info-value {
-    color: var(--primary-dark);
-    font-size: 0.9375rem;
-    font-weight: 800;
-}
-
-.inst-info-icon {
-    width: 28px; height: 28px;
-    background: var(--white);
-    color: var(--primary);
-    border: 1px solid var(--gray-200);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8125rem;
-    flex-shrink: 0;
-}
-.inst-info-body { flex: 1; min-width: 0; }
-.inst-info-label {
-    font-size: 0.5625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    line-height: 1.1;
-}
-.inst-info-value {
-    font-size: 0.875rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-    line-height: 1.25;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-/* "Bring instrument" cell — colored treatment */
-.inst-info-cell.bring-yes { background: rgba(245,158,11,0.1); }
-.inst-info-cell.bring-yes .inst-info-icon { color: #92400E; border-color: rgba(245,158,11,0.4); }
-.inst-info-cell.bring-yes .inst-info-value { color: #92400E; }
-
-.inst-info-cell.bring-no { background: rgba(16,185,129,0.08); }
-.inst-info-cell.bring-no .inst-info-icon { color: var(--success-dark); border-color: rgba(16,185,129,0.35); }
-.inst-info-cell.bring-no .inst-info-value { color: var(--success-dark); }
-
-/* Programs pill — separate from the instrument info row */
-.programs-pill {
-    flex-shrink: 0;
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: 10px;
-    padding: 0.45rem 0.75rem 0.45rem 0.5rem;
-}
-.programs-pill.yes {
-    background: rgba(16,185,129,0.08);
-    border-color: rgba(16,185,129,0.3);
-}
-.programs-pill .programs-icon {
-    width: 28px; height: 28px;
-    background: var(--white);
-    color: var(--success-dark);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem;
-    border: 1px solid rgba(16,185,129,0.3);
-}
-.programs-pill.no .programs-icon { color: var(--text-light); border-color: var(--gray-200); }
-.programs-pill-body { display: flex; flex-direction: column; line-height: 1.1; }
-.programs-pill-label {
-    font-size: 0.5625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.05em;
-}
-.programs-pill-value {
-    font-size: 0.8125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.1rem;
-}
-.programs-pill.yes .programs-pill-value { color: var(--success-dark); }
-.programs-pill.no .programs-pill-value { color: var(--text-secondary); }
-.programs-pill-link {
-    margin-left: 0.25rem;
-    background: var(--success-dark); color: white;
-    text-decoration: none;
-    font-size: 0.625rem; font-weight: 700;
-    padding: 0.25rem 0.5rem;
-    border-radius: 5px;
-    text-transform: uppercase; letter-spacing: 0.04em;
-    display: inline-flex; align-items: center; gap: 0.25rem;
-    transition: background 0.15s;
-}
-.programs-pill-link:hover { background: #047857; }
-
-/* Placeholder when no instrument is selected (replaces the info row) */
-.inst-placeholder {
-    background: linear-gradient(135deg, rgba(250,128,114,0.04), rgba(255,160,122,0.04));
-    border: 1.5px dashed var(--primary-light);
-    border-radius: 10px;
-    padding: 0.625rem 1rem;
-    display: flex; align-items: center; gap: 0.625rem;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-.inst-placeholder i { color: var(--primary); font-size: 1rem; }
-
-/* On narrow screens, wrap the info row */
-@media (max-width: 800px) {
-    .inst-info-row { flex-wrap: wrap; }
-    .inst-info-cell { flex-basis: 50%; border-right: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
-    .inst-info-cell.name-cell { flex-basis: 100%; }
-    .inst-info-cell:nth-last-child(-n+2) { border-bottom: none; }
-}
-
-/* ── ESSENTIALS CARD ── */
-.essentials-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    padding: 1.25rem 1.5rem;
-}
-.essentials-card .card-eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 0.5rem;
-    display: flex; align-items: center; gap: 0.4rem;
-}
-.essentials-card .card-eyebrow i { color: var(--primary); }
-
-.essentials-headline {
-    display: flex; align-items: baseline; gap: 0.75rem;
-    margin-bottom: 0.875rem;
-    flex-wrap: wrap;
-}
-.essentials-headline .standard-len {
-    font-size: 1.875rem; font-weight: 800;
-    color: var(--text-primary);
-    line-height: 1;
-}
-.essentials-headline .standard-price {
-    font-size: 1.5rem; font-weight: 700;
-    color: var(--primary-dark);
-}
-.essentials-headline .standard-label {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--success-dark);
-    background: rgba(16,185,129,0.12);
-    padding: 0.2rem 0.5rem;
-    border-radius: 6px;
-    text-transform: uppercase; letter-spacing: 0.05em;
-    display: inline-flex; align-items: center; gap: 0.25rem;
-}
-.essentials-cadence {
-    font-size: 0.9375rem; color: var(--text-secondary);
-    display: flex; align-items: center; gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-.essentials-cadence i { color: var(--primary); font-size: 0.875rem; }
-.essentials-cadence strong { color: var(--text-primary); font-weight: 700; }
-
-.essentials-divider {
-    height: 1px; background: var(--gray-200);
-    margin: 0.875rem 0;
-}
-.essentials-other-label {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    margin-bottom: 0.5rem;
-}
-.essentials-other-list {
-    display: flex; flex-direction: column; gap: 0.4rem;
-}
-.essentials-other-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.5rem 0.875rem;
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: 8px;
-}
-.essentials-other-row .len {
-    font-size: 0.875rem; font-weight: 600;
-    color: var(--text-primary);
-}
-.essentials-other-row .price {
-    font-size: 0.875rem; font-weight: 700;
-    color: var(--primary-dark);
-}
-
-/* ── ANNUAL FEE CARD ── */
-.annual-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    padding: 1.25rem 1.5rem;
-}
-.annual-header {
-    display: flex; align-items: center; gap: 0.875rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.875rem;
-    border-bottom: 1px solid var(--gray-100);
-}
-.annual-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.125rem; flex-shrink: 0;
-}
-.annual-header-text { flex: 1; }
-.annual-header-label {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.annual-header-amount {
-    font-size: 1.5rem; font-weight: 800;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-    line-height: 1;
-}
-.annual-header-amount .per { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
-
-.annual-covers-label {
-    font-size: 0.75rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.625rem;
-    display: flex; align-items: center; gap: 0.4rem;
-}
-.annual-covers-label i { color: var(--primary); font-size: 0.75rem; }
-
-.annual-covers-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-}
-.annual-cover-item {
-    display: flex; align-items: flex-start; gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--gray-50);
-    border-left: 3px solid var(--success);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    line-height: 1.4;
-}
-.annual-cover-item i {
-    color: var(--success-dark); font-size: 0.6875rem; margin-top: 0.3rem;
-    flex-shrink: 0;
-}
-
-/* ── TRIAL CARD ── */
-.trial-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    padding: 1.25rem 1.5rem;
-}
-.trial-header {
-    display: flex; align-items: center; gap: 0.875rem;
-    margin-bottom: 0.75rem;
-}
-.trial-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--success), #34D399);
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.125rem; flex-shrink: 0;
-}
-.trial-icon.discounted { background: linear-gradient(135deg, var(--warning), #FBBF24); }
-.trial-icon.none { background: var(--gray-300); }
-.trial-title-block { flex: 1; }
-.trial-eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.trial-title {
-    font-size: 1.125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-}
-.trial-status-pill {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 8px;
-    font-size: 0.6875rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.05em;
-}
-.trial-status-pill.yes { background: rgba(16,185,129,0.15); color: var(--success-dark); }
-.trial-status-pill.discounted { background: rgba(245,158,11,0.15); color: #92400E; }
-.trial-status-pill.no { background: var(--gray-100); color: var(--text-secondary); }
-
-.trial-body {
-    font-size: 0.9375rem; line-height: 1.6;
-    color: var(--text-primary);
-    padding: 0.875rem 1rem;
-    background: var(--gray-50);
-    border-radius: 10px;
-    border-left: 3px solid var(--primary);
-}
-
-/* Compact promos section inside trial card */
-.trial-promos {
-    margin-top: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 1px dashed var(--gray-200);
-    animation: slideDown 0.2s ease-out;
-}
-.trial-promos-toggle {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px dashed var(--gray-200);
-}
-.trial-promos-trigger {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    padding: 8px 12px;
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: 10px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-    letter-spacing: -0.005em;
-}
-.trial-promos-trigger:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    color: var(--primary-dark);
-}
-.trial-promos-trigger > i:first-child { color: var(--warning); }
-.trial-promos-trigger span { flex: 1; text-align: left; }
-.trial-promos-caret {
-    transition: transform 0.2s;
-    font-size: 0.6875rem;
-}
-.trial-promos-trigger.open .trial-promos-caret { transform: rotate(180deg); }
-.trial-promos-trigger.open {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    color: var(--primary-dark);
-}
-.trial-promos-header {
-    display: flex; align-items: center; gap: 0.4rem;
-    margin-bottom: 0.5rem;
-}
-.trial-promos-label {
-    font-size: 0.625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.trial-promos-label i { color: var(--warning); margin-right: 0.25rem; }
-.trial-promos-list {
-    display: flex; flex-wrap: wrap; gap: 0.375rem;
-}
-.trial-promo-chip {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 14px;
-    padding: 0.25rem 0.5rem 0.25rem 0.25rem;
-    font-size: 0.75rem;
-    transition: all 0.15s;
-    cursor: default;
-    max-width: 100%;
-}
-.trial-promo-chip:hover {
-    border-color: var(--warning);
-    box-shadow: 0 2px 6px rgba(245,158,11,0.15);
-}
-.trial-promo-chip.studio-specific:hover {
-    border-color: var(--primary);
-    box-shadow: 0 2px 6px rgba(250,128,114,0.15);
-}
-.trial-promo-pct {
-    background: linear-gradient(135deg, var(--warning), #FBBF24);
-    color: white;
-    font-size: 0.625rem; font-weight: 800;
-    padding: 0.15rem 0.4rem;
-    border-radius: 10px;
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-.trial-promo-chip.studio-specific .trial-promo-pct {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-}
-.trial-promo-name {
-    font-weight: 700; color: var(--text-primary);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.trial-promo-scope {
-    color: var(--text-light);
-    font-size: 0.625rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.04em;
-}
-
-/* ── ANNUAL FEE INSIDE ESSENTIALS ── */
-.essentials-annual {
-    margin-top: 0.875rem;
-    padding: 0.875rem 1rem;
-    background: linear-gradient(135deg, rgba(250,128,114,0.05), rgba(255,160,122,0.05));
-    border: 1px solid rgba(250,128,114,0.2);
-    border-radius: 10px;
-}
-.essentials-annual-top {
-    display: flex; align-items: center; gap: 0.625rem;
-    margin-bottom: 0.625rem;
-}
-.essentials-annual-icon {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.875rem; flex-shrink: 0;
-}
-.essentials-annual-label {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.05em;
-}
-.essentials-annual-amount {
-    font-size: 1.125rem; font-weight: 800;
-    color: var(--text-primary);
-    line-height: 1.1;
-}
-.essentials-annual-amount .per {
-    font-size: 0.75rem; color: var(--text-secondary); font-weight: 500;
-}
-
-.essentials-annual-covers-label {
-    font-size: 0.625rem; font-weight: 700;
-    color: var(--text-secondary);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
-    display: flex; align-items: center; gap: 0.3rem;
-}
-.essentials-annual-covers-label i { color: var(--primary); font-size: 0.625rem; }
-.essentials-annual-covers {
-    display: flex; flex-wrap: wrap; gap: 0.3rem;
-}
-.essentials-annual-cover {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    background: var(--white);
-    border: 1px solid rgba(16,185,129,0.25);
-    color: var(--text-primary);
-    padding: 0.2rem 0.55rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-.essentials-annual-cover i { color: var(--success-dark); font-size: 0.625rem; }
-
-/* ─── NEW COMPACT ANNUAL FEE ROW ─── */
-.annual-row {
-    margin: 14px 0 0;
-    padding: 12px 14px;
-    background: linear-gradient(135deg, #FFF7F5 0%, #FFFBF9 100%);
-    border: 1px solid #FFE6DF;
-    border-radius: 12px;
-}
-.annual-row-main {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.annual-row-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: var(--primary);
-    color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-.annual-row-body { flex: 1; min-width: 0; }
-.annual-row-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-.annual-row-amount {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-}
-.annual-row-amount .per {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-left: 2px;
-}
-.annual-row-covers { margin-top: 10px; }
-.annual-covers-inline {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-    font-size: 0.75rem;
-}
-.covers-prefix {
-    display: inline-flex; align-items: center; gap: 5px;
-    color: var(--success-dark);
-    font-weight: 600;
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-.covers-prefix i { font-size: 0.6875rem; }
-.cover-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 9px;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: 14px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    letter-spacing: -0.005em;
-}
-.covers-expand-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    background: var(--primary-light);
-    color: var(--primary-dark);
-    border: none;
-    border-radius: 14px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s;
-    font-family: inherit;
-}
-.covers-expand-btn:hover { background: var(--primary); color: white; }
-.covers-expand-btn i { font-size: 0.625rem; transition: transform 0.2s; }
-.covers-expand-btn.open i { transform: rotate(180deg); }
-.annual-covers-rest {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed #FFE6DF;
-    animation: slideDown 0.2s ease-out;
-}
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── COMPACT OTHER-LENGTHS ROW ─── */
-.other-lengths-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    padding: 10px 14px;
-    background: var(--gray-50);
-    border-radius: 10px;
-}
-.other-lengths-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-right: 4px;
-}
-.other-length-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 11px;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: 16px;
-    font-size: 0.8125rem;
-}
-.other-length-pill .ol-len {
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-.other-length-pill .ol-price {
-    color: var(--text-primary);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-}
-
-/* ── BILLING TIMELINE (at bottom of essentials) ── */
-.billing-timeline {
-    margin-top: 0.875rem;
-    padding-top: 0.875rem;
-    border-top: 1px dashed var(--gray-200);
-}
-.billing-timeline-label {
-    font-size: 0.625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    margin-bottom: 0.5rem;
-    display: flex; align-items: center; gap: 0.3rem;
-}
-.billing-timeline-label i { color: var(--primary); }
-
-.billing-timeline-steps {
-    display: flex; align-items: stretch; gap: 0;
-    position: relative;
-}
-.billing-timeline-step {
-    flex: 1; min-width: 0;
-    position: relative;
-    padding: 0.4rem 0.4rem 0.4rem 1.75rem;
-    display: flex; flex-direction: column; justify-content: center;
-}
-.billing-timeline-step-num {
-    position: absolute;
-    left: 0; top: 50%; transform: translateY(-50%);
-    width: 24px; height: 24px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.6875rem; font-weight: 800;
-    z-index: 2;
-}
-.billing-timeline-step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: -0.125rem; top: 50%; transform: translateY(-50%);
-    width: 6px; height: 6px;
-    border-top: 2px solid var(--primary-light);
-    border-right: 2px solid var(--primary-light);
-    transform: translateY(-50%) rotate(45deg);
-}
-.billing-timeline-step .ts-label {
-    font-size: 0.5625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.04em;
-    line-height: 1.1;
-}
-.billing-timeline-step .ts-value {
-    font-size: 0.8125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.1rem;
-    line-height: 1.25;
-}
-.billing-timeline-step .ts-value.prorated-yes { color: var(--warning); }
-.billing-timeline-step .ts-value.prorated-no  { color: var(--text-secondary); }
-
-@media (max-width: 700px) {
-    .billing-timeline-steps { flex-direction: column; gap: 0.5rem; }
-    .billing-timeline-step::after { display: none; }
-}
-
-/* ── SALES DISCOUNTS CARD ── */
-.discounts-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    padding: 1.25rem 1.5rem;
-}
-.discounts-header {
-    display: flex; align-items: center; gap: 0.875rem;
-    margin-bottom: 1rem;
-}
-.discounts-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--warning), #FBBF24);
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.125rem; flex-shrink: 0;
-}
-.discounts-title-block { flex: 1; }
-.discounts-eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.discounts-title {
-    font-size: 1.125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-}
-.discounts-subtitle {
-    font-size: 0.8125rem; color: var(--text-secondary);
-    margin-bottom: 0.875rem;
-    font-style: italic;
-}
-.discounts-list {
-    display: flex; flex-direction: column;
-    gap: 0.5rem;
-}
-.discount-item {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.625rem 0.875rem;
-    background: var(--gray-50);
-    border-left: 3px solid var(--warning);
-    border-radius: 8px;
-    transition: all 0.15s;
-}
-.discount-item.studio-specific {
-    border-left-color: var(--primary);
-    background: linear-gradient(135deg, rgba(250,128,114,0.04), rgba(255,160,122,0.04));
-}
-.discount-percent {
-    background: linear-gradient(135deg, var(--warning), #FBBF24);
-    color: white;
-    font-size: 0.8125rem; font-weight: 800;
-    padding: 0.3rem 0.625rem;
-    border-radius: 8px;
-    min-width: 60px;
-    text-align: center;
-    flex-shrink: 0;
-}
-.discount-item.studio-specific .discount-percent {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-}
-.discount-body { flex: 1; min-width: 0; }
-.discount-name {
-    font-size: 0.9375rem; font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
-}
-.discount-desc {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
-    margin-top: 0.125rem;
-    line-height: 1.4;
-}
-.discount-scope-pill {
-    font-size: 0.5625rem; font-weight: 700;
-    padding: 0.125rem 0.4rem;
-    border-radius: 4px;
-    text-transform: uppercase; letter-spacing: 0.05em;
-    flex-shrink: 0;
-}
-.discount-scope-pill.global {
-    background: rgba(245,158,11,0.15);
-    color: #92400E;
-}
-.discount-scope-pill.studio {
-    background: rgba(250,128,114,0.15);
-    color: var(--primary-dark);
-}
-
-/* ── POLICIES CARD ── */
-.policies-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    overflow: hidden;
-}
-.policies-card-header {
-    padding: 1.25rem 1.5rem 1rem;
-    display: flex; align-items: center; gap: 0.875rem;
-    border-bottom: 1px solid var(--gray-100);
-}
-.policies-card-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.125rem; flex-shrink: 0;
-}
-.policies-card-title-block { flex: 1; }
-.policies-card-eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.policies-card-title {
-    font-size: 1.125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-}
-.policies-card-subtitle {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    margin-top: 0.25rem;
-}
-
-/* ─── FLAT POLICY ONE-LINER LIST ─── */
-.policy-oneliner-list {
-    padding: 0.5rem 1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.policy-oneliner {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px 14px;
-    background: var(--gray-50);
-    border: 1px solid var(--gray-100);
-    border-radius: 12px;
-    transition: all 0.15s;
-}
-.policy-oneliner:hover {
-    background: white;
-    border-color: var(--primary-light);
-    box-shadow: var(--shadow-sm);
-}
-.policy-oneliner-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-.policy-oneliner-body {
-    flex: 1;
-    min-width: 0;
-}
-.policy-oneliner-title {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-    margin-bottom: 2px;
-}
-.policy-oneliner-text {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
-    line-height: 1.45;
-    letter-spacing: -0.005em;
-}
-.policy-oneliner-text strong, .policy-oneliner-text b {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-.policy-oneliner-text em, .policy-oneliner-text i {
-    color: var(--text-primary);
-}
-
-/* Each policy section */
-.policy-section {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--gray-100);
-}
-.policy-section:last-child { border-bottom: none; }
-
-.policy-section-header {
-    display: flex; align-items: center; gap: 0.75rem;
-    margin-bottom: 0.75rem;
-}
-.policy-section-num {
-    width: 26px; height: 26px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 800;
-    flex-shrink: 0;
-}
-.policy-section-icon {
-    color: var(--primary);
-    font-size: 1rem;
-}
-.policy-section-title {
-    flex: 1;
-    font-size: 1rem; font-weight: 700;
-    color: var(--text-primary);
-}
-
-.policy-content {
-    background: var(--gray-50);
-    border-left: 3px solid var(--primary);
-    border-radius: 8px;
-    padding: 0.875rem 1rem;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--text-primary);
-}
-.policy-content.placeholder {
-    background: linear-gradient(135deg, rgba(250,128,114,0.04), rgba(255,160,122,0.04));
-    border-left-color: var(--primary-light);
-    border-left-style: dashed;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-.policy-content .what-to-say-label {
-    font-size: 0.625rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.05em;
-    margin-bottom: 0.375rem;
-    display: flex; align-items: center; gap: 0.375rem;
-}
-.policy-content .what-to-say-label i { color: var(--primary); font-size: 0.625rem; }
-
-/* ── STUDIO NOTES CARD (bottom of page) ── */
-.notes-card {
-    background: var(--white);
-    border-radius: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    overflow: hidden;
-}
-.notes-card-header {
-    padding: 1.25rem 1.5rem 1rem;
-    display: flex; align-items: center; gap: 0.875rem;
-    border-bottom: 1px solid var(--gray-100);
-}
-.notes-card-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, #6366F1, #818CF8);
-    color: white;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.125rem; flex-shrink: 0;
-}
-.notes-card-title-block { flex: 1; }
-.notes-card-eyebrow {
-    font-size: 0.6875rem; font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase; letter-spacing: 0.06em;
-}
-.notes-card-title {
-    font-size: 1.125rem; font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 0.125rem;
-}
-.notes-card-subtitle {
-    font-size: 0.75rem; color: var(--text-secondary);
-    margin-top: 0.125rem;
-}
-
-.notes-card-body { padding: 1rem 1.5rem 1.25rem; }
-.notes-list {
-    display: flex; flex-direction: column;
-    gap: 0.625rem;
-}
-.note-item {
-    display: flex; gap: 0.75rem; align-items: flex-start;
-    padding: 0.75rem 0.875rem;
-    background: var(--gray-50);
-    border-left: 3px solid #6366F1;
-    border-radius: 8px;
-}
-.note-item.important {
-    background: rgba(245,158,11,0.06);
-    border-left-color: var(--warning);
-}
-.note-item.tip {
-    background: rgba(16,185,129,0.05);
-    border-left-color: var(--success);
-}
-.note-bullet {
-    width: 22px; height: 22px;
-    background: var(--white);
-    color: #6366F1;
-    border: 1px solid rgba(99,102,241,0.3);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.625rem; font-weight: 800;
-    flex-shrink: 0;
-    margin-top: 0.0625rem;
-}
-.note-item.important .note-bullet {
-    color: var(--warning);
-    border-color: rgba(245,158,11,0.4);
-}
-.note-item.tip .note-bullet {
-    color: var(--success-dark);
-    border-color: rgba(16,185,129,0.4);
-}
-.note-text {
-    flex: 1;
-    font-size: 0.9375rem;
-    line-height: 1.55;
-    color: var(--text-primary);
-}
-.note-text .note-tag {
-    display: inline-block;
-    font-size: 0.5625rem; font-weight: 800;
-    padding: 0.125rem 0.4rem;
-    border-radius: 4px;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    margin-right: 0.4rem;
-    vertical-align: 1px;
-}
-.note-text .note-tag.important {
-    background: rgba(245,158,11,0.15); color: #92400E;
-}
-.note-text .note-tag.tip {
-    background: rgba(16,185,129,0.15); color: var(--success-dark);
-}
-
-.notes-empty {
-    padding: 1rem;
-    background: var(--gray-50);
-    border: 1.5px dashed var(--gray-200);
-    border-radius: 10px;
-    text-align: center;
-    color: var(--text-light);
-    font-size: 0.875rem;
-    font-style: italic;
-}
-
-/* "Other policies" collapsible items */
-.other-policies-list {
-    display: flex; flex-direction: column; gap: 0.5rem;
-}
-.other-policy-item {
-    border: 1px solid var(--gray-200);
-    border-radius: 10px;
-    background: var(--gray-50);
-    overflow: hidden;
-    transition: all 0.2s;
-}
-.other-policy-item:hover { border-color: var(--primary-light); }
-.other-policy-item.open {
-    background: var(--white);
-    border-color: var(--primary);
-}
-.other-policy-header {
-    display: flex; align-items: center; gap: 0.625rem;
-    padding: 0.625rem 0.875rem;
-    cursor: pointer;
-    user-select: none;
-}
-.other-policy-title {
-    flex: 1;
-    font-size: 0.875rem; font-weight: 600;
-    color: var(--text-primary);
-}
-.other-policy-caret {
-    color: var(--text-light);
-    transition: transform 0.2s, color 0.2s;
-    font-size: 0.75rem;
-}
-.other-policy-item.open .other-policy-caret { transform: rotate(180deg); color: var(--primary); }
-.other-policy-body {
-    display: none;
-    padding: 0 0.875rem 0.875rem;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    line-height: 1.55;
-    border-top: 1px solid var(--gray-100);
-    margin-top: 0;
-}
-.other-policy-item.open .other-policy-body { display: block; padding-top: 0.625rem; }
-.other-policy-empty {
-    padding: 0.875rem 1rem;
-    background: var(--gray-50);
-    border: 1.5px dashed var(--gray-200);
-    border-radius: 8px;
-    font-size: 0.8125rem;
-    color: var(--text-light);
-    font-style: italic;
-    text-align: center;
-}
-
-@media (max-width: 900px) {
-    .app-sidebar { display: none; }
-    .main-wrap { margin-left: 0; }
-    .annual-covers-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 700px) {
-    .page-header { padding: 1rem 1rem 0.5rem; }
-    .page-header h1 { font-size: 1.5rem; }
-    .top-search-bar { margin: 0.5rem 1rem 0; padding: 0.875rem 1rem; }
-    .console { padding: 1rem; }
-    .studio-banner { padding: 1rem 1.25rem; }
-    .essentials-headline .standard-len { font-size: 1.5rem; }
-    .essentials-headline .standard-price { font-size: 1.25rem; }
-}
-/* ─── LOADING OVERLAY (shown while pulling studios from Supabase) ─── */
-.loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(248, 249, 250, 0.92);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-.loading-overlay.visible { display: flex; }
-.loading-card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 32px 48px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-}
-.loading-spinner {
-    width: 36px; height: 36px;
-    border: 3px solid var(--gray-200);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    margin: 0 auto 14px;
-    animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: -0.01em;
-}
+/* responsive: below 1000px stack + allow scroll (no-scroll cockpit is a desktop feature) */
+@media(max-width:1000px){
+  body{overflow:auto}
+  .wrap{height:auto;min-height:100vh}
+  .card{flex:none}
+  .card-body{grid-template-columns:1fr}
+  .col-money{border-right:none;border-bottom:1px solid var(--g200)}
+  .col,.col-lesson{overflow:visible}
+  .pol-zone{min-height:auto}.pol-scroll{overflow:visible}
+}
+@media(max-width:900px){.sidebar{display:none}.wrap{margin-left:0}}
 </style>
 </head>
 <body>
 
-<aside class="app-sidebar">
-    <div class="app-sidebar-header">
-        <div class="logo-icon">EH</div>
-        <div class="logo-text">Enrollment Hub</div>
-    </div>
-    <nav class="app-sidebar-nav">
-        <a href="#" class="nav-item"><i class="fas fa-link"></i> Quick Links</a>
-        <a href="#" class="nav-item"><i class="fas fa-building"></i> Studio Directory</a>
-        <a href="#" class="nav-item"><i class="fas fa-star"></i> Teacher Directory</a>
-        <a href="#" class="nav-item"><i class="fas fa-map-marked-alt"></i> Map</a>
-        <a href="#" class="nav-item"><i class="fas fa-graduation-cap"></i> Programs</a>
-        <a href="#" class="nav-item active"><i class="fas fa-scroll"></i> Call Script</a>
-        <a href="#" class="nav-item"><i class="fas fa-file-alt"></i> Snippets</a>
-        <a href="#" class="nav-item"><i class="fas fa-book-open"></i> Training</a>
-    </nav>
+<aside class="sidebar">
+  <div class="sidebar-head"><div class="logo">EH</div><div class="logo-text">Enrollment Hub</div></div>
+  <nav class="sidebar-nav">
+    <a class="nav" href="#"><i class="fas fa-link"></i> Quick Links</a>
+    <a class="nav" href="#"><i class="fas fa-building"></i> Studio Directory</a>
+    <a class="nav" href="#"><i class="fas fa-star"></i> Teacher Directory</a>
+    <a class="nav" href="#"><i class="fas fa-map-marked-alt"></i> Map</a>
+    <a class="nav" href="#"><i class="fas fa-graduation-cap"></i> Programs</a>
+    <a class="nav active" href="#"><i class="fas fa-scroll"></i> Call Script</a>
+    <a class="nav" href="#"><i class="fas fa-file-alt"></i> Snippets</a>
+    <a class="nav" href="#"><i class="fas fa-book-open"></i> Training</a>
+  </nav>
 </aside>
 
-<div class="main-wrap">
-
-    <div class="page-header">
-        <div class="page-header-inner">
-            <h1>Call Script</h1>
-            <p>Pick a studio to see pricing, policies, and instrument details at a glance.</p>
-        </div>
-    </div>
-
-    <div class="top-search-bar">
-        <div class="top-search-bar-inner">
-            <div class="search-row">
-                <div class="search-field">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="studioSearch" class="search-input" placeholder="Search by brand, city, or state..." autocomplete="off">
-                    <button class="search-clear" id="searchClear" onclick="clearSearch()"><i class="fas fa-times"></i></button>
-                    <div class="search-dropdown" id="searchDropdown"></div>
-                </div>
-                <div id="selectedPillSlot"></div>
-            </div>
-        </div>
-    </div>
-
-    <main class="console">
-        <div class="console-inner" id="console">
-            <div class="console-empty">
-                <div class="icon-wrap"><i class="fas fa-headset"></i></div>
-                <h2>Ready to take a call?</h2>
-                <p>Use the search bar above to find a studio — or click a brand chip to jump straight to its locations.</p>
-            </div>
-        </div>
-    </main>
-
+<div class="wrap">
+  <div class="searchbar">
+    <i class="fas fa-magnifying-glass lead"></i>
+    <input id="studioSearch" type="text" placeholder="Search studio by brand, city, or state…" autocomplete="off">
+    <div class="dd" id="studioDd"></div>
+  </div>
+  <div class="card" id="card"></div>
 </div>
 
 <script>
-/* ─── SUPABASE CONNECTION ─── */
-const SUPABASE_URL = 'https://kvyvjwepfrqqkvyyutdw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* ── SUPABASE CONNECTION ── */
+const SUPABASE_URL='https://kvyvjwepfrqqkvyyutdw.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2eXZqd2VwZnJxcWt2eXl1dGR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMjgyOTgsImV4cCI6MjA4MjgwNDI5OH0.ZayLxzQCEFENvQ9FwpLm4x2le2Y9kJvSslX8DVRzAh8';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-/* ─── GLOBAL DISCOUNTS (cross-studio promos) ─── */
-/* You said all promos are studio-level, so this stays empty.
-   If you ever want true global promos, add them here. */
-const GLOBAL_DISCOUNTS = [];
+let STUDIOS=[];
 
-/* ─── STUDIOS — populated from Supabase on page load ─── */
-let STUDIOS = [];
+/* ── HELPERS for the studio CMS rich-text fields ── */
+function stripHtml(html){if(!html)return'';const t=document.createElement('div');t.innerHTML=html;return(t.textContent||t.innerText||'').trim()}
+function hasContent(html){return stripHtml(html).length>0}
+function scriptOf(full,script){if(hasContent(script))return script;if(hasContent(full))return full;return''}
+function scriptOfText(full,script){return stripHtml(scriptOf(full,script))}
 
-/* ─── HELPERS ─── */
-/* Strip HTML tags to plain text */
-function stripHtml(html) {
-    if (!html) return '';
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return (tmp.textContent || tmp.innerText || '').trim();
-}
-/* Check if HTML has any actual text content */
-function hasContent(html) {
-    return stripHtml(html).length > 0;
-}
-/* Pick the "script version" of a prose field, falling back to full text if empty.
-   Pass the FULL field and the SCRIPT field. Returns HTML (preserves bold/italic). */
-function scriptOf(full, script) {
-    if (hasContent(script)) return script;
-    if (hasContent(full)) return full;
-    return '';
-}
-/* Like scriptOf but returns plain text (for places that don't render HTML). */
-function scriptOfText(full, script) {
-    return stripHtml(scriptOf(full, script));
-}
+/* ── TRANSFORM one Supabase studio row into the call-script shape ── */
+function transformStudio(s,brandsById,countTeachers){
+  const brand=brandsById[s.brand_id]||{name:'Unknown brand'};
 
-/* ─── TRANSFORM A SUPABASE STUDIO ROW INTO CALL-SCRIPT SHAPE ─── */
-function transformStudio(s, brandsById, countTeachers) {
-    const brand = brandsById[s.brand_id] || { name: 'Unknown brand' };
+  const notes=(s.studio_notes||[]).map(n=>({
+    type:n.note_type||'info',
+    text:scriptOf(n.notes,n.notes_script)||stripHtml(n.title||''),
+  })).filter(n=>n.text);
 
-    // Notes — drop any not flagged show_in_enroll? No — keep all notes (they're not toggle-gated on the script side per our spec).
-    // We use the script version if available, else full text.
-    const notes = (s.studio_notes || []).map(n => ({
-        type: n.note_type || 'info',
-        text: scriptOf(n.notes, n.notes_script) || stripHtml(n.title || ''),
-    })).filter(n => n.text);
+  const POLICY_ICON_MAP=[
+    {match:['makeup','cancellation'],icon:'fa-calendar-plus'},
+    {match:['withdraw'],icon:'fa-door-open'},
+    {match:['holiday','closure','closed'],icon:'fa-snowflake'},
+    {match:['teacher change','teacher swap','switch teacher'],icon:'fa-user-pen'},
+    {match:['payment','billing','card'],icon:'fa-credit-card'},
+    {match:['refund'],icon:'fa-rotate-left'},
+    {match:['attendance','absence'],icon:'fa-user-check'},
+    {match:['recital','performance'],icon:'fa-music'},
+    {match:['photo','media'],icon:'fa-camera'},
+    {match:['weather'],icon:'fa-cloud-bolt'},
+    {match:['lateness','late','tardy'],icon:'fa-clock'},
+  ];
+  function iconForPolicy(title){const t=(title||'').toLowerCase();for(const{match,icon}of POLICY_ICON_MAP){if(match.some(m=>t.includes(m)))return icon}return'fa-file-shield'}
 
-    // Policies — flat list of one-liners. Only include policies that have a script version
-    // (the rep-friendly short text). Skip anything without one — admin-only details
-    // shouldn't appear here.
-    const POLICY_ICON_MAP = [
-        { match: ['makeup', 'cancellation'], icon: 'fa-calendar-plus' },
-        { match: ['withdraw'], icon: 'fa-door-open' },
-        { match: ['holiday', 'closure', 'closed'], icon: 'fa-snowflake' },
-        { match: ['teacher change', 'teacher swap', 'switch teacher'], icon: 'fa-user-pen' },
-        { match: ['payment', 'billing', 'card'], icon: 'fa-credit-card' },
-        { match: ['refund'], icon: 'fa-rotate-left' },
-        { match: ['attendance', 'absence'], icon: 'fa-user-check' },
-        { match: ['recital', 'performance'], icon: 'fa-music' },
-        { match: ['photo', 'media'], icon: 'fa-camera' },
-        { match: ['weather'], icon: 'fa-cloud-bolt' },
-        { match: ['lateness', 'late', 'tardy'], icon: 'fa-clock' },
-    ];
-    function iconForPolicy(title) {
-        const t = (title || '').toLowerCase();
-        for (const { match, icon } of POLICY_ICON_MAP) {
-            if (match.some(m => t.includes(m))) return icon;
-        }
-        return 'fa-file-shield'; // default
-    }
-    const policies = (s.policies || [])
-        .filter(p => p.show_on_script !== false)
-        .filter(p => hasContent(p.notes_script))  // SKIP if no script version
-        .map(p => ({
-            title: p.title || 'Policy',
-            body: p.notes_script,  // script version is required at this point
-            icon: iconForPolicy(p.title),
-        }));
+  const policies=(s.policies||[])
+    .filter(p=>p.show_on_script!==false)
+    .filter(p=>hasContent(p.notes_script))
+    .map(p=>({title:p.title||'Policy',body:p.notes_script,icon:iconForPolicy(p.title)}));
 
-    // Discounts — only ones flagged show_on_script
-    const studioDiscounts = (s.discounts || [])
-        .filter(d => d.show_on_script !== false)
-        .map(d => ({
-            percent: d.display_label || d.title || '',
-            name: d.title || '',
-            desc: scriptOfText(d.description, d.description_script),
-        }));
+  const studioDiscounts=(s.discounts||[])
+    .filter(d=>d.show_on_script!==false)
+    .map(d=>({percent:d.display_label||d.title||'',name:d.title||'',desc:scriptOfText(d.description,d.description_script)}));
 
-    // Instruments — teacher count is DERIVED from the teacher directory:
-    //   active teachers, same brand, same city, teaching this instrument.
-    const instruments = (s.instruments || []).map(i => {
-        const instName = i.name || i.instrument || 'Instrument';
-        return {
-            name: instName,
-            icon: i.icon || 'fa-music',
-            startAge: i.start_age != null ? i.start_age : 5,
-            method: i.method || '—',
-            teacherCount: countTeachers ? countTeachers(brand.name, s.city, instName) : 0,
-            bringInstrument: !!i.bring_instrument,
-            bringNote: i.bring_note || '',
-        };
-    });
-
-    // Prices — call script wants {30, 45, 60}
-    const prices = {
-        30: s.monthly_rate || '—',
-        45: s.price_45 || '—',
-        60: s.price_60 || '—',
+  const instruments=(s.instruments||[]).map(i=>{
+    const instName=i.name||i.instrument||'Instrument';
+    return{
+      name:instName,icon:i.icon||'fa-music',
+      startAge:i.start_age!=null?i.start_age:5,
+      method:i.method||'—',
+      teacherCount:countTeachers?countTeachers(brand.name,s.city,instName):0,
+      bringInstrument:!!i.bring_instrument,
     };
+  });
 
-    return {
-        id: s.id,
-        brand: brand.name,
-        city: s.city || '',
-        state: s.state || '',
-        address: s.address || '',
-        infoUrl: '#studio-info/' + s.id,
-        notes,
-        defaultLength: s.default_length || 45,
-        cadence: s.cadence || 'Once per week',
-        prices,
-        firstCharge: s.first_charge || '—',
-        firstChargeProrated: !!s.first_charge_prorated,
-        billingDay: s.billing_day || '—',
-        annualFee: s.display_annual_fee || s.annual_fee || '—',
-        annualFeeCovers: Array.isArray(s.annual_fee_covers) ? s.annual_fee_covers : [],
-        programsEnabled: !!s.programs_enabled,
-        programsUrl: s.programs_url || '#',
-        trialType: s.trial_type || (s.first_lesson_free ? 'free' : 'none'),
-        trialDetails: scriptOf(s.trial_details, s.trial_details_script),
-        studioDiscounts,
-        policies,
-        instruments,
-    };
+  return{
+    id:s.id,brand:brand.name,city:s.city||'',state:s.state||'',address:s.address||'',
+    infoUrl:'#studio-info/'+s.id,
+    defaultLength:s.default_length||45,cadence:s.cadence||'Once per week',
+    prices:{30:s.monthly_rate||'—',45:s.price_45||'—',60:s.price_60||'—'},
+    firstCharge:s.first_charge||'—',firstChargeProrated:!!s.first_charge_prorated,billingDay:s.billing_day||'—',
+    annualFee:s.display_annual_fee||s.annual_fee||'—',
+    annualFeeCovers:Array.isArray(s.annual_fee_covers)?s.annual_fee_covers:[],
+    programsEnabled:!!s.programs_enabled,programsUrl:s.programs_url||'#',
+    scheduling:s.scheduling_platform||'',schedulingUrl:s.scheduling_url||'#',
+    studioDiscounts,policies,instruments,notes,
+  };
 }
 
-/* ─── LOAD ALL STUDIOS FROM SUPABASE ─── */
-async function loadStudios() {
-    try {
-        const [brandsRes, studiosRes, instrumentsRes, notesRes, policiesRes, discountsRes, teachersRes, teacherCitiesRes, teacherInstrumentsRes] = await Promise.all([
-            supabaseClient.from('brands').select('*'),
-            supabaseClient.from('studios').select('*').order('city'),
-            supabaseClient.from('studio_instruments').select('*').order('order_index'),
-            supabaseClient.from('studio_notes').select('*').order('order_index'),
-            supabaseClient.from('studio_policies').select('*').order('order_index'),
-            supabaseClient.from('studio_discounts').select('*').order('order_index'),
-            supabaseClient.from('teachers').select('*'),
-            supabaseClient.from('teacher_cities').select('*'),
-            supabaseClient.from('teacher_instruments').select('*'),
-        ]);
-        if (brandsRes.error) throw brandsRes.error;
-        if (studiosRes.error) throw studiosRes.error;
+/* ── LOAD everything from Supabase ── */
+async function loadStudios(){
+  try{
+    const[brandsRes,studiosRes,instrumentsRes,notesRes,policiesRes,discountsRes,teachersRes,teacherCitiesRes,teacherInstrumentsRes]=await Promise.all([
+      supabaseClient.from('brands').select('*'),
+      supabaseClient.from('studios').select('*').order('city'),
+      supabaseClient.from('studio_instruments').select('*').order('order_index'),
+      supabaseClient.from('studio_notes').select('*').order('order_index'),
+      supabaseClient.from('studio_policies').select('*').order('order_index'),
+      supabaseClient.from('studio_discounts').select('*').order('order_index'),
+      supabaseClient.from('teachers').select('*'),
+      supabaseClient.from('teacher_cities').select('*'),
+      supabaseClient.from('teacher_instruments').select('*'),
+    ]);
+    if(brandsRes.error)throw brandsRes.error;
+    if(studiosRes.error)throw studiosRes.error;
 
-        const brandsById = {};
-        (brandsRes.data || []).forEach(b => { brandsById[b.id] = b; });
+    const brandsById={};
+    (brandsRes.data||[]).forEach(b=>{brandsById[b.id]=b});
 
-        // ─── Build a teacher index for counting active teachers per studio+instrument ───
-        // Schema notes:
-        //  - teachers.brand is a TEXT name (matches brands.name, not brands.id)
-        //  - teacher_cities is a join table mapping teacher_id → city (text)
-        //  - teacher_instruments is a join table mapping teacher_id → instrument (text name)
-        //  - teachers.state is text; teachers.status is one of 'pending'/'active'/'inactive'
-        // We only count teachers with status === 'active'.
-        const activeTeachers = (teachersRes.data || []).filter(t => t.status === 'active');
-        const citiesByTeacher = {};
-        (teacherCitiesRes.data || []).forEach(tc => {
-            if (!citiesByTeacher[tc.teacher_id]) citiesByTeacher[tc.teacher_id] = [];
-            citiesByTeacher[tc.teacher_id].push((tc.city || '').toLowerCase().trim());
-        });
-        const instrumentsByTeacher = {};
-        (teacherInstrumentsRes.data || []).forEach(ti => {
-            if (!instrumentsByTeacher[ti.teacher_id]) instrumentsByTeacher[ti.teacher_id] = [];
-            instrumentsByTeacher[ti.teacher_id].push((ti.instrument || '').toLowerCase().trim());
-        });
-        // Returns # of active teachers at this brand+city who teach this instrument.
-        function countTeachers(brandName, city, instrumentName) {
-            if (!brandName || !instrumentName) return 0;
-            const brandLower = brandName.toLowerCase().trim();
-            const cityLower = (city || '').toLowerCase().trim();
-            const instLower = instrumentName.toLowerCase().trim();
-            return activeTeachers.filter(t => {
-                if ((t.brand || '').toLowerCase().trim() !== brandLower) return false;
-                const teacherCities = citiesByTeacher[t.id] || [];
-                if (cityLower && !teacherCities.includes(cityLower)) return false;
-                const teacherInsts = instrumentsByTeacher[t.id] || [];
-                return teacherInsts.includes(instLower);
-            }).length;
-        }
-
-        const studios = (studiosRes.data || []).map(s => {
-            s.instruments = (instrumentsRes.data || []).filter(i => i.studio_id === s.id);
-            s.studio_notes = (notesRes.data || []).filter(n => n.studio_id === s.id);
-            s.policies = (policiesRes.data || []).filter(p => p.studio_id === s.id);
-            s.discounts = (discountsRes.data || []).filter(d => d.studio_id === s.id);
-            return transformStudio(s, brandsById, countTeachers);
-        });
-
-        STUDIOS = studios;
-        // Refresh dropdown if open
-        if (searchDropdown && searchDropdown.classList.contains('open')) {
-            renderDropdown(searchInput.value);
-        }
-        // If a studio was selected before reload (deep-link path), re-select it
-        if (activeStudio) {
-            const refreshed = STUDIOS.find(s => s.id === activeStudio.id);
-            if (refreshed) {
-                activeStudio = refreshed;
-                renderConsole();
-            }
-        }
-        // Hide loading state if visible
-        const loadingEl = document.getElementById('loadingOverlay');
-        if (loadingEl) loadingEl.classList.remove('visible');
-    } catch (err) {
-        console.error('Error loading studios from Supabase:', err);
-        const loadingEl = document.getElementById('loadingOverlay');
-        if (loadingEl) {
-            const msg = (err && err.message) ? err.message : String(err);
-            loadingEl.innerHTML = `
-                <div class="loading-card" style="max-width: 460px; text-align: left;">
-                    <div style="text-align: center; color: #E96E5D; margin-bottom: 14px;">
-                        <i class="fas fa-triangle-exclamation" style="font-size: 36px;"></i>
-                    </div>
-                    <div style="font-weight: 700; font-size: 16px; color: #2D3748; text-align: center; margin-bottom: 8px;">Couldn't load studios</div>
-                    <div style="font-size: 13px; color: #718096; text-align: center; margin-bottom: 14px;">Supabase returned an error:</div>
-                    <div style="font-family: ui-monospace, monospace; font-size: 12px; background: #F8F9FA; padding: 10px 12px; border-radius: 8px; color: #2D3748; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow: auto;">${escapeHtml(msg)}</div>
-                    <button onclick="location.reload()" style="margin-top: 14px; width: 100%; padding: 10px; background: #FA8072; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Try again</button>
-                </div>`;
-        }
-    }
-}
-
-/* ─── STATE ─── */
-let activeStudio = null;
-let activeInstrument = null;
-let instSearchQuery = '';
-
-const searchInput = document.getElementById('studioSearch');
-const searchClear = document.getElementById('searchClear');
-const searchDropdown = document.getElementById('searchDropdown');
-
-async function init() {
-    wireSearchEvents();
-    showLoadingOverlay();
-    await loadStudios();
-}
-
-function showLoadingOverlay() {
-    // Inject a loading overlay if not already present
-    if (document.getElementById('loadingOverlay')) return;
-    const overlay = document.createElement('div');
-    overlay.id = 'loadingOverlay';
-    overlay.className = 'loading-overlay visible';
-    overlay.innerHTML = `
-        <div class="loading-card">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Loading studios…</div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-}
-
-/* ─── STUDIO SEARCH ─── */
-function wireSearchEvents() {
-    searchInput.addEventListener('focus', () => {
-        renderDropdown(searchInput.value);
-        searchDropdown.classList.add('open');
-    });
-    searchInput.addEventListener('input', e => {
-        const v = e.target.value;
-        searchClear.classList.toggle('visible', v.length > 0);
-        renderDropdown(v);
-        searchDropdown.classList.add('open');
-    });
-    document.addEventListener('click', e => {
-        if (!e.target.closest('.search-field')) searchDropdown.classList.remove('open');
-        if (!e.target.closest('.inst-selector')) closeInstrumentDropdown();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            searchDropdown.classList.remove('open');
-            closeInstrumentDropdown();
-        }
-    });
-}
-function clearSearch() {
-    searchInput.value = '';
-    searchClear.classList.remove('visible');
-    renderDropdown('');
-    searchInput.focus();
-}
-
-function renderDropdown(query) {
-    const q = (query || '').toLowerCase().trim();
-    let filtered = STUDIOS;
-    if (q) {
-        filtered = filtered.filter(s =>
-            s.brand.toLowerCase().includes(q) ||
-            s.city.toLowerCase().includes(q) ||
-            s.state.toLowerCase().includes(q) ||
-            (s.address || '').toLowerCase().includes(q)
-        );
-    }
-    if (!filtered.length) {
-        searchDropdown.innerHTML = `
-            <div class="dropdown-empty">
-                <i class="fas fa-search"></i>
-                No studios match "${escapeHtml(query)}"
-            </div>`;
-        return;
-    }
-    const groups = {};
-    filtered.forEach(s => { (groups[s.brand] = groups[s.brand] || []).push(s); });
-    let html = '';
-    Object.keys(groups).forEach(brand => {
-        html += `<div class="dropdown-section">
-            <div class="dropdown-brand-header"><i class="fas fa-building"></i> ${hl(brand, q)}</div>`;
-        groups[brand].forEach(s => {
-            const isActive = activeStudio?.id === s.id;
-            html += `
-                <div class="dropdown-row ${isActive ? 'active' : ''}" onclick="selectStudio('${s.id}')">
-                    <div class="pin"><i class="fas fa-location-dot"></i></div>
-                    <div class="dropdown-row-info">
-                        <div class="dropdown-row-city">${hl(s.city, q)}</div>
-                        <div class="dropdown-row-state">${hl(s.state, q)}</div>
-                        <div class="dropdown-row-address">${hl(s.address || '', q)}</div>
-                    </div>
-                    <i class="fas fa-arrow-right dropdown-row-arrow"></i>
-                </div>`;
-        });
-        html += `</div>`;
-    });
-    searchDropdown.innerHTML = html;
-}
-function hl(text, q) {
-    if (!q) return escapeHtml(text);
-    const lower = text.toLowerCase();
-    const idx = lower.indexOf(q);
-    if (idx === -1) return escapeHtml(text);
-    return escapeHtml(text.substring(0, idx))
-         + '<mark class="search-hit">' + escapeHtml(text.substring(idx, idx + q.length)) + '</mark>'
-         + escapeHtml(text.substring(idx + q.length));
-}
-function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function selectStudio(id) {
-    activeStudio = STUDIOS.find(s => s.id === id);
-    if (!activeStudio) return;
-    activeInstrument = null;
-    instSearchQuery = '';
-    searchDropdown.classList.remove('open');
-    searchInput.value = '';
-    searchClear.classList.remove('visible');
-    renderSelectedPill();
-    renderConsole();
-}
-function renderSelectedPill() {
-    const slot = document.getElementById('selectedPillSlot');
-    if (!activeStudio) { slot.innerHTML = ''; return; }
-    slot.innerHTML = `
-        <div class="selected-pill">
-            <i class="fas fa-location-dot"></i>
-            <span>${activeStudio.brand} — ${activeStudio.city}</span>
-            <button class="change-btn" onclick="changeStudio()">Change</button>
-        </div>
-    `;
-}
-function changeStudio() {
-    searchInput.focus();
-    renderDropdown('');
-    searchDropdown.classList.add('open');
-}
-
-/* ─── CONSOLE ─── */
-function renderConsole() {
-    if (!activeStudio) return;
-    const s = activeStudio;
-    document.getElementById('console').innerHTML = `
-        <div class="studio-banner">
-            <div class="studio-banner-inner">
-                <div class="studio-banner-text">
-                    <div class="eyebrow"><i class="fas fa-scroll"></i> Call Script</div>
-                    <h1>${s.brand} — ${s.city}, ${s.state}</h1>
-                    <div class="address"><i class="fas fa-map-marker-alt"></i> ${s.address}</div>
-                </div>
-                <a href="${s.infoUrl || '#'}" class="studio-info-btn">
-                    <i class="fas fa-circle-info"></i>
-                    View Studio Info
-                    <i class="fas fa-arrow-right" style="font-size:0.75rem;"></i>
-                </a>
-            </div>
-        </div>
-
-        ${renderInstrumentBar()}
-        ${renderEssentials()}
-        ${renderTrial()}
-        ${renderPolicies()}
-        ${renderNotes()}
-    `;
-    wireInstrumentSelector();
-    wireStickyDetection();
-}
-
-/* ─── FROZEN INSTRUMENT BAR ─── */
-function renderInstrumentBar() {
-    const s = activeStudio;
-    const i = activeInstrument;
-
-    const displayValue = i ? i.name : '';
-
-    // Programs pill — studio-level info, sits next to the search
-    const programsPill = s.programsEnabled ? `
-        <div class="programs-pill yes">
-            <div class="programs-icon"><i class="fas fa-graduation-cap"></i></div>
-            <div class="programs-pill-body">
-                <div class="programs-pill-label">Programs</div>
-                <div class="programs-pill-value">Yes</div>
-            </div>
-            <a href="${s.programsUrl || '#'}" class="programs-pill-link"><i class="fas fa-arrow-right"></i> View</a>
-        </div>
-    ` : `
-        <div class="programs-pill no">
-            <div class="programs-icon"><i class="fas fa-graduation-cap"></i></div>
-            <div class="programs-pill-body">
-                <div class="programs-pill-label">Programs</div>
-                <div class="programs-pill-value">No</div>
-            </div>
-        </div>
-    `;
-
-    // Instrument info row — full width below search
-    let instrumentInfo = '';
-    if (i) {
-        instrumentInfo = `
-            <div class="inst-info-row">
-                <div class="inst-info-cell name-cell">
-                    <div class="inst-info-icon"><i class="fas ${i.icon}"></i></div>
-                    <div class="inst-info-body">
-                        <div class="inst-info-label">Instrument</div>
-                        <div class="inst-info-value">${i.name}</div>
-                    </div>
-                </div>
-                <div class="inst-info-cell">
-                    <div class="inst-info-icon"><i class="fas fa-baby"></i></div>
-                    <div class="inst-info-body">
-                        <div class="inst-info-label">Start Age</div>
-                        <div class="inst-info-value">${i.startAge}+ years</div>
-                    </div>
-                </div>
-                <div class="inst-info-cell">
-                    <div class="inst-info-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <div class="inst-info-body">
-                        <div class="inst-info-label">Teachers</div>
-                        <div class="inst-info-value">${i.teacherCount} on staff</div>
-                    </div>
-                </div>
-                <div class="inst-info-cell">
-                    <div class="inst-info-icon"><i class="fas fa-book"></i></div>
-                    <div class="inst-info-body">
-                        <div class="inst-info-label">Method</div>
-                        <div class="inst-info-value" title="${escapeHtml(i.method)}">${i.method}</div>
-                    </div>
-                </div>
-                <div class="inst-info-cell ${i.bringInstrument ? 'bring-yes' : 'bring-no'}">
-                    <div class="inst-info-icon"><i class="fas ${i.bringInstrument ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i></div>
-                    <div class="inst-info-body">
-                        <div class="inst-info-label">Bring on Day 1?</div>
-                        <div class="inst-info-value">${i.bringInstrument ? 'Yes — bring it' : 'No — we provide'}</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    } else {
-        instrumentInfo = `
-            <div class="inst-placeholder">
-                <i class="fas fa-arrow-up"></i>
-                Pick an instrument above to see age, teachers, methodology, and bring-info
-            </div>
-        `;
+    const activeTeachers=(teachersRes.data||[]).filter(t=>t.status==='active');
+    const citiesByTeacher={};
+    (teacherCitiesRes.data||[]).forEach(tc=>{(citiesByTeacher[tc.teacher_id]=citiesByTeacher[tc.teacher_id]||[]).push((tc.city||'').toLowerCase().trim())});
+    const instrumentsByTeacher={};
+    (teacherInstrumentsRes.data||[]).forEach(ti=>{(instrumentsByTeacher[ti.teacher_id]=instrumentsByTeacher[ti.teacher_id]||[]).push((ti.instrument||'').toLowerCase().trim())});
+    function countTeachers(brandName,city,instrumentName){
+      if(!brandName||!instrumentName)return 0;
+      const bl=brandName.toLowerCase().trim(),cl=(city||'').toLowerCase().trim(),il=instrumentName.toLowerCase().trim();
+      return activeTeachers.filter(t=>{
+        if((t.brand||'').toLowerCase().trim()!==bl)return false;
+        const tc=citiesByTeacher[t.id]||[];if(cl&&!tc.includes(cl))return false;
+        return(instrumentsByTeacher[t.id]||[]).includes(il);
+      }).length;
     }
 
-    return `
-        <div class="instrument-bar" id="instrumentBar">
-            <div class="instrument-bar-top">
-                <div class="inst-selector">
-                    <div class="inst-selector-field">
-                        <i class="fas fa-music inst-selector-leading-icon"></i>
-                        <input type="text"
-                               id="instrumentInput"
-                               class="inst-selector-input ${i ? 'has-selection' : ''}"
-                               placeholder="Search instruments..."
-                               value="${escapeHtml(displayValue)}"
-                               autocomplete="off">
-                        ${i
-                            ? `<button class="inst-selector-clear" onclick="clearInstrument()"><i class="fas fa-times"></i></button>`
-                            : `<i class="fas fa-chevron-down inst-selector-caret"></i>`
-                        }
-                        <div class="inst-dropdown" id="instrumentDropdown"></div>
-                    </div>
-                </div>
-                ${programsPill}
-            </div>
-            ${instrumentInfo}
-        </div>
-    `;
-}
-
-function wireInstrumentSelector() {
-    const input = document.getElementById('instrumentInput');
-    if (!input) return;
-
-    input.addEventListener('focus', () => {
-        if (activeInstrument) {
-            // Clear the field so they can search again — but don't blow away state until they confirm
-            input.value = '';
-        }
-        instSearchQuery = input.value;
-        renderInstrumentDropdown();
-        document.getElementById('instrumentDropdown').classList.add('open');
+    STUDIOS=(studiosRes.data||[]).map(s=>{
+      s.instruments=(instrumentsRes.data||[]).filter(i=>i.studio_id===s.id);
+      s.studio_notes=(notesRes.data||[]).filter(n=>n.studio_id===s.id);
+      s.policies=(policiesRes.data||[]).filter(p=>p.studio_id===s.id);
+      s.discounts=(discountsRes.data||[]).filter(d=>d.studio_id===s.id);
+      return transformStudio(s,brandsById,countTeachers);
     });
 
-    input.addEventListener('input', e => {
-        instSearchQuery = e.target.value;
-        renderInstrumentDropdown();
-        document.getElementById('instrumentDropdown').classList.add('open');
-    });
-
-    input.addEventListener('blur', () => {
-        // If they had an active instrument and didn't pick a new one, restore the name in the field
-        setTimeout(() => {
-            if (activeInstrument && !document.getElementById('instrumentDropdown').classList.contains('open')) {
-                input.value = activeInstrument.name;
-            }
-        }, 200);
-    });
+    if($dd&&$dd.classList.contains('open'))renderDd($search.value);
+    if(activeStudio){const r=STUDIOS.find(s=>s.id===activeStudio.id);if(r){activeStudio=r;render()}}
+    const ov=document.getElementById('loadingOverlay');if(ov)ov.classList.remove('visible');
+  }catch(err){
+    console.error('Error loading studios from Supabase:',err);
+    const ov=document.getElementById('loadingOverlay');
+    if(ov){const msg=(err&&err.message)?err.message:String(err);
+      ov.innerHTML=`<div class="loading-card" style="max-width:460px;text-align:left">
+        <div style="text-align:center;color:#E96E5D;margin-bottom:14px"><i class="fas fa-triangle-exclamation" style="font-size:36px"></i></div>
+        <div style="font-weight:700;font-size:16px;color:#2D3748;text-align:center;margin-bottom:8px">Couldn't load studios</div>
+        <div style="font-size:13px;color:#718096;text-align:center;margin-bottom:14px">Supabase returned an error:</div>
+        <div style="font-family:ui-monospace,monospace;font-size:12px;background:#F8F9FA;padding:10px 12px;border-radius:8px;color:#2D3748;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto">${esc(msg)}</div>
+        <button onclick="location.reload()" style="margin-top:14px;width:100%;padding:10px;background:#FA8072;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Try again</button>
+      </div>`;}
+  }
 }
 
-function renderInstrumentDropdown() {
-    const s = activeStudio;
-    const q = (instSearchQuery || '').toLowerCase().trim();
-    const filtered = s.instruments.filter(i =>
-        !q || i.name.toLowerCase().includes(q) || i.method.toLowerCase().includes(q)
-    );
-    const dropdown = document.getElementById('instrumentDropdown');
-    if (!filtered.length) {
-        dropdown.innerHTML = `<div class="inst-dropdown-empty">No instruments match "${escapeHtml(instSearchQuery)}"</div>`;
-        return;
-    }
-    dropdown.innerHTML = filtered.map(i => {
-        const isActive = activeInstrument?.name === i.name;
-        return `
-            <div class="inst-dropdown-row ${isActive ? 'active' : ''}" onclick="pickInstrument('${i.name.replace(/'/g, "\\'")}')">
-                <div class="inst-dropdown-icon"><i class="fas ${i.icon}"></i></div>
-                <div class="inst-dropdown-info">
-                    <div class="inst-dropdown-name">${hl(i.name, q)}</div>
-                    <div class="inst-dropdown-sub">${i.teacherCount} ${i.teacherCount === 1 ? 'teacher' : 'teachers'} · Ages ${i.startAge}+ · ${hl(i.method, q)}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
+function showLoadingOverlay(){
+  if(document.getElementById('loadingOverlay'))return;
+  const ov=document.createElement('div');
+  ov.id='loadingOverlay';ov.className='loading-overlay visible';
+  ov.innerHTML=`<div class="loading-card"><div class="loading-spinner"></div><div class="loading-text">Loading studios…</div></div>`;
+  document.body.appendChild(ov);
 }
 
-function pickInstrument(name) {
-    const inst = activeStudio.instruments.find(x => x.name === name);
-    if (!inst) return;
-    activeInstrument = inst;
-    instSearchQuery = '';
-    closeInstrumentDropdown();
-    renderConsole();
+let activeStudio=null,activeInstrument=null,instQuery='';
+const $search=document.getElementById('studioSearch'),$dd=document.getElementById('studioDd'),$card=document.getElementById('card');
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+$search.addEventListener('focus',()=>{renderDd($search.value);$dd.classList.add('open')});
+$search.addEventListener('input',e=>{renderDd(e.target.value);$dd.classList.add('open')});
+document.addEventListener('click',e=>{if(!e.target.closest('.searchbar'))$dd.classList.remove('open');if(!e.target.closest('.inst-pick'))closeInstDd()});
+function renderDd(q){q=(q||'').toLowerCase().trim();
+  const f=STUDIOS.filter(s=>!q||s.brand.toLowerCase().includes(q)||s.city.toLowerCase().includes(q)||s.state.toLowerCase().includes(q));
+  $dd.innerHTML=f.length?f.map(s=>`<div class="dd-row" onclick="selectStudio('${s.id}')"><div class="pin"><i class="fas fa-location-dot"></i></div>
+    <div><div class="city">${esc(s.city)}, ${esc(s.state)}</div><div class="meta">${esc(s.brand)} · ${esc(s.address)}</div></div></div>`).join('')
+    :`<div class="dd-row" style="cursor:default;color:var(--text-3)">No studios match "${esc(q)}"</div>`}
+function selectStudio(id){activeStudio=STUDIOS.find(s=>s.id===id);activeInstrument=null;instQuery='';$dd.classList.remove('open');$search.value='';render()}
+
+function render(){
+  if(!activeStudio){
+    $card.innerHTML=`<div class="empty"><div class="ic"><i class="fas fa-headset"></i></div>
+      <h2>Pick a studio to start</h2><p>Search by brand, city, or state above. Everything for the call lands here on one screen — no scrolling.</p></div>`;
+    return;
+  }
+  const s=activeStudio;
+  const prog=s.programsEnabled
+    ? `<div class="prog-pill"><i class="fas fa-graduation-cap"></i> Programs <span class="pv">Yes</span><a href="${s.programsUrl||'#'}">View</a></div>`
+    : `<div class="prog-pill"><i class="fas fa-graduation-cap"></i> Programs <span class="pv">No</span></div>`;
+  const sched=s.scheduling
+    ? `<div class="prog-pill"><i class="fas fa-calendar-check"></i> Scheduling <span class="pv">${esc(s.scheduling)}</span><a href="${s.schedulingUrl||'#'}">Open</a></div>`
+    : '';
+  $card.innerHTML=`
+    <div class="card-head">
+      <div class="ht">
+        <div class="eyebrow"><i class="fas fa-scroll"></i> Call Script</div>
+        <h1>${esc(s.brand)} — ${esc(s.city)}, ${esc(s.state)}</h1>
+        <div class="addr"><i class="fas fa-map-marker-alt"></i> ${esc(s.address)}</div>
+      </div>
+      <div class="hc">
+        ${sched}
+        ${prog}
+        <a class="head-btn" href="${s.infoUrl||'#'}"><i class="fas fa-circle-info"></i> Studio Info</a>
+      </div>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="dot good"></span> Included / we handle it</span>
+      <span class="lg"><span class="dot flag"></span> Mention to the customer</span>
+    </div>
+    <div class="card-body">
+      <div class="col col-money">${renderMoney(s)}</div>
+      <div class="col col-lesson">${renderLesson(s)}</div>
+    </div>
+    ${renderNotes(s)}
+  `;
+  wireInst();
 }
 
-function clearInstrument() {
-    activeInstrument = null;
-    instSearchQuery = '';
-    closeInstrumentDropdown();
-    renderConsole();
+function renderMoney(s){
+  const L=s.defaultLength,p=s.prices[L],others=[30,45,60].filter(x=>x!==L);
+  const covers=s.annualFeeCovers||[],promos=s.studioDiscounts||[];
+  return `
+    <div class="block">
+      <div class="block-label"><i class="fas fa-tag"></i> Standard pricing</div>
+      <div class="price-row">
+        <div class="price-amt">${esc(p.split('/')[0])}</div>
+        <div class="price-unit">/${esc(p.split('/')[1]||'mo')} · ${L} min</div>
+        <div class="price-badge">Standard</div>
+      </div>
+      <div class="cadence"><strong>${esc(s.cadence)}</strong></div>
+      <div class="other">${others.map(x=>`<span class="ol"><span class="l">${x} min</span><span class="p">${esc(s.prices[x])}</span></span>`).join('')}</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><i class="fas fa-calendar-day"></i> Billing</div>
+      <div class="annual">
+        <div class="annual-top"><div class="annual-ic"><i class="fas fa-receipt"></i></div>
+          <div><div class="annual-lbl">Registration fee</div><div class="annual-amt">${esc(s.annualFee)}<span class="per">/yr</span></div></div></div>
+        ${covers.length?`<div class="covers">${covers.map(c=>`<span class="cchip"><i class="fas fa-check"></i>${esc(c)}</span>`).join('')}</div>`:''}
+      </div>
+      <div class="steps">
+        <div class="step"><span class="num">1</span><div><div class="sl">First charge</div><div class="sv">${esc(s.firstCharge)}</div></div></div>
+        <div class="step"><span class="num">2</span><div><div class="sl">First month</div><div class="sv ${s.firstChargeProrated?'warn':''}">${s.firstChargeProrated?'Prorated':'Full price'}</div></div></div>
+        <div class="step"><span class="num">3</span><div><div class="sl">Recurring</div><div class="sv">${esc(s.billingDay)}</div></div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><i class="fas fa-tags"></i> Promos · if needed to close</div>
+      ${promos.length?promos.map(d=>`<div class="promo"><span class="pct">${esc(d.percent)}</span>
+        <div><div class="pn">${esc(d.name)}</div><div class="pd">${esc(d.desc)}</div></div></div>`).join('')
+        :`<div class="promo-none">No promos at this studio.</div>`}
+    </div>
+  `;
 }
 
-function closeInstrumentDropdown() {
-    const d = document.getElementById('instrumentDropdown');
-    if (d) d.classList.remove('open');
-}
-
-/* ─── STICKY DETECTION (adds stronger shadow when stuck) ─── */
-function wireStickyDetection() {
-    const bar = document.getElementById('instrumentBar');
-    if (!bar) return;
-    // Use IntersectionObserver on a sentinel placed right above the bar
-    // Simpler approach: listen to scroll on the console wrapper / window
-    const onScroll = () => {
-        const rect = bar.getBoundingClientRect();
-        // If the top is pinned at 0 (or close to it), it's stuck
-        bar.classList.toggle('stuck', rect.top <= 1);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-}
-
-/* ─── ESSENTIALS (now includes annual fee + billing timeline) ─── */
-function renderEssentials() {
-    const s = activeStudio;
-    const standardLen = s.defaultLength;
-    const standardPrice = s.prices[standardLen];
-    const otherLengths = [30, 45, 60].filter(L => L !== standardLen);
-    const covers = s.annualFeeCovers || [];
-    const previewCount = 2; // inline preview, rest hides behind expander
-    const previewCovers = covers.slice(0, previewCount);
-    const restCovers = covers.slice(previewCount);
-
-    return `
-        <div class="essentials-card">
-            <div class="card-eyebrow"><i class="fas fa-star"></i> The Essentials</div>
-
-            <!-- 1. Headline standard price -->
-            <div class="essentials-headline">
-                <span class="standard-len">${standardLen} min</span>
-                <span class="standard-price">${standardPrice}</span>
-                <span class="standard-label"><i class="fas fa-check"></i> Standard</span>
-            </div>
-            <div class="essentials-cadence">
-                <i class="fas fa-repeat"></i>
-                <span><strong>${s.cadence}</strong></span>
-            </div>
-
-            <!-- 2. Annual fee — compact row with inline covers + expandable -->
-            <div class="annual-row">
-                <div class="annual-row-main">
-                    <div class="annual-row-icon"><i class="fas fa-receipt"></i></div>
-                    <div class="annual-row-body">
-                        <div class="annual-row-label">Annual Fee</div>
-                        <div class="annual-row-amount">${s.annualFee}<span class="per">/yr</span></div>
-                    </div>
-                </div>
-                ${covers.length > 0 ? `
-                    <div class="annual-row-covers">
-                        <div class="annual-covers-inline">
-                            <span class="covers-prefix"><i class="fas fa-check"></i> Includes:</span>
-                            ${previewCovers.map(c => `<span class="cover-chip">${escapeHtml(c)}</span>`).join('')}
-                            ${restCovers.length > 0 ? `
-                                <button class="covers-expand-btn" onclick="toggleAnnualCovers(this)" type="button">
-                                    +${restCovers.length} more <i class="fas fa-chevron-down"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                        ${restCovers.length > 0 ? `
-                            <div class="annual-covers-rest" hidden>
-                                ${restCovers.map(c => `<span class="cover-chip">${escapeHtml(c)}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                ` : ''}
-            </div>
-
-            <!-- 3. Other lesson lengths — single compact row -->
-            ${otherLengths.length > 0 ? `
-                <div class="other-lengths-row">
-                    <span class="other-lengths-label">Other lengths</span>
-                    ${otherLengths.map(L => `
-                        <span class="other-length-pill">
-                            <span class="ol-len">${L} min</span>
-                            <span class="ol-price">${s.prices[L]}</span>
-                        </span>
-                    `).join('')}
-                </div>
-            ` : ''}
-
-            <!-- 4. Billing timeline -->
-            <div class="billing-timeline">
-                <div class="billing-timeline-label">
-                    <i class="fas fa-calendar-day"></i> Billing Timeline
-                </div>
-                <div class="billing-timeline-steps">
-                    <div class="billing-timeline-step">
-                        <div class="billing-timeline-step-num">1</div>
-                        <div class="ts-label">First Charge</div>
-                        <div class="ts-value">${s.firstCharge}</div>
-                    </div>
-                    <div class="billing-timeline-step">
-                        <div class="billing-timeline-step-num">2</div>
-                        <div class="ts-label">First Month</div>
-                        <div class="ts-value ${s.firstChargeProrated ? 'prorated-yes' : 'prorated-no'}">${s.firstChargeProrated ? 'Prorated' : 'Full price'}</div>
-                    </div>
-                    <div class="billing-timeline-step">
-                        <div class="billing-timeline-step-num">3</div>
-                        <div class="ts-label">Recurring</div>
-                        <div class="ts-value">${s.billingDay}</div>
-                    </div>
-                </div>
-            </div>
+function renderLesson(s){
+  const i=activeInstrument;
+  let facts;
+  if(i){
+    facts=`<div class="facts">
+      <div class="fact"><div class="fi"><i class="fas fa-baby"></i></div><div><div class="fk">Start age</div><div class="fv">${i.startAge}+ yrs</div></div></div>
+      <div class="fact"><div class="fi"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="fk">Teachers</div><div class="fv">${i.teacherCount} on staff</div></div></div>
+      <div class="fact"><div class="fi"><i class="fas fa-book"></i></div><div><div class="fk">Method</div><div class="fv" title="${esc(i.method)}">${esc(i.method)}</div></div></div>
+      <div class="fact ${i.bringInstrument?'bring-yes':'bring-no'}"><div class="fi"><i class="fas ${i.bringInstrument?'fa-exclamation-circle':'fa-check-circle'}"></i></div>
+        <div><div class="fk">Bring day 1?</div><div class="fv">${i.bringInstrument?'Yes':'We provide'}</div></div></div>
+    </div>`;
+  }else{
+    facts=`<div class="inst-empty"><i class="fas fa-arrow-up"></i> Search an instrument to see age, teachers, method & bring-info</div>`;
+  }
+  const pols=s.policies||[];
+  return `
+    <div class="inst-zone">
+      <div class="block-label"><i class="fas fa-music"></i> Instrument</div>
+      <div class="inst-pick">
+        <div class="inst-field">
+          <i class="fas fa-magnifying-glass lead"></i>
+          <input id="instInput" class="inst-input ${i?'chosen':''}" placeholder="Search instruments…" value="${i?esc(i.name):''}" autocomplete="off">
+          ${i?`<button class="inst-clear" onclick="clearInst()"><i class="fas fa-times"></i></button>`:`<i class="fas fa-chevron-down inst-caret"></i>`}
+          <div class="inst-dd" id="instDd"></div>
         </div>
-    `;
+        ${facts}
+      </div>
+    </div>
+    <div class="pol-zone">
+      <div class="block-label"><i class="fas fa-file-shield"></i> Policies · what to cover</div>
+      <div class="pol-scroll">
+        ${pols.length?pols.map(p=>`<div class="policy"><div class="pi"><i class="fas ${p.icon}"></i></div>
+          <div><div class="pt">${esc(p.title)}</div><div class="pb">${p.body}</div></div></div>`).join('')
+          :`<div class="pol-none">No policies listed for this studio.</div>`}
+      </div>
+    </div>
+  `;
 }
 
-function toggleAnnualCovers(btn) {
-    const rest = btn.closest('.annual-row-covers').querySelector('.annual-covers-rest');
-    const isOpen = rest && !rest.hidden;
-    if (rest) rest.hidden = isOpen;
-    btn.classList.toggle('open', !isOpen);
-    const restCount = rest ? rest.children.length : 0;
-    btn.innerHTML = isOpen
-        ? `+${restCount} more <i class="fas fa-chevron-down"></i>`
-        : `Hide <i class="fas fa-chevron-up"></i>`;
+function renderNotes(s){
+  const n=s.notes||[];
+  const items=n.length?n.map(x=>{const lbl=x.type==='important'?'Heads up':x.type==='tip'?'Tip':'Note';
+    return `<div class="note ${x.type}"><span class="ntag">${lbl}</span><span class="nt">${x.text}</span></div>`}).join('')
+    :`<span class="notes-none">No additional notes for this studio.</span>`;
+  return `<div class="notes-strip"><span class="notes-label"><i class="fas fa-sticky-note"></i> Notes</span>${items}</div>`;
 }
 
-/* ─── ANNUAL FEE ─── */
-function renderAnnualFee() {
-    const s = activeStudio;
-    return `
-        <div class="annual-card">
-            <div class="annual-header">
-                <div class="annual-icon"><i class="fas fa-receipt"></i></div>
-                <div class="annual-header-text">
-                    <div class="annual-header-label">Annual / Registration Fee</div>
-                    <div class="annual-header-amount">${s.annualFee} <span class="per">/ year</span></div>
-                </div>
-            </div>
+/* instrument picker wiring */
+function wireInst(){const inp=document.getElementById('instInput');if(!inp)return;
+  inp.addEventListener('focus',()=>{if(activeInstrument)inp.value='';instQuery=inp.value;renderInstDd();document.getElementById('instDd').classList.add('open')});
+  inp.addEventListener('input',e=>{instQuery=e.target.value;renderInstDd();document.getElementById('instDd').classList.add('open')});
+  inp.addEventListener('blur',()=>setTimeout(()=>{if(activeInstrument&&!document.getElementById('instDd').classList.contains('open'))inp.value=activeInstrument.name},200))}
+function renderInstDd(){const q=(instQuery||'').toLowerCase().trim();
+  const f=activeStudio.instruments.filter(i=>!q||i.name.toLowerCase().includes(q)||i.method.toLowerCase().includes(q));
+  const dd=document.getElementById('instDd');
+  dd.innerHTML=f.length?f.map(i=>`<div class="inst-dd-row" onclick="pickInst('${i.name.replace(/'/g,"\\'")}')">
+    <div class="di"><i class="fas ${i.icon}"></i></div><div><div class="n">${esc(i.name)}</div>
+    <div class="s">${i.teacherCount} ${i.teacherCount===1?'teacher':'teachers'} · Ages ${i.startAge}+ · ${esc(i.method)}</div></div></div>`).join('')
+    :`<div class="inst-dd-row" style="cursor:default;color:var(--text-3)">No instruments match "${esc(instQuery)}"</div>`}
+function pickInst(n){activeInstrument=activeStudio.instruments.find(x=>x.name===n);instQuery='';closeInstDd();render()}
+function clearInst(){activeInstrument=null;instQuery='';closeInstDd();render()}
+function closeInstDd(){const d=document.getElementById('instDd');if(d)d.classList.remove('open')}
 
-            <div class="annual-covers-label">
-                <i class="fas fa-circle-check"></i> What it includes
-            </div>
-            <div class="annual-covers-grid">
-                ${s.annualFeeCovers.map(c => `
-                    <div class="annual-cover-item">
-                        <i class="fas fa-check"></i>
-                        <span>${c}</span>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-/* ─── TRIAL (now includes compact promos) ─── */
-function renderTrial() {
-    const s = activeStudio;
-    let iconClass = '', iconSym = '', pillClass = '', pillText = '', title = '';
-
-    if (s.trialType === 'free') {
-        iconClass = ''; iconSym = 'fa-gift';
-        pillClass = 'yes'; pillText = 'Available';
-        title = 'First Lesson Free';
-    } else if (s.trialType === 'discounted') {
-        iconClass = 'discounted'; iconSym = 'fa-percent';
-        pillClass = 'discounted'; pillText = 'Discounted';
-        title = 'Discounted Trial Lesson';
-    } else {
-        iconClass = 'none'; iconSym = 'fa-circle-xmark';
-        pillClass = 'no'; pillText = 'Not Offered';
-        title = 'No Trial Lesson';
-    }
-
-    // Combine global + studio-specific promos
-    const studioDiscounts = s.studioDiscounts || [];
-    const allDiscounts = [
-        ...GLOBAL_DISCOUNTS.map(d => ({ ...d, scope: 'global' })),
-        ...studioDiscounts.map(d => ({ ...d, scope: 'studio' })),
-    ];
-
-    const promosBlock = allDiscounts.length === 0 ? '' : `
-        <div class="trial-promos-toggle">
-            <button class="trial-promos-trigger" onclick="toggleTrialPromos(this)" type="button">
-                <i class="fas fa-tag"></i>
-                <span>${allDiscounts.length} promo${allDiscounts.length === 1 ? '' : 's'} available if needed</span>
-                <i class="fas fa-chevron-down trial-promos-caret"></i>
-            </button>
-            <div class="trial-promos" hidden>
-                <div class="trial-promos-list">
-                    ${allDiscounts.map(d => `
-                        <div class="trial-promo-chip ${d.scope === 'studio' ? 'studio-specific' : ''}" title="${escapeHtml(d.desc)}">
-                            <span class="trial-promo-pct">${d.percent}</span>
-                            <span class="trial-promo-name">${d.name}</span>
-                            ${GLOBAL_DISCOUNTS.length > 0 ? `<span class="trial-promo-scope">${d.scope === 'studio' ? '• Local' : '• Global'}</span>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-
-    return `
-        <div class="trial-card">
-            <div class="trial-header">
-                <div class="trial-icon ${iconClass}"><i class="fas ${iconSym}"></i></div>
-                <div class="trial-title-block">
-                    <div class="trial-eyebrow">Trial / First Lesson Free</div>
-                    <div class="trial-title">${title}</div>
-                </div>
-                <span class="trial-status-pill ${pillClass}">${pillText}</span>
-            </div>
-            <div class="trial-body">${s.trialDetails || 'No trial lesson offered at this studio.'}</div>
-            ${promosBlock}
-        </div>
-    `;
-}
-
-function toggleTrialPromos(btn) {
-    const list = btn.parentElement.querySelector('.trial-promos');
-    if (!list) return;
-    const isOpen = !list.hidden;
-    list.hidden = isOpen;
-    btn.classList.toggle('open', !isOpen);
-}
-
-/* ─── DISCOUNTS ─── */
-function renderDiscounts() {
-    const s = activeStudio;
-    const studioDiscounts = s.studioDiscounts || [];
-    const allDiscounts = [
-        ...GLOBAL_DISCOUNTS.map(d => ({ ...d, scope: 'global' })),
-        ...studioDiscounts.map(d => ({ ...d, scope: 'studio' })),
-    ];
-
-    if (allDiscounts.length === 0) return ''; // hide section if no discounts
-
-    const hasGlobals = GLOBAL_DISCOUNTS.length > 0;
-    const subtitle = hasGlobals
-        ? `Offer these if needed to close the deal — global apply to all studios, studio-specific are local to ${s.city}.`
-        : `Studio-specific promos for ${s.city}. Offer these if needed to close the deal.`;
-
-    return `
-        <div class="discounts-card">
-            <div class="discounts-header">
-                <div class="discounts-icon"><i class="fas fa-tags"></i></div>
-                <div class="discounts-title-block">
-                    <div class="discounts-eyebrow">Sales Discounts</div>
-                    <div class="discounts-title">Available Promos</div>
-                </div>
-            </div>
-            <div class="discounts-subtitle">${subtitle}</div>
-            <div class="discounts-list">
-                ${allDiscounts.map(d => `
-                    <div class="discount-item ${d.scope === 'studio' ? 'studio-specific' : ''}">
-                        <div class="discount-percent">${d.percent}</div>
-                        <div class="discount-body">
-                            <div class="discount-name">${d.name}</div>
-                            <div class="discount-desc">${d.desc}</div>
-                        </div>
-                        ${hasGlobals ? `<div class="discount-scope-pill ${d.scope}">${d.scope === 'studio' ? 'This Studio' : 'Global'}</div>` : ''}
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-/* ─── POLICIES — flat one-liners, driven by script-version content ─── */
-function renderPolicies() {
-    const s = activeStudio;
-    const policies = Array.isArray(s.policies) ? s.policies : [];
-
-    // Don't render the section at all if no policy has a script version
-    if (policies.length === 0) return '';
-
-    return `
-        <div class="policies-card">
-            <div class="policies-card-header">
-                <div class="policies-card-icon"><i class="fas fa-file-shield"></i></div>
-                <div class="policies-card-title-block">
-                    <div class="policies-card-eyebrow">Policies</div>
-                    <div class="policies-card-title">What to cover on the call</div>
-                    <div class="policies-card-subtitle">${policies.length} ${policies.length === 1 ? 'policy' : 'policies'} to mention</div>
-                </div>
-            </div>
-            <div class="policy-oneliner-list">
-                ${policies.map(p => `
-                    <div class="policy-oneliner">
-                        <div class="policy-oneliner-icon"><i class="fas ${p.icon}"></i></div>
-                        <div class="policy-oneliner-body">
-                            <div class="policy-oneliner-title">${escapeHtml(p.title)}</div>
-                            <div class="policy-oneliner-text">${p.body}</div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-// (kept for legacy; not used by new flat list)
-function toggleOtherPolicy(headerEl) {
-    headerEl.closest('.other-policy-item').classList.toggle('open');
-}
-
-/* ─── STUDIO NOTES (bottom of page) ─── */
-function renderNotes() {
-    const s = activeStudio;
-    const notes = s.notes || [];
-
-    const body = notes.length === 0
-        ? `<div class="notes-empty">No additional notes for this studio yet</div>`
-        : `<div class="notes-list">
-                ${notes.map((n, idx) => {
-                    const type = n.type || 'info';
-                    const tagLabel = type === 'important' ? 'Heads up'
-                                   : type === 'tip' ? 'Tip'
-                                   : '';
-                    return `
-                        <div class="note-item ${type}">
-                            <div class="note-bullet">${idx + 1}</div>
-                            <div class="note-text">
-                                ${tagLabel ? `<span class="note-tag ${type}">${tagLabel}</span>` : ''}
-                                ${n.text}
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>`;
-
-    return `
-        <div class="notes-card">
-            <div class="notes-card-header">
-                <div class="notes-card-icon"><i class="fas fa-sticky-note"></i></div>
-                <div class="notes-card-title-block">
-                    <div class="notes-card-eyebrow">Notes</div>
-                    <div class="notes-card-title">Things to know about this studio</div>
-                    <div class="notes-card-subtitle">Helpful context for scheduling and conversations</div>
-                </div>
-            </div>
-            <div class="notes-card-body">${body}</div>
-        </div>
-    `;
-}
-
-init();
+/* boot: show empty state, then pull everything from Supabase */
+render();
+showLoadingOverlay();
+loadStudios();
 </script>
-
 </body>
 </html>
