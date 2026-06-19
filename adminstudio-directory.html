@@ -896,6 +896,13 @@
         }
         .remove-item-btn:hover { background: var(--red-light); color: var(--red); }
 
+        .lesson-default-label {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: 12px; font-weight: 600; color: var(--text-2);
+            cursor: pointer; margin-top: 2px; letter-spacing: -0.005em;
+        }
+        .lesson-default-label input { accent-color: var(--primary-ink); cursor: pointer; }
+        
         /* Instrument list */
         .instruments-list { display: flex; flex-direction: column; gap: 10px; }
         .instrument-item {
@@ -1782,36 +1789,17 @@
 
                     <!-- Pricing Tab -->
                     <div id="pricingTab" class="modal-tab-content">
-                        <!-- Lesson rates -->
-                        <div class="form-row-3">
-                            <div class="form-group">
-                                <label class="form-label">30-Min Price</label>
-                                <input type="text" class="form-input" id="studioPrice30" placeholder="$0.00">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">45-Min Price</label>
-                                <input type="text" class="form-input" id="studioPrice45" placeholder="$0.00">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">60-Min Price</label>
-                                <input type="text" class="form-input" id="studioPrice60" placeholder="$0.00">
-                            </div>
+                        <!-- Lesson options (up to 3 custom durations) -->
+                        <div class="form-group">
+                            <label class="form-label">Lesson Options <span style="text-transform:none;letter-spacing:0;color:var(--text-3);font-weight:500;">— type any duration &amp; price, up to 3. Mark one as default.</span></label>
+                            <div id="lessonOptionsList" class="dynamic-list-items" style="gap: 8px;"></div>
+                            <button type="button" id="addLessonOptionBtn" class="btn btn-secondary btn-small" style="margin-top: 10px;" onclick="addLessonOption()"><i class="fas fa-plus"></i> Add Option</button>
                         </div>
 
-                        <!-- Lesson defaults -->
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Default Lesson Length</label>
-                                <div class="radio-pill-group" id="studioDefaultLength">
-                                    <label class="radio-pill"><input type="radio" name="defaultLength" value="30"><span>30 min</span></label>
-                                    <label class="radio-pill"><input type="radio" name="defaultLength" value="45" checked><span>45 min</span></label>
-                                    <label class="radio-pill"><input type="radio" name="defaultLength" value="60"><span>60 min</span></label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Lesson Cadence</label>
-                                <input type="text" class="form-input" id="studioCadence" placeholder="e.g., Once per week">
-                            </div>
+                        <!-- Lesson cadence -->
+                        <div class="form-group">
+                            <label class="form-label">Lesson Cadence</label>
+                            <input type="text" class="form-input" id="studioCadence" placeholder="e.g., Once per week">
                         </div>
 
                         <!-- Annual fee -->
@@ -2060,6 +2048,7 @@
         let currentAdmins = [], currentInstruments = [], currentLinks = [], currentScholarships = [];
         let currentNotes = [], currentPolicies = [], currentDiscounts = [];
         let currentAnnualCovers = [];
+        let currentLessonOptions = [];
         let deletedAdminIds = [], deletedInstrumentIds = [], deletedLinkIds = [], deletedScholarshipIds = [];
         let deletedNoteIds = [], deletedPolicyIds = [], deletedDiscountIds = [];
 
@@ -2483,6 +2472,50 @@
             return checked ? checked.value : null;
         }
 
+        // ── LESSON OPTIONS — up to 3 custom durations, each with a price ──
+        // Stored on the studio as jsonb `lesson_options`:
+        //   [{minutes:30, price:'$120/mo', isDefault:true}, ...]
+        function addLessonOption() {
+            if (currentLessonOptions.length >= 3) { showToast('Up to 3 lesson options', 'error'); return; }
+            const first = currentLessonOptions.length === 0;
+            currentLessonOptions.push({ minutes: '', price: '', isDefault: first });
+            renderLessonOptions();
+        }
+        function removeLessonOption(index) {
+            const wasDefault = currentLessonOptions[index] && currentLessonOptions[index].isDefault;
+            currentLessonOptions.splice(index, 1);
+            if (wasDefault && currentLessonOptions.length && !currentLessonOptions.some(o => o.isDefault)) currentLessonOptions[0].isDefault = true;
+            renderLessonOptions();
+        }
+        function updateLessonOption(index, field, value) {
+            if (!currentLessonOptions[index]) return;
+            if (field === 'minutes') currentLessonOptions[index].minutes = value !== '' ? parseInt(value) : '';
+            else currentLessonOptions[index][field] = value;
+        }
+        function setLessonDefault(index) { currentLessonOptions.forEach((o, i) => { o.isDefault = (i === index); }); }
+        function renderLessonOptions() {
+            const container = document.getElementById('lessonOptionsList');
+            if (!currentLessonOptions.length) {
+                container.innerHTML = '<p style="color:var(--text-3);font-size:13px;text-align:center;padding:14px;">No lesson options yet. Click "Add Option".</p>';
+            } else {
+                container.innerHTML = currentLessonOptions.map((o, index) => `
+                    <div class="dynamic-item">
+                        <div class="dynamic-item-content">
+                            <div class="dynamic-item-row">
+                                <input type="number" min="1" placeholder="Minutes (e.g., 30)" value="${escapeHtml(String(o.minutes ?? ''))}" onchange="updateLessonOption(${index}, 'minutes', this.value)">
+                                <input type="text" placeholder="Price (e.g., $120/mo)" value="${escapeHtml(o.price || '')}" onchange="updateLessonOption(${index}, 'price', this.value)">
+                            </div>
+                            <label class="lesson-default-label">
+                                <input type="radio" name="lessonDefault" ${o.isDefault ? 'checked' : ''} onchange="setLessonDefault(${index})"> Default for this studio
+                            </label>
+                        </div>
+                        <button type="button" class="remove-item-btn" onclick="removeLessonOption(${index})" aria-label="Remove"><i class="fas fa-times"></i></button>
+                    </div>`).join('');
+            }
+            const btn = document.getElementById('addLessonOptionBtn');
+            if (btn) btn.disabled = currentLessonOptions.length >= 3;
+        }
+        
         function openStudioModal() {
             document.getElementById('studioModalTitle').textContent = 'Add studio';
             document.getElementById('studioForm').reset();
@@ -2492,8 +2525,13 @@
             document.getElementById('rentalFields').classList.remove('show');
             document.getElementById('programsFields').classList.remove('show');
             // New pricing-tab defaults
-            setRadioPillValue('studioDefaultLength', '45');
             setRadioPillValue('studioTrialType', 'free');
+            // Start with familiar 30/45/60 rows (prices blank), default = 45
+            currentLessonOptions = [
+                { minutes: 30, price: '', isDefault: false },
+                { minutes: 45, price: '', isDefault: true },
+                { minutes: 60, price: '', isDefault: false }
+            ];
             document.getElementById('studioFirstChargeProrated').checked = false;
             ['studioDescription','studioRentalInfo','studioSummaryVibe','studioSecurityNotes','customerCareNotes','studioTrialDetails'].forEach(id => document.getElementById(id).innerHTML = '');
             // Init collapsed-trigger script-version fields (empty)
@@ -2533,9 +2571,6 @@
             document.getElementById('studioDirectorEmail').value = studio.director_email || '';
             document.getElementById('studioSchedulingLink').value = studio.scheduling_link || '';
             document.getElementById('studioAdminHours').value = studio.admin_office_hours || '';
-            document.getElementById('studioPrice30').value = studio.monthly_rate || '';
-            document.getElementById('studioPrice45').value = studio.price_45 || '';
-            document.getElementById('studioPrice60').value = studio.price_60 || '';
             document.getElementById('studioAnnualFee').value = studio.annual_fee || '';
             document.getElementById('studioDisplayAnnualFee').value = studio.display_annual_fee || '';
             document.getElementById('studioPrograms').checked = studio.programs_enabled || false;
@@ -2550,7 +2585,23 @@
             document.getElementById('customerCareNotes').innerHTML = studio.customer_care_notes || '';
 
             // New pricing/trial fields
-            setRadioPillValue('studioDefaultLength', studio.default_length || '45');
+            // Lesson options — prefer new lesson_options, fall back to legacy 30/45/60 columns
+            if (Array.isArray(studio.lesson_options) && studio.lesson_options.length) {
+                currentLessonOptions = studio.lesson_options.slice(0, 3).map(o => ({
+                    minutes: (o.minutes != null && o.minutes !== '') ? parseInt(o.minutes) : '',
+                    price: o.price || '',
+                    isDefault: !!o.isDefault
+                }));
+                if (currentLessonOptions.length && !currentLessonOptions.some(o => o.isDefault)) currentLessonOptions[0].isDefault = true;
+            } else {
+                const dl = studio.default_length || 45;
+                currentLessonOptions = [
+                    { minutes: 30, price: studio.monthly_rate || '', isDefault: 30 === dl },
+                    { minutes: 45, price: studio.price_45 || '', isDefault: 45 === dl },
+                    { minutes: 60, price: studio.price_60 || '', isDefault: 60 === dl }
+                ];
+                if (!currentLessonOptions.some(o => o.isDefault)) currentLessonOptions[1].isDefault = true;
+            }
             document.getElementById('studioCadence').value = studio.cadence || '';
             document.getElementById('studioFirstCharge').value = studio.first_charge || '';
             document.getElementById('studioBillingDay').value = studio.billing_day || '';
@@ -2623,7 +2674,7 @@
                 ? studio.annual_fee_covers.map(c => String(c))
                 : [];
             deletedAdminIds=[]; deletedInstrumentIds=[]; deletedLinkIds=[]; deletedScholarshipIds=[]; deletedNoteIds=[]; deletedPolicyIds=[]; deletedDiscountIds=[];
-            renderAdmins(); renderInstruments(); renderLinks(); renderScholarships(); renderNotes(); renderPolicies(); renderDiscounts(); renderAnnualCovers();
+            renderAdmins(); renderInstruments(); renderLinks(); renderScholarships(); renderNotes(); renderPolicies(); renderDiscounts(); renderAnnualCovers(); renderLessonOptions();
             document.getElementById('studioModal').classList.add('active');
         }
 
@@ -3166,6 +3217,21 @@
             const brandId = document.getElementById('studioBrand').value;
             if (!brandId) { showToast('Please select a brand', 'error'); return; }
 
+            // === Lesson options (up to 3 custom durations) ===
+            const cleanedLessonOptions = currentLessonOptions
+                .filter(o => o.minutes !== '' && o.minutes != null)
+                .map(o => ({ minutes: parseInt(o.minutes), price: (o.price || '').trim(), isDefault: !!o.isDefault }))
+                .slice(0, 3);
+            if (cleanedLessonOptions.length && !cleanedLessonOptions.some(o => o.isDefault)) cleanedLessonOptions[0].isDefault = true;
+            const defaultOpt = cleanedLessonOptions.find(o => o.isDefault) || cleanedLessonOptions[0] || null;
+            // Keep legacy price columns populated for any 30/45/60 rows (back-compat)
+            const legacyPrices = { monthly_rate: null, price_45: null, price_60: null };
+            cleanedLessonOptions.forEach(o => {
+                if (o.minutes === 30) legacyPrices.monthly_rate = o.price || null;
+                else if (o.minutes === 45) legacyPrices.price_45 = o.price || null;
+                else if (o.minutes === 60) legacyPrices.price_60 = o.price || null;
+            });
+
             // === EXISTING COLUMNS (saved to Supabase) ===
             const studioData = {
                 brand_id: brandId, state: document.getElementById('studioState').value || null,
@@ -3178,8 +3244,8 @@
                 phone_number: document.getElementById('studioPhone').value || null, director_name: document.getElementById('studioDirectorName').value || null,
                 director_email: document.getElementById('studioDirectorEmail').value || null, scheduling_link: document.getElementById('studioSchedulingLink').value || null,
                 admin_office_hours: document.getElementById('studioAdminHours').value || null,
-                monthly_rate: document.getElementById('studioPrice30').value || null, price_45: document.getElementById('studioPrice45').value || null,
-                price_60: document.getElementById('studioPrice60').value || null, annual_fee: document.getElementById('studioAnnualFee').value || null,
+                monthly_rate: legacyPrices.monthly_rate, price_45: legacyPrices.price_45,
+                price_60: legacyPrices.price_60, annual_fee: document.getElementById('studioAnnualFee').value || null,
                 display_annual_fee: document.getElementById('studioDisplayAnnualFee').value || null,
                 programs_enabled: document.getElementById('studioPrograms').checked, rentals_enabled: document.getElementById('studioRentals').checked,
                 rental_info: document.getElementById('studioRentalInfo').innerHTML || null, rental_link: document.getElementById('studioRentalLink').value || null,
@@ -3192,7 +3258,8 @@
 
             // === NEW COLUMNS (call-script support) — active after migration_phase1.sql is run ===
             Object.assign(studioData, {
-                default_length: parseInt(getRadioPillValue('studioDefaultLength')) || null,
+                lesson_options: cleanedLessonOptions,
+                default_length: defaultOpt ? defaultOpt.minutes : null,
                 cadence: document.getElementById('studioCadence').value || null,
                 first_charge: document.getElementById('studioFirstCharge').value || null,
                 billing_day: document.getElementById('studioBillingDay').value || null,
