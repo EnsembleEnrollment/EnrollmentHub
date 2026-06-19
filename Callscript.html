@@ -119,6 +119,8 @@ body{
   border-radius:9px;padding:.35rem .65rem;font-size:.8125rem}
 .other .ol .l{color:var(--text-3)}
 .other .ol .p{font-weight:700;font-variant-numeric:tabular-nums}
+.other button.ol{cursor:pointer;font-family:inherit;color:var(--text);transition:border-color .15s,background .15s}
+.other button.ol:hover{border-color:var(--primary);background:var(--g50)}
 
 /* billing */
 .steps{display:flex;flex-direction:column;gap:.55rem}
@@ -153,6 +155,12 @@ body{
 
 /* instrument selector */
 .inst-zone{flex:0 0 auto}
+.inst-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.6rem}
+.inst-head .block-label{margin-bottom:0}
+.rental-pill{display:inline-flex;align-items:center;gap:.4rem;border-radius:8px;padding:.3rem .6rem;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+.rental-pill i{font-size:.7rem}
+.rental-pill.yes{background:rgba(16,185,129,.12);color:var(--success-dark)}
+.rental-pill.no{background:rgba(245,158,11,.12);color:#92400E}
 .inst-pick{position:relative}
 .inst-field{position:relative}
 .inst-field i.lead{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--primary);z-index:2}
@@ -210,16 +218,30 @@ body{
 .notes-label{font-size:.625rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;
   display:flex;align-items:center;gap:.35rem}
 .notes-label i{color:var(--primary)}
-.note{flex-shrink:0;display:flex;align-items:center;gap:.55rem;background:var(--white);border:1px solid var(--g200);
-  border-left:3px solid var(--g300);border-radius:10px;padding:.5rem .75rem;max-width:420px}
+.note{flex-shrink:0;display:inline-flex;align-items:center;gap:.5rem;background:var(--white);border:1px solid var(--g200);
+  border-left:3px solid var(--g300);border-radius:10px;padding:.4rem .6rem;cursor:pointer;font-family:inherit;
+  max-width:300px;transition:border-color .15s,box-shadow .15s}
+.note:hover{border-color:var(--primary);box-shadow:var(--sh-sm)}
 .note.important{border-left-color:var(--warning)}
 .note.tip{border-left-color:var(--success)}
-.note .ntag{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .4rem;border-radius:5px;flex-shrink:0}
-.note.info .ntag{background:var(--g100);color:var(--text-2)}
-.note.important .ntag{background:rgba(245,158,11,.15);color:#92400E}
-.note.tip .ntag{background:rgba(16,185,129,.15);color:var(--success-dark)}
-.note .nt{font-size:.8rem;color:var(--text);white-space:nowrap}
+.ntag{font-size:.56rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .4rem;border-radius:5px;flex-shrink:0;background:var(--g100);color:var(--text-2)}
+.ntag.important{background:rgba(245,158,11,.15);color:#92400E}
+.ntag.tip{background:rgba(16,185,129,.15);color:var(--success-dark)}
+.note .nt{font-size:.8rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.note .nexp{color:var(--text-3);font-size:.62rem;flex-shrink:0}
 .notes-none{font-size:.8rem;color:var(--text-3);font-style:italic}
+
+/* note read-more modal */
+.note-modal{position:fixed;inset:0;background:rgba(45,55,72,.5);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;z-index:1000;padding:1.5rem}
+.note-modal.open{display:flex}
+.note-modal-card{background:var(--white);border-radius:16px;box-shadow:var(--sh-lg);max-width:520px;width:100%;
+  max-height:80vh;display:flex;flex-direction:column;overflow:hidden;animation:popin .15s ease}
+@keyframes popin{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.note-modal-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.9rem 1.1rem;border-bottom:1px solid var(--g200)}
+.note-modal-x{border:none;background:var(--g100);color:var(--text-2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:.85rem;flex-shrink:0}
+.note-modal-x:hover{background:var(--g200)}
+.note-modal-body{padding:1.1rem 1.25rem;overflow-y:auto;font-size:.9rem;line-height:1.6;color:var(--text)}
 
 /* loading + error overlay */
 .loading-overlay{position:fixed;inset:0;background:rgba(241,243,245,.92);backdrop-filter:blur(8px);
@@ -327,16 +349,31 @@ function transformStudio(s,brandsById,countTeachers){
     };
   });
 
+  let lessonOptions = Array.isArray(s.lesson_options)
+    ? s.lesson_options
+        .filter(o=>o && o.minutes!=null && o.minutes!=='' && o.price && String(o.price).trim())
+        .map(o=>({minutes:Number(o.minutes), price:String(o.price).trim(), isDefault:!!o.isDefault}))
+    : [];
+  if(!lessonOptions.length){
+    const dl=s.default_length||45;
+    lessonOptions=[{minutes:30,price:s.monthly_rate},{minutes:45,price:s.price_45},{minutes:60,price:s.price_60}]
+      .filter(o=>o.price && String(o.price).trim())
+      .map(o=>({minutes:o.minutes, price:String(o.price).trim(), isDefault:o.minutes===dl}));
+  }
+  if(lessonOptions.length && !lessonOptions.some(o=>o.isDefault)) lessonOptions[0].isDefault=true;
+
   return{
     id:s.id,brand:brand.name,city:s.city||'',state:s.state||'',address:s.address||'',
     infoUrl:'#studio-info/'+s.id,
     defaultLength:s.default_length||45,cadence:s.cadence||'Once per week',
     prices:{30:s.monthly_rate||'—',45:s.price_45||'—',60:s.price_60||'—'},
+    lessonOptions,
     firstCharge:s.first_charge||'—',firstChargeProrated:!!s.first_charge_prorated,billingDay:s.billing_day||'—',
     annualFee:s.display_annual_fee||s.annual_fee||'—',
     annualFeeCovers:Array.isArray(s.annual_fee_covers)?s.annual_fee_covers:[],
     programsEnabled:!!s.programs_enabled,programsUrl:s.programs_url||'#',
-    scheduling:s.scheduling_platform||'',schedulingUrl:s.scheduling_url||'#',
+    scheduling:s.scheduling_platform||'',schedulingUrl:s.scheduling_link||'',
+    rentals:s.rentals_enabled==null?null:!!s.rentals_enabled,
     studioDiscounts,policies,instruments,notes,
   };
 }
@@ -409,19 +446,22 @@ function showLoadingOverlay(){
   document.body.appendChild(ov);
 }
 
-let activeStudio=null,activeInstrument=null,instQuery='';
+let activeStudio=null,activeInstrument=null,instQuery='',activeLengthIdx=null;
 const $search=document.getElementById('studioSearch'),$dd=document.getElementById('studioDd'),$card=document.getElementById('card');
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 $search.addEventListener('focus',()=>{renderDd($search.value);$dd.classList.add('open')});
 $search.addEventListener('input',e=>{renderDd(e.target.value);$dd.classList.add('open')});
 document.addEventListener('click',e=>{if(!e.target.closest('.searchbar'))$dd.classList.remove('open');if(!e.target.closest('.inst-pick'))closeInstDd()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNote();$dd.classList.remove('open');closeInstDd()}});
 function renderDd(q){q=(q||'').toLowerCase().trim();
   const f=STUDIOS.filter(s=>!q||s.brand.toLowerCase().includes(q)||s.city.toLowerCase().includes(q)||s.state.toLowerCase().includes(q));
   $dd.innerHTML=f.length?f.map(s=>`<div class="dd-row" onclick="selectStudio('${s.id}')"><div class="pin"><i class="fas fa-location-dot"></i></div>
     <div><div class="city">${esc(s.city)}, ${esc(s.state)}</div><div class="meta">${esc(s.brand)} · ${esc(s.address)}</div></div></div>`).join('')
     :`<div class="dd-row" style="cursor:default;color:var(--text-3)">No studios match "${esc(q)}"</div>`}
-function selectStudio(id){activeStudio=STUDIOS.find(s=>s.id===id);activeInstrument=null;instQuery='';$dd.classList.remove('open');$search.value='';render()}
+function defaultLengthIdx(s){const o=(s&&s.lessonOptions)||[];const di=o.findIndex(x=>x.isDefault);return di>=0?di:(o.length?0:null)}
+function pickLength(i){activeLengthIdx=i;render()}
+function selectStudio(id){activeStudio=STUDIOS.find(s=>s.id===id);activeInstrument=null;instQuery='';activeLengthIdx=defaultLengthIdx(activeStudio);$dd.classList.remove('open');$search.value='';render()}
 
 function render(){
   if(!activeStudio){
@@ -433,8 +473,8 @@ function render(){
   const prog=s.programsEnabled
     ? `<div class="prog-pill"><i class="fas fa-graduation-cap"></i> Programs <span class="pv">Yes</span><a href="${s.programsUrl||'#'}">View</a></div>`
     : `<div class="prog-pill"><i class="fas fa-graduation-cap"></i> Programs <span class="pv">No</span></div>`;
-  const sched=s.scheduling
-    ? `<div class="prog-pill"><i class="fas fa-calendar-check"></i> Scheduling <span class="pv">${esc(s.scheduling)}</span><a href="${s.schedulingUrl||'#'}">Open</a></div>`
+  const sched=(s.scheduling||s.schedulingUrl)
+    ? `<div class="prog-pill"><i class="fas fa-calendar-check"></i> Scheduling${s.scheduling?` <span class="pv">${esc(s.scheduling)}</span>`:''}${s.schedulingUrl?` <a href="${esc(s.schedulingUrl)}" target="_blank">Open</a>`:''}</div>`
     : '';
   $card.innerHTML=`
     <div class="card-head">
@@ -463,18 +503,25 @@ function render(){
 }
 
 function renderMoney(s){
-  const L=s.defaultLength,p=s.prices[L],others=[30,45,60].filter(x=>x!==L);
+  const opts=s.lessonOptions||[];
+  let idx=activeLengthIdx;
+  if(idx==null||idx<0||idx>=opts.length) idx=defaultLengthIdx(s);
+  const sel=(opts.length&&idx!=null)?opts[idx]:null;
+  const p=sel?sel.price:'—';
+  const others=opts.map((o,i)=>({o,i})).filter(x=>x.i!==idx);
   const covers=s.annualFeeCovers||[],promos=s.studioDiscounts||[];
   return `
     <div class="block">
       <div class="block-label"><i class="fas fa-tag"></i> Standard pricing</div>
+      ${sel?`
       <div class="price-row">
-        <div class="price-amt">${esc(p.split('/')[0])}</div>
-        <div class="price-unit">/${esc(p.split('/')[1]||'mo')} · ${L} min</div>
-        <div class="price-badge">Standard</div>
+        <div class="price-amt">${esc(String(p).split('/')[0])}</div>
+        <div class="price-unit">/${esc(String(p).split('/')[1]||'mo')} · ${esc(String(sel.minutes))} min</div>
+        <div class="price-badge">Selected</div>
       </div>
       <div class="cadence"><strong>${esc(s.cadence)}</strong></div>
-      <div class="other">${others.map(x=>`<span class="ol"><span class="l">${x} min</span><span class="p">${esc(s.prices[x])}</span></span>`).join('')}</div>
+      ${others.length?`<div class="other">${others.map(x=>`<button type="button" class="ol ol-pick" onclick="pickLength(${x.i})"><span class="l">${esc(String(x.o.minutes))} min</span><span class="p">${esc(x.o.price)}</span></button>`).join('')}</div>`:''}
+      `:`<div class="promo-none">No lesson pricing set for this studio.</div>`}
     </div>
 
     <div class="block">
@@ -515,9 +562,17 @@ function renderLesson(s){
     facts=`<div class="inst-empty"><i class="fas fa-arrow-up"></i> Search an instrument to see age, teachers, method & bring-info</div>`;
   }
   const pols=s.policies||[];
+  const rentalPill = s.rentals===true
+    ? `<span class="rental-pill yes"><i class="fas fa-check-circle"></i> Rentals available</span>`
+    : s.rentals===false
+    ? `<span class="rental-pill no"><i class="fas fa-circle-xmark"></i> No rentals — they bring/buy</span>`
+    : '';
   return `
     <div class="inst-zone">
-      <div class="block-label"><i class="fas fa-music"></i> Instrument</div>
+      <div class="inst-head">
+        <div class="block-label"><i class="fas fa-music"></i> Instrument</div>
+        ${rentalPill}
+      </div>
       <div class="inst-pick">
         <div class="inst-field">
           <i class="fas fa-magnifying-glass lead"></i>
@@ -539,13 +594,30 @@ function renderLesson(s){
   `;
 }
 
+function truncate(str,n){str=(str||'').trim();return str.length>n?str.slice(0,n-1).trim()+'…':str}
 function renderNotes(s){
   const n=s.notes||[];
-  const items=n.length?n.map(x=>{const lbl=x.type==='important'?'Heads up':x.type==='tip'?'Tip':'Note';
-    return `<div class="note ${x.type}"><span class="ntag">${lbl}</span><span class="nt">${x.text}</span></div>`}).join('')
+  const items=n.length?n.map((x,idx)=>{
+    const lbl=x.type==='important'?'Heads up':x.type==='tip'?'Tip':'Note';
+    const preview=esc(truncate(stripHtml(x.text),46));
+    return `<button class="note ${x.type}" onclick="openNote(${idx})"><span class="ntag ${x.type}">${lbl}</span><span class="nt">${preview}</span><i class="fas fa-up-right-and-down-left-from-center nexp"></i></button>`;
+  }).join('')
     :`<span class="notes-none">No additional notes for this studio.</span>`;
   return `<div class="notes-strip"><span class="notes-label"><i class="fas fa-sticky-note"></i> Notes</span>${items}</div>`;
 }
+function openNote(idx){
+  const n=((activeStudio&&activeStudio.notes)||[])[idx]; if(!n)return;
+  const lbl=n.type==='important'?'Heads up':n.type==='tip'?'Tip':'Note';
+  let m=document.getElementById('noteModal');
+  if(!m){m=document.createElement('div');m.id='noteModal';m.className='note-modal';
+    m.addEventListener('click',e=>{if(e.target===m)closeNote()});document.body.appendChild(m);}
+  m.innerHTML=`<div class="note-modal-card">
+    <div class="note-modal-head"><span class="ntag ${n.type}">${lbl}</span>
+      <button class="note-modal-x" onclick="closeNote()"><i class="fas fa-times"></i></button></div>
+    <div class="note-modal-body">${n.text}</div></div>`;
+  m.classList.add('open');
+}
+function closeNote(){const m=document.getElementById('noteModal');if(m)m.classList.remove('open')}
 
 /* instrument picker wiring */
 function wireInst(){const inp=document.getElementById('instInput');if(!inp)return;
