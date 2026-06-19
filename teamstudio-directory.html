@@ -1439,9 +1439,35 @@
             // Instruments Tab
             const instrumentsContent = s.instruments && s.instruments.length > 0 ? `
                 <div class="info-list-cards">
-                    ${s.instruments.map(inst => `
+                    ${s.instruments.map(inst => {
+                        const instName = inst.name || inst.instrument || 'Unknown';
+                        const instIcon = inst.icon || 'fa-music';
+                        const hasStartAge = inst.start_age !== null && inst.start_age !== undefined && inst.start_age !== '';
+                        const hasBring = inst.bring_instrument || (inst.bring_note && inst.bring_note.trim());
+                        const bringValue = (inst.bring_note && inst.bring_note.trim())
+                            ? inst.bring_note
+                            : (inst.bring_instrument ? 'Student brings their own' : 'Studio provides');
+                        return `
                         <div class="info-list-card instrument-card">
-                            <div class="info-list-card-title"><i class="fas fa-music"></i> ${inst.name || inst.instrument || 'Unknown'}</div>
+                            <div class="info-list-card-title"><i class="fas ${instIcon}"></i> ${instName}</div>
+                            ${hasStartAge ? `
+                                <div class="info-list-card-field">
+                                    <span class="field-label">Start Age:</span>
+                                    <span class="field-value">${inst.start_age}+ years</span>
+                                </div>
+                            ` : ''}
+                            ${inst.method ? `
+                                <div class="info-list-card-field">
+                                    <span class="field-label">Teaching Method:</span>
+                                    <span class="field-value">${inst.method}</span>
+                                </div>
+                            ` : ''}
+                            ${hasBring ? `
+                                <div class="info-list-card-field">
+                                    <span class="field-label">Bring Day 1:</span>
+                                    <span class="field-value">${bringValue}</span>
+                                </div>
+                            ` : ''}
                             ${inst.notes ? `
                                 <div class="info-list-card-field">
                                     <span class="field-label">Notes:</span>
@@ -1455,7 +1481,8 @@
                                 </div>
                             ` : ''}
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             ` : '<div class="info-row-value empty">No instruments listed</div>';
 
