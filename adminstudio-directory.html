@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1814,6 +1816,29 @@
                             </div>
                         </div>
 
+                        <!-- Fee type, amount & timing -->
+                        <div class="form-group" style="margin-top: 6px;">
+                            <label class="form-label">Fee Type</label>
+                            <div class="radio-pill-group" id="studioFeeType">
+                                <label class="radio-pill"><input type="radio" name="feeType" value="annual" checked><span>📅 Annual Fee</span></label>
+                                <label class="radio-pill"><input type="radio" name="feeType" value="one_time"><span>1× Registration Fee</span></label>
+                                <label class="radio-pill"><input type="radio" name="feeType" value=""><span>✕ No Fee</span></label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Fee Amount <span style="text-transform:none;letter-spacing:0;color:var(--text-3);font-weight:500;">— numeric only, e.g. 49</span></label>
+                                <input type="number" class="form-input" id="studioFeeAmount" placeholder="0.00" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Fee Timing</label>
+                                <div class="radio-pill-group" id="studioFeeTiming">
+                                    <label class="radio-pill"><input type="radio" name="feeTiming" value="today" checked><span>💳 Due Today</span></label>
+                                    <label class="radio-pill"><input type="radio" name="feeTiming" value="first_lesson"><span>📅 Due at First Lesson</span></label>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Billing timing -->
                         <div class="form-row">
                             <div class="form-group">
@@ -2606,6 +2631,9 @@
             document.getElementById('studioFirstCharge').value = studio.first_charge || '';
             document.getElementById('studioBillingDay').value = studio.billing_day || '';
             document.getElementById('studioFirstChargeProrated').checked = studio.first_charge_prorated || false;
+            setRadioPillValue('studioFeeType', studio.fee_type ?? '');
+            document.getElementById('studioFeeAmount').value = studio.fee_amount != null ? studio.fee_amount : '';
+            setRadioPillValue('studioFeeTiming', studio.fee_timing || 'today');
             // Map legacy first_lesson_free → trial_type if trial_type missing
             const trialType = studio.trial_type || (studio.first_lesson_free ? 'free' : 'none');
             setRadioPillValue('studioTrialType', trialType);
@@ -3264,6 +3292,9 @@
                 first_charge: document.getElementById('studioFirstCharge').value || null,
                 billing_day: document.getElementById('studioBillingDay').value || null,
                 first_charge_prorated: document.getElementById('studioFirstChargeProrated').checked,
+                fee_type: getRadioPillValue('studioFeeType') || null,
+                fee_amount: document.getElementById('studioFeeAmount').value !== '' ? parseFloat(document.getElementById('studioFeeAmount').value) : null,
+                fee_timing: getRadioPillValue('studioFeeTiming') || null,
                 trial_type: getRadioPillValue('studioTrialType') || 'none',
                 trial_details: document.getElementById('studioTrialDetails').innerHTML || null,
                 programs_url: document.getElementById('studioProgramsUrl').value || null,
