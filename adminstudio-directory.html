@@ -1851,6 +1851,15 @@
                             </div>
                         </div>
 
+                        <!-- Subscription: when is the first payment due -->
+                        <div class="form-group" style="margin-top: 6px;">
+                            <label class="form-label">First Payment Due</label>
+                            <div class="radio-pill-group" id="studioSubFirstPaymentTiming">
+                                <label class="radio-pill"><input type="radio" name="subFirstPaymentTiming" value="registration" checked><span>📝 Day of Registration</span></label>
+                                <label class="radio-pill"><input type="radio" name="subFirstPaymentTiming" value="first_lesson"><span>📅 Day of First Lesson</span></label>
+                            </div>
+                        </div>
+
                         <div class="toggle-group">
                             <div>
                                 <span class="toggle-label">First Month Prorated</span>
@@ -2551,6 +2560,7 @@
             document.getElementById('programsFields').classList.remove('show');
             // New pricing-tab defaults
             setRadioPillValue('studioTrialType', 'free');
+            setRadioPillValue('studioSubFirstPaymentTiming', 'registration');
             // Start with familiar 30/45/60 rows (prices blank), default = 45
             currentLessonOptions = [
                 { minutes: 30, price: '', isDefault: false },
@@ -2634,6 +2644,7 @@
             setRadioPillValue('studioFeeType', studio.fee_type ?? '');
             document.getElementById('studioFeeAmount').value = studio.fee_amount != null ? studio.fee_amount : '';
             setRadioPillValue('studioFeeTiming', studio.fee_timing || 'today');
+            setRadioPillValue('studioSubFirstPaymentTiming', studio.subscription_first_payment_timing || 'registration');
             // Map legacy first_lesson_free → trial_type if trial_type missing
             const trialType = studio.trial_type || (studio.first_lesson_free ? 'free' : 'none');
             setRadioPillValue('studioTrialType', trialType);
@@ -3295,6 +3306,7 @@
                 fee_type: getRadioPillValue('studioFeeType') || null,
                 fee_amount: document.getElementById('studioFeeAmount').value !== '' ? parseFloat(document.getElementById('studioFeeAmount').value) : null,
                 fee_timing: getRadioPillValue('studioFeeTiming') || null,
+                 subscription_first_payment_timing: getRadioPillValue('studioSubFirstPaymentTiming') || 'registration',
                 trial_type: getRadioPillValue('studioTrialType') || 'none',
                 trial_details: document.getElementById('studioTrialDetails').innerHTML || null,
                 programs_url: document.getElementById('studioProgramsUrl').value || null,
