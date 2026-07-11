@@ -940,14 +940,50 @@
     tbody.innerHTML = announcements.map(a => `<tr><td><strong>${esc(a.title)}</strong></td><td>${fmtDate(a.date)}</td><td><span class="badge ${a.is_active ? 'badge-success' : 'badge-muted'}">${a.is_active ? 'Active' : 'Inactive'}</span></td><td><div class="table-actions"><button class="action-btn" onclick="editAnnouncement('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('announcement','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></td></tr>`).join('');
   }
   function editAnnouncement(id) { const a = announcements.find(x => x.id === id); if (!a) return; document.getElementById('announcementId').value = a.id; document.getElementById('announcementTitle').value = a.title || ''; document.getElementById('announcementContent').innerHTML = a.content || ''; document.getElementById('announcementDate').value = a.date || ''; document.getElementById('announcementActive').checked = a.is_active !== false; document.getElementById('announcementModalTitle').textContent = 'Edit Announcement'; openModal('announcement'); }
-  async function saveAnnouncement() { const id = document.getElementById('announcementId').value; const data = { title: document.getElementById('announcementTitle').value.trim(), content: document.getElementById('announcementContent').innerHTML.trim(), date: document.getElementById('announcementDate').value || new Date().toISOString().split('T')[0], is_active: document.getElementById('announcementActive').checked }; if (!data.title) { toast('Title required', 'error'); return; } try { if (id) await sb.from('announcements').update(data).eq('id', id); else { data.sort_order = announcements.length; await sb.from('announcements').insert(data); } await loadAllData(); closeModal('announcement'); toast('Saved!', 'success'); } catch (e) { console.error(e); toast('Error saving', 'error'); } }
+  async function saveAnnouncement() {
+    const id = document.getElementById('announcementId').value;
+    const title = document.getElementById('announcementTitle').value.trim();
+    if (!title) { toast('Title required', 'error'); return; }
+    const data = {
+      title,
+      content: document.getElementById('announcementContent').innerHTML.trim() || null,
+      date: document.getElementById('announcementDate').value || new Date().toISOString().split('T')[0],
+      is_active: document.getElementById('announcementActive').checked
+    };
+    try {
+      let res;
+      if (id) { res = await sb.from('announcements').update(data).eq('id', id); }
+      else { data.sort_order = announcements.length; res = await sb.from('announcements').insert(data); }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('announcement'); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetAnnouncementForm() { document.getElementById('announcementId').value = ''; document.getElementById('announcementTitle').value = ''; document.getElementById('announcementContent').innerHTML = ''; document.getElementById('announcementDate').value = ''; document.getElementById('announcementActive').checked = true; document.getElementById('announcementModalTitle').textContent = 'Add Announcement'; }
 
   // ── PROMOTIONS ──
   function switchPromoTab(tab, btn) { currentPromoTab = tab; document.querySelectorAll('#promotions .tab-btn').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderPromotions(); }
   function renderPromotions() { const tbody = document.getElementById('promotionsList'); const filtered = promotions.filter(p => promoStatus(p) === currentPromoTab); if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><h3>No ${currentPromoTab} promotions</h3></div></td></tr>`; return; } tbody.innerHTML = filtered.map(p => `<tr><td><strong>${esc(p.title)}</strong></td><td><span class="badge badge-muted">${esc(p.type)}</span></td><td>${p.discount_label ? esc(p.discount_label) : '-'}</td><td>${fmtDate(p.start_date)} – ${p.end_date ? fmtDate(p.end_date) : 'Ongoing'}</td><td><div class="table-actions"><button class="action-btn" onclick="editPromotion('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('promotion','${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></td></tr>`).join(''); }
   function editPromotion(id) { const p = promotions.find(x => x.id === id); if (!p) return; document.getElementById('promotionId').value = p.id; document.getElementById('promotionTitle').value = p.title || ''; document.getElementById('promotionDescription').innerHTML = p.description || ''; document.getElementById('promotionType').value = p.type || 'promo'; document.getElementById('promotionDiscount').value = p.discount_label || ''; document.getElementById('promotionStartDate').value = p.start_date || ''; document.getElementById('promotionEndDate').value = p.end_date || ''; document.getElementById('promotionModalTitle').textContent = 'Edit Promotion'; openModal('promotion'); }
-  async function savePromotion() { const id = document.getElementById('promotionId').value; const data = { title: document.getElementById('promotionTitle').value.trim(), description: document.getElementById('promotionDescription').innerHTML.trim(), type: document.getElementById('promotionType').value, discount_label: document.getElementById('promotionDiscount').value.trim(), start_date: document.getElementById('promotionStartDate').value, end_date: document.getElementById('promotionEndDate').value || null }; if (!data.title) { toast('Title required', 'error'); return; } try { if (id) await sb.from('promotions').update(data).eq('id', id); else { data.sort_order = promotions.length; await sb.from('promotions').insert(data); } await loadAllData(); closeModal('promotion'); toast('Saved!', 'success'); } catch (e) { console.error(e); toast('Error saving', 'error'); } }
+  async function savePromotion() {
+    const id = document.getElementById('promotionId').value;
+    const startDate = document.getElementById('promotionStartDate').value || null;
+    const endDate = document.getElementById('promotionEndDate').value || null;
+    const discountLabel = document.getElementById('promotionDiscount').value.trim() || null;
+    const title = document.getElementById('promotionTitle').value.trim();
+    if (!title) { toast('Title required', 'error'); return; }
+    const data = { title, discount_label: discountLabel, start_date: startDate, end_date: endDate };
+    try {
+      let res;
+      if (id) {
+        res = await sb.from('promotions').update(data).eq('id', id);
+      } else {
+        data.sort_order = promotions.length;
+        res = await sb.from('promotions').insert(data);
+      }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || res.error.details || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('promotion'); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetPromotionForm() { document.getElementById('promotionId').value = ''; document.getElementById('promotionTitle').value = ''; document.getElementById('promotionDescription').innerHTML = ''; document.getElementById('promotionType').value = 'promo'; document.getElementById('promotionDiscount').value = ''; document.getElementById('promotionStartDate').value = ''; document.getElementById('promotionEndDate').value = ''; document.getElementById('promotionModalTitle').textContent = 'Add Promotion'; }
 
   // ── RESPONSIBILITIES ──
@@ -959,7 +995,19 @@
     grid.innerHTML = filtered.map(r => `<div class="resp-card"><div class="resp-card-header"><div class="resp-card-title-row"><span class="resp-owner-badge ${r.owner}">${r.owner === 'enrollment' ? 'Enrollment' : 'Studio'}</span><span class="resp-card-title">${esc(r.title)}</span></div><div class="resp-card-actions"><button class="action-btn" onclick="editResponsibility('${r.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('responsibility','${r.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="resp-card-body">${r.notes || ''}</div></div>`).join('');
   }
   function editResponsibility(id) { const r = responsibilities.find(x => x.id === id); if (!r) return; document.getElementById('responsibilityId').value = r.id; document.getElementById('responsibilityOwner').value = r.owner || 'enrollment'; document.getElementById('responsibilityTitle').value = r.title || ''; document.getElementById('responsibilityNotes').innerHTML = r.notes || ''; document.getElementById('responsibilityModalTitle').textContent = 'Edit Responsibility'; openModal('responsibility'); }
-  async function saveResponsibility() { const id = document.getElementById('responsibilityId').value; const data = { owner: document.getElementById('responsibilityOwner').value, title: document.getElementById('responsibilityTitle').value.trim(), notes: document.getElementById('responsibilityNotes').innerHTML.trim() }; if (!data.title) { toast('Title required', 'error'); return; } try { if (id) await sb.from('responsibilities').update(data).eq('id', id); else { data.sort_order = responsibilities.length; await sb.from('responsibilities').insert(data); } await loadAllData(); closeModal('responsibility'); resetResponsibilityForm(); toast('Saved!', 'success'); } catch (e) { console.error(e); toast('Error saving', 'error'); } }
+  async function saveResponsibility() {
+    const id = document.getElementById('responsibilityId').value;
+    const title = document.getElementById('responsibilityTitle').value.trim();
+    if (!title) { toast('Title required', 'error'); return; }
+    const data = { owner: document.getElementById('responsibilityOwner').value, title, notes: document.getElementById('responsibilityNotes').innerHTML.trim() || null };
+    try {
+      let res;
+      if (id) { res = await sb.from('responsibilities').update(data).eq('id', id); }
+      else { data.sort_order = responsibilities.length; res = await sb.from('responsibilities').insert(data); }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('responsibility'); resetResponsibilityForm(); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetResponsibilityForm() { document.getElementById('responsibilityId').value = ''; document.getElementById('responsibilityOwner').value = 'enrollment'; document.getElementById('responsibilityTitle').value = ''; document.getElementById('responsibilityNotes').innerHTML = ''; document.getElementById('responsibilityModalTitle').textContent = 'Add Responsibility'; }
 
   // ── TEAM ──
@@ -978,14 +1026,44 @@
   function renderRoleDropdown() { const s = document.getElementById('teamRole'); s.innerHTML = '<option value="">Select role...</option>' + roles.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join(''); }
   function editTeamMember(id) { const t = teamMembers.find(x => x.id === id); if (!t) return; document.getElementById('teamId').value = t.id; document.getElementById('teamFirstName').value = t.first_name || ''; document.getElementById('teamLastName').value = t.last_name || ''; renderRoleDropdown(); document.getElementById('teamRole').value = t.role_id || ''; document.getElementById('teamZone').value = t.zone || ''; document.getElementById('teamEmail').value = t.email || ''; document.getElementById('teamExtension').value = t.phone_extension || ''; document.getElementById('teamAvatarUrl').value = t.avatar_url || ''; document.getElementById('teamPhotoPreview').src = t.avatar_url || ''; document.getElementById('teamModalTitle').textContent = 'Edit Team Member'; openModal('team'); }
   async function previewTeamPhoto(input) { if (input.files && input.files[0]) { const file = input.files[0]; if (file.size > 10*1024*1024) { toast('Image must be under 10MB', 'error'); input.value=''; return; } const reader = new FileReader(); reader.onload = e => { document.getElementById('teamPhotoPreview').src = e.target.result; }; reader.readAsDataURL(file); try { toast('Uploading...',''); const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${file.name.split('.').pop()}`; const { error } = await sb.storage.from('avatars').upload(fileName, file, { cacheControl:'3600', upsert:false }); if (error) { toast('Error: '+error.message,'error'); return; } const { data: urlData } = sb.storage.from('avatars').getPublicUrl(fileName); document.getElementById('teamAvatarUrl').value = urlData.publicUrl; toast('Uploaded!','success'); } catch(e){ console.error(e); toast('Error uploading','error'); } } }
-  async function saveTeamMember() { const id = document.getElementById('teamId').value; const data = { first_name: document.getElementById('teamFirstName').value.trim(), last_name: document.getElementById('teamLastName').value.trim(), role_id: document.getElementById('teamRole').value || null, zone: document.getElementById('teamZone').value.trim(), email: document.getElementById('teamEmail').value.trim(), phone_extension: document.getElementById('teamExtension').value.trim(), avatar_url: document.getElementById('teamAvatarUrl').value.trim() }; if (!data.first_name || !data.last_name || !data.email) { toast('Name and email required','error'); return; } try { if (id) await sb.from('team_members').update(data).eq('id', id); else { data.sort_order = teamMembers.length; await sb.from('team_members').insert(data); } await loadAllData(); closeModal('team'); resetTeamForm(); toast('Saved!','success'); } catch(e){ console.error(e); toast('Error saving','error'); } }
+  async function saveTeamMember() {
+    const id = document.getElementById('teamId').value;
+    const data = {
+      first_name: document.getElementById('teamFirstName').value.trim(),
+      last_name: document.getElementById('teamLastName').value.trim(),
+      role_id: document.getElementById('teamRole').value || null,
+      zone: document.getElementById('teamZone').value.trim() || null,
+      email: document.getElementById('teamEmail').value.trim(),
+      phone_extension: document.getElementById('teamExtension').value.trim() || null,
+      avatar_url: document.getElementById('teamAvatarUrl').value.trim() || null
+    };
+    if (!data.first_name || !data.last_name || !data.email) { toast('Name and email required', 'error'); return; }
+    try {
+      let res;
+      if (id) { res = await sb.from('team_members').update(data).eq('id', id); }
+      else { data.sort_order = teamMembers.length; res = await sb.from('team_members').insert(data); }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('team'); resetTeamForm(); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetTeamForm() { document.getElementById('teamId').value=''; document.getElementById('teamFirstName').value=''; document.getElementById('teamLastName').value=''; renderRoleDropdown(); document.getElementById('teamRole').value=''; document.getElementById('teamZone').value=''; document.getElementById('teamEmail').value=''; document.getElementById('teamExtension').value=''; document.getElementById('teamAvatarUrl').value=''; document.getElementById('teamPhotoPreview').src=''; document.getElementById('teamPhotoFile').value=''; document.getElementById('teamModalTitle').textContent='Add Team Member'; }
 
   // ── ROLES ──
   function renderRoles() { const tbody = document.getElementById('rolesList'); if (!roles.length) { tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></div><h3>No roles</h3><p>Add your first role</p></div></td></tr>`; return; } tbody.innerHTML = roles.map(r => `<tr><td><strong>${esc(r.name)}</strong></td><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:20px;height:20px;background:${r.color};border-radius:4px;"></div><span style="font-family:monospace;font-size:13px;">${esc(r.color)}</span></div></td><td>${r.is_featured ? '<span class="badge badge-success">★ Featured</span>' : '<span class="badge badge-muted">Standard</span>'}</td><td><div class="table-actions"><button class="action-btn" onclick="editRole('${r.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('role','${r.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></td></tr>`).join(''); }
   function editRole(id) { const r = roles.find(x => x.id === id); if (!r) return; document.getElementById('roleId').value=r.id; document.getElementById('roleName').value=r.name||''; document.getElementById('roleColor').value=r.color||'#F07B65'; document.getElementById('roleColorText').value=r.color||'#F07B65'; document.getElementById('roleFeatured').checked=r.is_featured||false; updateRolePreview(); document.getElementById('roleModalTitle').textContent='Edit Role'; openModal('role'); }
   function updateRolePreview() { const name=document.getElementById('roleName').value||'Role Name'; const color=document.getElementById('roleColor').value; document.getElementById('roleColorText').value=color; document.getElementById('rolePreviewBadge').textContent=name; document.getElementById('rolePreviewBadge').style.background=color+'18'; document.getElementById('rolePreviewBadge').style.color=color; }
-  async function saveRole() { const id=document.getElementById('roleId').value; const data={name:document.getElementById('roleName').value.trim(), color:document.getElementById('roleColor').value, is_featured:document.getElementById('roleFeatured').checked}; if (!data.name){toast('Name required','error');return;} try { if (id) await sb.from('roles').update(data).eq('id',id); else { data.sort_order=roles.length; await sb.from('roles').insert(data); } await loadAllData(); closeModal('role'); resetRoleForm(); toast('Saved!','success'); } catch(e){console.error(e);toast('Error saving','error');} }
+  async function saveRole() {
+    const id = document.getElementById('roleId').value;
+    const data = { name: document.getElementById('roleName').value.trim(), color: document.getElementById('roleColor').value, is_featured: document.getElementById('roleFeatured').checked };
+    if (!data.name) { toast('Name required', 'error'); return; }
+    try {
+      let res;
+      if (id) { res = await sb.from('roles').update(data).eq('id', id); }
+      else { data.sort_order = roles.length; res = await sb.from('roles').insert(data); }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('role'); resetRoleForm(); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetRoleForm() { document.getElementById('roleId').value=''; document.getElementById('roleName').value=''; document.getElementById('roleColor').value='#F07B65'; document.getElementById('roleColorText').value='#F07B65'; document.getElementById('roleFeatured').checked=false; document.getElementById('rolePreviewBadge').textContent='Role Name'; document.getElementById('rolePreviewBadge').style.background='rgba(240,123,101,0.1)'; document.getElementById('rolePreviewBadge').style.color='#F07B65'; document.getElementById('roleModalTitle').textContent='Add Role'; }
 
   // ── LINKS ──
@@ -1010,7 +1088,22 @@
   async function deleteLinkCategory(id) { const cat=linkCategories.find(c=>c.id===id); const count=links.filter(l=>l.category_id===id).length; document.getElementById('deleteMessage').textContent=count>0?`Delete "${cat?.name}"? The ${count} link${count>1?'s':''} in it will become uncategorized.`:`Delete category "${cat?.name}"?`; deleteCallback=async()=>{ try { await sb.from('links').update({category_id:null}).eq('category_id',id); await sb.from('link_categories').delete().eq('id',id); if(activeLinkCatId===id) activeLinkCatId=null; await loadAllData(); toast('Category deleted','success'); } catch(e){console.error(e);toast('Error','error');} }; openModal('delete'); }
   function renderLinkCategoryDropdown() { const s=document.getElementById('linkCategory'); s.innerHTML='<option value="">Uncategorized</option>'+linkCategories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join(''); }
   function editLink(id) { const link=links.find(x=>x.id===id); if(!link) return; renderLinkCategoryDropdown(); document.getElementById('linkId').value=link.id; document.getElementById('linkTitle').value=link.title||''; document.getElementById('linkUrl').value=link.url||''; document.getElementById('linkDescription').value=link.description||''; document.getElementById('linkCategory').value=link.category_id||''; document.getElementById('linkModalTitle').textContent='Edit Link'; openModal('link'); }
-  async function saveLink() { const id=document.getElementById('linkId').value; const data={title:document.getElementById('linkTitle').value.trim(), url:document.getElementById('linkUrl').value.trim(), description:document.getElementById('linkDescription').value.trim(), category_id:document.getElementById('linkCategory').value||null}; if(!data.title){toast('Title required','error');return;} if(!data.url){toast('URL required','error');return;} if(!data.url.startsWith('http')){toast('URL must start with http:// or https://','error');return;} try { if(id) await sb.from('links').update(data).eq('id',id); else { data.sort_order=links.length; await sb.from('links').insert(data); } await loadAllData(); closeModal('link'); resetLinkForm(); toast('Saved!','success'); } catch(e){console.error(e);toast('Error saving','error');} }
+  async function saveLink() {
+    const id = document.getElementById('linkId').value;
+    const title = document.getElementById('linkTitle').value.trim();
+    const url = document.getElementById('linkUrl').value.trim();
+    if (!title) { toast('Title required', 'error'); return; }
+    if (!url) { toast('URL required', 'error'); return; }
+    if (!url.startsWith('http')) { toast('URL must start with http:// or https://', 'error'); return; }
+    const data = { title, url, description: document.getElementById('linkDescription').value.trim() || null, category_id: document.getElementById('linkCategory').value || null };
+    try {
+      let res;
+      if (id) { res = await sb.from('links').update(data).eq('id', id); }
+      else { data.sort_order = links.length; res = await sb.from('links').insert(data); }
+      if (res.error) { console.error('Supabase error:', res.error); toast('Error: ' + (res.error.message || 'Save failed'), 'error'); return; }
+      await loadAllData(); closeModal('link'); resetLinkForm(); toast('Saved!', 'success');
+    } catch (e) { console.error(e); toast('Error saving', 'error'); }
+  }
   function resetLinkForm() { document.getElementById('linkId').value=''; document.getElementById('linkTitle').value=''; document.getElementById('linkUrl').value=''; document.getElementById('linkDescription').value=''; renderLinkCategoryDropdown(); document.getElementById('linkCategory').value=''; document.getElementById('linkModalTitle').textContent='Add Link'; }
 
   // ── SCRIPT ──
