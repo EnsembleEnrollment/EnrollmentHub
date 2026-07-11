@@ -497,7 +497,7 @@
       </div>
       <div class="card">
         <table class="data-table">
-          <thead><tr><th>Title</th><th>Type</th><th>Discount</th><th>Dates</th><th style="width:100px;text-align:right;">Actions</th></tr></thead>
+          <thead><tr><th>Title</th><th>Discount</th><th>Dates</th><th style="width:100px;text-align:right;">Actions</th></tr></thead>
           <tbody id="promotionsList"></tbody>
         </table>
       </div>
@@ -682,25 +682,8 @@
         <input type="text" class="form-input" id="promotionTitle" placeholder="Enter title">
       </div>
       <div class="form-group">
-        <label class="form-label">Description</label>
-        <div class="editor-container">
-          <div class="editor-toolbar">
-            <button class="editor-btn" onclick="formatDocIn('promotionDescription','bold')"><strong>B</strong></button>
-            <button class="editor-btn" onclick="formatDocIn('promotionDescription','italic')"><em>I</em></button>
-            <button class="editor-btn" onclick="formatDocIn('promotionDescription','insertUnorderedList')"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
-          </div>
-          <div class="editor-content" id="promotionDescription" contenteditable="true" style="min-height:70px;"></div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Type</label>
-          <select class="form-select" id="promotionType"><option value="promo">Promo</option><option value="discount">Discount</option></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Discount Label</label>
-          <input type="text" class="form-input" id="promotionDiscount" placeholder="e.g., 20% Off">
-        </div>
+        <label class="form-label">Discount Label</label>
+        <input type="text" class="form-input" id="promotionDiscount" placeholder="e.g., 20% Off, Free Registration">
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -962,8 +945,8 @@
 
   // ── PROMOTIONS ──
   function switchPromoTab(tab, btn) { currentPromoTab = tab; document.querySelectorAll('#promotions .tab-btn').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderPromotions(); }
-  function renderPromotions() { const tbody = document.getElementById('promotionsList'); const filtered = promotions.filter(p => promoStatus(p) === currentPromoTab); if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><h3>No ${currentPromoTab} promotions</h3></div></td></tr>`; return; } tbody.innerHTML = filtered.map(p => `<tr><td><strong>${esc(p.title)}</strong></td><td><span class="badge badge-muted">${esc(p.type)}</span></td><td>${p.discount_label ? esc(p.discount_label) : '-'}</td><td>${fmtDate(p.start_date)} – ${p.end_date ? fmtDate(p.end_date) : 'Ongoing'}</td><td><div class="table-actions"><button class="action-btn" onclick="editPromotion('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('promotion','${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></td></tr>`).join(''); }
-  function editPromotion(id) { const p = promotions.find(x => x.id === id); if (!p) return; document.getElementById('promotionId').value = p.id; document.getElementById('promotionTitle').value = p.title || ''; document.getElementById('promotionDescription').innerHTML = p.description || ''; document.getElementById('promotionType').value = p.type || 'promo'; document.getElementById('promotionDiscount').value = p.discount_label || ''; document.getElementById('promotionStartDate').value = p.start_date || ''; document.getElementById('promotionEndDate').value = p.end_date || ''; document.getElementById('promotionModalTitle').textContent = 'Edit Promotion'; openModal('promotion'); }
+  function renderPromotions() { const tbody = document.getElementById('promotionsList'); const filtered = promotions.filter(p => promoStatus(p) === currentPromoTab); if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><h3>No ${currentPromoTab} promotions</h3></div></td></tr>`; return; } tbody.innerHTML = filtered.map(p => `<tr><td><strong>${esc(p.title)}</strong></td><td>${p.discount_label ? esc(p.discount_label) : '-'}</td><td>${fmtDate(p.start_date)} – ${p.end_date ? fmtDate(p.end_date) : 'Ongoing'}</td><td><div class="table-actions"><button class="action-btn" onclick="editPromotion('${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button><button class="action-btn delete" onclick="deleteItem('promotion','${p.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></td></tr>`).join(''); }
+  function editPromotion(id) { const p = promotions.find(x => x.id === id); if (!p) return; document.getElementById('promotionId').value = p.id; document.getElementById('promotionTitle').value = p.title || ''; document.getElementById('promotionDiscount').value = p.discount_label || ''; document.getElementById('promotionStartDate').value = p.start_date || ''; document.getElementById('promotionEndDate').value = p.end_date || ''; document.getElementById('promotionModalTitle').textContent = 'Edit Promotion'; openModal('promotion'); }
   async function savePromotion() {
     const id = document.getElementById('promotionId').value;
     const startDate = document.getElementById('promotionStartDate').value || null;
@@ -984,7 +967,7 @@
       await loadAllData(); closeModal('promotion'); toast('Saved!', 'success');
     } catch (e) { console.error(e); toast('Error saving', 'error'); }
   }
-  function resetPromotionForm() { document.getElementById('promotionId').value = ''; document.getElementById('promotionTitle').value = ''; document.getElementById('promotionDescription').innerHTML = ''; document.getElementById('promotionType').value = 'promo'; document.getElementById('promotionDiscount').value = ''; document.getElementById('promotionStartDate').value = ''; document.getElementById('promotionEndDate').value = ''; document.getElementById('promotionModalTitle').textContent = 'Add Promotion'; }
+  function resetPromotionForm() { document.getElementById('promotionId').value = ''; document.getElementById('promotionTitle').value = ''; document.getElementById('promotionDiscount').value = ''; document.getElementById('promotionStartDate').value = ''; document.getElementById('promotionEndDate').value = ''; document.getElementById('promotionModalTitle').textContent = 'Add Promotion'; }
 
   // ── RESPONSIBILITIES ──
   function switchRespTab(tab, btn) { activeRespTab = tab; document.querySelectorAll('.resp-tab-btn').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderResponsibilities(); }
