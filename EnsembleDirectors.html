@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -595,7 +594,7 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('detailBackdrop').classList.remove('open'); });
 
   function openAnnouncementDetail(id) {
-    const a = allAnnouncements.find(x => x.id === id);
+    const a = allAnnouncements.find(x => String(x.id) === String(id));
     if (!a) return;
     const d = new Date(a.date);
     document.getElementById('detailIcon').innerHTML = `<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`;
@@ -608,7 +607,7 @@
   }
 
   function openPromoDetail(id) {
-    const p = allPromotions.find(x => x.id === id);
+    const p = allPromotions.find(x => String(x.id) === String(id));
     if (!p) return;
     const s = promoStatus(p);
     const range = [p.start_date && fmtDate(p.start_date), p.end_date && fmtDate(p.end_date)].filter(Boolean).join(' – ');
@@ -624,6 +623,9 @@
     }
     if (p.start_date || p.end_date) {
       body += `<div class="detail-field"><div class="detail-field-label">Promotion Period</div><div class="detail-field-value">${range || 'Ongoing'}</div></div>`;
+    }
+    if (p.notes && p.notes.trim().replace(/<[^>]*>/g, '').trim()) {
+      body += `<div class="detail-field"><div class="detail-field-label">Details</div><div style="font-size:14px;line-height:1.75;color:var(--text)">${p.notes}</div></div>`;
     }
     if (!body) body = `<p class="detail-no-content">No additional details for this promotion.</p>`;
     document.getElementById('detailBody').innerHTML = body;
